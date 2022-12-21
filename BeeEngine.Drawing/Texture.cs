@@ -5,28 +5,12 @@ namespace BeeEngine.Drawing;
 public sealed class Texture: IDisposable
 {
     internal readonly IntPtr _texture;
-    private Renderer? _renderer;
-    internal Renderer Renderer
-    {
-        get
-        {
-            if (_renderer is null)
-            {
-                _renderer = RenderingContext.GetRenderer();
-            }
-
-            return _renderer;
-        }
-        set => _renderer = value;
-    }
     public readonly int Width;
     public readonly int Height;
     internal SDL.SDL_Rect TextureRect;
     public static Texture FromFile(string path)
     {
-        var texture = SDL_image.IMG_LoadTexture(RenderingContext.GetRenderer().GetRenderer(), path);
-        if (texture == IntPtr.Zero)
-            throw new FileLoadException($"Couldn't load image at {path}. Error: {SDL.SDL_GetError()}");
+        var texture = Renderer.LoadTexture(path);
         return new Texture(texture);
     }
 

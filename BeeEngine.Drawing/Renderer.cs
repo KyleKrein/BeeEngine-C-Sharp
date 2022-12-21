@@ -2,14 +2,15 @@ using SDL2;
 
 namespace BeeEngine.Drawing;
 
-internal class Renderer: IDisposable
-{
-    private IntPtr _renderer;
-    private IntPtr _window;
-    private Graphics? _graphics;
-    private readonly object locker = new object();
 
-    public void Init(string Title, int Width, int Height)
+internal static class Renderer
+{
+    private static IntPtr _renderer;
+    private static IntPtr _window;
+    private static Graphics? _graphics;
+    private static readonly object locker = new object();
+
+    /*public static void Init(string Title, int Width, int Height)
     {
         // Initilizes SDL.
         if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) < 0)
@@ -41,9 +42,9 @@ internal class Renderer: IDisposable
         {
             throw new Exception($"There was an issue creating the renderer. {SDL.SDL_GetError()}");
         }
-    }
-
-    public void InitWindow(string text, Point location, Size size, bool useVsync, params WindowFlags[] flags)
+    }*/
+    
+    public static void InitWindow(string text, Point location, Size size, bool useVsync, params WindowFlags[] flags)
     {
         // Initilizes SDL.
         if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) < 0)
@@ -82,9 +83,11 @@ internal class Renderer: IDisposable
         {
             throw new Exception($"There was an issue creating the renderer. {SDL.SDL_GetError()}");
         }
+
+        IsClosing = false;
     }
     
-    bool PollEvents()
+    static bool PollEvents()
     {
         // Check to see if there are any events and continue to do so until the queue is empty.
         while (SDL.SDL_PollEvent(out SDL.SDL_Event e) == 1)
@@ -94,15 +97,19 @@ internal class Renderer: IDisposable
                 case SDL.SDL_EventType.SDL_QUIT:
                     IsClosing = true;
                     return false;
+                case SDL.SDL_EventType.SDL_KEYUP:
+                case SDL.SDL_EventType.SDL_KEYDOWN: 
+                    
+                    break;
             }
         }
 
         return true;
     }
 
-    public bool IsClosing { get; private set; } = false;
+    public static bool IsClosing { get; private set; } = true;
 
-    internal bool PrepareForDrawingFrame(Color BackgroundColor)
+    internal static bool PrepareForDrawingFrame(Color BackgroundColor)
     {
         if (!PollEvents())
         {
@@ -124,29 +131,29 @@ internal class Renderer: IDisposable
         return true;
     }
 
-    public void SetRenderTarget(IntPtr target)
+    public static void SetRenderTarget(IntPtr target)
     {
         SDL.SDL_SetRenderTarget(_renderer, target);
     }
 
-    public void ResetRenderTarget()
+    public static void ResetRenderTarget()
     {
         SDL.SDL_SetRenderTarget(_renderer, IntPtr.Zero);
     }
-    internal void Render()
+    internal static void Render()
     {
         // Switches out the currently presented render surface with the one we just did work on.
         SDL.SDL_RenderPresent(_renderer);
     }
 
-    public void Dispose()
+    public static void Dispose()
     {
         SDL.SDL_DestroyRenderer(_renderer);
         SDL.SDL_DestroyWindow(_window);
         SDL.SDL_Quit();
     }
 
-    public Graphics GetGraphics()
+    public static Graphics GetGraphics()
     {
         if (_graphics is null)
         {
@@ -154,7 +161,7 @@ internal class Renderer: IDisposable
             {
                 if (_graphics is null)
                 {
-                    _graphics = new Graphics(this);
+                    _graphics = new Graphics();
                 }
             }
         }
@@ -162,7 +169,7 @@ internal class Renderer: IDisposable
         return _graphics;
     }
 
-    public void InitWithoutWindow(WindowFlags[] flags)
+    /*public static void InitWithoutWindow(WindowFlags[] flags)
     {
         // Initilizes SDL.
         if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) < 0)
@@ -204,77 +211,85 @@ internal class Renderer: IDisposable
         {
             throw new Exception($"There was an issue creating the renderer. {SDL.SDL_GetError()}");
         }
-    }
+    }*/
 
-    public IntPtr GetRenderer()
+    public static IntPtr GetRenderer()
     {
         return _renderer;
     }
 
-    public void DrawLine(int x1, int y1, int x2, int y2, Color color)
+    public static void DrawLine(int x1, int y1, int x2, int y2, Color color)
     {
         SDL.SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
         SDL.SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
     }
 
-    public void DrawPoint(int x, int y, Color color)
+    public static void DrawPoint(int x, int y, Color color)
     {
         SDL.SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
         SDL.SDL_RenderDrawPoint(_renderer, x, y);
     }
 
-    public void DrawPointF(float x, float y, Color color)
+    public static void DrawPointF(float x, float y, Color color)
     {
         SDL.SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
         SDL.SDL_RenderDrawPointF(_renderer, x, y);
     }
 
-    public void DrawPoints(SDL.SDL_Point[] sdlPoints, Color color)
+    public static void DrawPoints(SDL.SDL_Point[] sdlPoints, Color color)
     {
         SDL.SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
         SDL.SDL_RenderDrawPoints(_renderer, sdlPoints, sdlPoints.Length);
     }
 
-    public void DrawPointsF(SDL.SDL_FPoint[] sdlPoints, Color color)
+    public static void DrawPointsF(SDL.SDL_FPoint[] sdlPoints, Color color)
     {
         SDL.SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
         SDL.SDL_RenderDrawPointsF(_renderer, sdlPoints, sdlPoints.Length);
     }
 
-    public void DrawRect(SDL.SDL_Rect rect, Color color)
+    public static void DrawRect(SDL.SDL_Rect rect, Color color)
     {
         SDL.SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
         SDL.SDL_RenderDrawRect(_renderer, ref rect);
     }
 
-    public void DrawRectF(SDL.SDL_FRect rect, Color color)
+    public static void DrawRectF(SDL.SDL_FRect rect, Color color)
     {
         SDL.SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
         SDL.SDL_RenderDrawRectF(_renderer, ref rect);
     }
 
-    public void DrawRects(SDL.SDL_Rect[] sdlRects, Color color)
+    public static void DrawRects(SDL.SDL_Rect[] sdlRects, Color color)
     {
         SDL.SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
         SDL.SDL_RenderDrawRects(_renderer, sdlRects, sdlRects.Length);
     }
 
-    public void DrawRectsF(SDL.SDL_FRect[] sdlRects, Color color)
+    public static void DrawRectsF(SDL.SDL_FRect[] sdlRects, Color color)
     {
         SDL.SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
         SDL.SDL_RenderDrawRectsF(_renderer, sdlRects, sdlRects.Length);
     }
 
-    public void DrawTexture(nint texture, SDL.SDL_Rect textureRect, SDL.SDL_Rect targetRect)
+    public static void DrawTexture(Texture texture, SDL.SDL_Rect textureRect, SDL.SDL_Rect targetRect)
     {
-        SDL.SDL_RenderCopy(_renderer, texture, ref textureRect, ref targetRect);
+        SDL.SDL_RenderCopy(_renderer, texture._texture, ref textureRect, ref targetRect);
     }
 
-    public void Clear(Color color)
+    public static void Clear(Color color)
     {
         SDL.SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
 
         // Clears the current render surface.
         SDL.SDL_RenderClear(_renderer);
+    }
+
+    public static IntPtr LoadTexture(string path)
+    {
+        var texture = SDL_image.IMG_LoadTexture(_renderer, path);
+        if (texture == IntPtr.Zero)
+            throw new FileLoadException($"Couldn't load image at {path}. Error: {SDL.SDL_GetError()}");
+        return texture;
     }
 }

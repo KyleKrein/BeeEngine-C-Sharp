@@ -7,14 +7,11 @@ public static class Application
     private struct WindowStruct
     {
         public readonly Window Window;
-        public readonly Renderer Renderer;
         public readonly UIThread UiThread;
 
         public WindowStruct(Window window)
         {
             Window = window;
-            Renderer = new Renderer();
-            Window.Renderer = Renderer;
             UiThread = new UIThread(Window);
         }
     }
@@ -23,18 +20,26 @@ public static class Application
 
     public static void Run<T>() where T : Window
     {
+        if (!Renderer.IsClosing)
+        {
+            throw new InvalidOperationException("Can't have more than 1 window opened at the same time");
+        }
         Window window = Activator.CreateInstance<Window>();
         var windowStruct = new WindowStruct(window);
         _windows.Add(windowStruct);
-        windowStruct.Renderer.InitWindow(window.Text, window.Location, window.Size, true);
+        Renderer.InitWindow(window.Text, window.Location, window.Size, true);
         windowStruct.UiThread.Update();
     }
 
     public static void Run(Window window)
     {
+        if (!Renderer.IsClosing)
+        {
+            throw new InvalidOperationException("Can't have more than 1 window opened at the same time");
+        }
         var windowStruct = new WindowStruct(window);
         _windows.Add(windowStruct);
-        windowStruct.Renderer.InitWindow(window.Text, window.Location, window.Size, true);
+        Renderer.InitWindow(window.Text, window.Location, window.Size, true);
         windowStruct.UiThread.Update();
     }
 }

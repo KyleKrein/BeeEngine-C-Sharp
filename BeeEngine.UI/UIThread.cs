@@ -1,3 +1,5 @@
+using BeeEngine.Drawing;
+
 namespace BeeEngine.UI;
 
 internal sealed class UIThread
@@ -14,9 +16,12 @@ internal sealed class UIThread
     public void Update()
     {
         bool flag = true;
+        _window.LoadEvent();
+        Graphics g = new Graphics();
         while (flag)
         {
-            flag = _window.Update(_window.Renderer.GetGraphics());
+            //if(_window.Invalid)
+                flag = _window.Update(g);
             Thread.Sleep(1);
         }
         _window.Dispose();

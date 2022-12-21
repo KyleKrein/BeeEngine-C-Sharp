@@ -1,13 +1,8 @@
-namespace BeeEngine.Drawing;
+/*namespace BeeEngine.Drawing;
 
 public static class RenderingContext
 {
-    internal static Renderer _renderer;
     public static bool Initialized { get; private set; } = false;
-    static RenderingContext()
-    {
-        _renderer = new Renderer();
-    }
 
     public static void Create(params WindowFlags[] flags)
     {
@@ -23,4 +18,4 @@ public static class RenderingContext
         }
         return _renderer;
     }
-}
+}*/

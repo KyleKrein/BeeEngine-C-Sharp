@@ -2,13 +2,17 @@
 using BeeEngine.UI;
 
 Window window = new Window();
-Texture archer = Texture.FromFile("archer_red.png");
+Texture archer = null;
 int x = 0;
+window.Load += (sender, e) =>
+{
+    archer = Texture.FromFile("archer_red.png");
+};
 window.Paint += (sender, g) =>
 {
-    g.DrawTexture(archer, x++,0);
+    g.DrawTexture(archer!, x++,0);
     var w = sender as Window;
-    w.Invalidate();
+    //w.Invalidate();
 };
 Application.Run(window);
 window.Dispose();
