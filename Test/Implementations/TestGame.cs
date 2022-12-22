@@ -8,6 +8,11 @@ public class TestGame: Game
     {
     }
 
+    protected override void UnloadResources()
+    {
+        
+    }
+
     protected override void Initialize()
     {
         

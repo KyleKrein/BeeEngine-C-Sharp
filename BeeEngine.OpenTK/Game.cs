@@ -8,12 +8,30 @@ namespace BeeEngine.OpenTK;
 
 public abstract class Game: IDisposable
 {
-    public string Title { get; set; }
-    public int Width { get; set; }
-    public int Height { get; set; }
+    public string Title
+    {
+        get => _nativeWindowSettings.Title;
+        set => _nativeWindowSettings.Title = value;
+    }
+
+    public int Width
+    {
+        get => _nativeWindowSettings.Size.X;
+        set => _nativeWindowSettings.Size = new Vector2i(value, _nativeWindowSettings.Size.Y);
+    }
+
+    public int Height
+    {
+        get => _nativeWindowSettings.Size.Y;
+        set => _nativeWindowSettings.Size = new Vector2i(_nativeWindowSettings.Size.X, value);
+    }
     
     public Point Location { get; set; }
-    public Size Size { get; set; }
+    public Size Size 
+    {
+        get => new Size(_nativeWindowSettings.Size.X, _nativeWindowSettings.Size.Y);
+        set => _nativeWindowSettings.Size = new Vector2i(value.Width, value.Height);
+    }
 
     private GameWindow _window;
     
@@ -28,6 +46,12 @@ public abstract class Game: IDisposable
         Time gameTime = new Time();
         
         _window.Load += LoadContent;
+        _window.Load += Initialize;
+        _window.Load += () => GL.ClearColor(Color4.CornflowerBlue);
+        _window.Unload += UnloadResources;
+
+        _window.Resize += (e) => { GL.Viewport(0, 0, e.Width, e.Height); };
+        
         _window.UpdateFrame += e =>
         {
             gameTime.TotalTime += TimeSpan.FromMilliseconds(e.Time);
@@ -40,7 +64,6 @@ public abstract class Game: IDisposable
         _window.RenderFrame += e =>
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.ClearColor(Color4.CornflowerBlue);
             Render(gameTime);
             _window.SwapBuffers();
         };
@@ -51,6 +74,8 @@ public abstract class Game: IDisposable
     {
         
     }
+
+    protected abstract void UnloadResources();
 
     private void UpdateGameObjects(Time gameTime)
     {
