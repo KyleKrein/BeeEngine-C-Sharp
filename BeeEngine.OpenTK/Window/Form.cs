@@ -5,15 +5,15 @@ using OpenTK.Windowing.Desktop;
 
 namespace BeeEngine.OpenTK;
 
-public sealed class Window: GameWindow
+public sealed class Form: GameWindow
 
 {
-    public Window(string title, int width, int height) : base(new GameWindowSettings(),
+    public Form(string title, int width, int height) : base(new GameWindowSettings(),
         new NativeWindowSettings() {Flags = ContextFlags.ForwardCompatible})
     {
         
     }
-    internal Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
+    internal Form(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
     {
     }
 
