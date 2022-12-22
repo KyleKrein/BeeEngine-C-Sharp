@@ -1,15 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
+        <OutputType>WinExe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BeeEngine.Drawing\BeeEngine.Drawing.csproj" />
-      <ProjectReference Include="..\BeeEngine.UI\BeeEngine.UI.csproj" />
+      <ProjectReference Include="..\BeeEngine.OpenTK\BeeEngine.OpenTK.csproj" />
     </ItemGroup>
 
 </Project>

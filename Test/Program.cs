@@ -1,7 +1,8 @@
-﻿using BeeEngine.Drawing;
+﻿/*
+using BeeEngine.Drawing;
 using BeeEngine.UI;
-
 Window window = new Window();
+
 Texture archer = null;
 int x = 0;
 window.Load += (sender, e) =>
@@ -15,4 +16,15 @@ window.Paint += (sender, g) =>
     //w.Invalidate();
 };
 Application.Run(window);
+window.Dispose();
+*/
+
+
+using BeeEngine.OpenTK;
+using Test.Implementations;
+
+TestGame window = new TestGame("Pochemu", 640, 480);
+
+window.Run();
+
 window.Dispose();

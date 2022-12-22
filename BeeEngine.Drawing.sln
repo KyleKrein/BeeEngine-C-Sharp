@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeeEngine.UI", "BeeEngine.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{8DBBDDF8-0FF0-4830-AC1C-A5B815F0919E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDLCS", "SDLCS\SDLCS.csproj", "{A98EAFF7-266D-4074-9D29-8192B3996A7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeeEngine.OpenTK", "BeeEngine.OpenTK\BeeEngine.OpenTK.csproj", "{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{8DBBDDF8-0FF0-4830-AC1C-A5B815F0919E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DBBDDF8-0FF0-4830-AC1C-A5B815F0919E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DBBDDF8-0FF0-4830-AC1C-A5B815F0919E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A98EAFF7-266D-4074-9D29-8192B3996A7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A98EAFF7-266D-4074-9D29-8192B3996A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A98EAFF7-266D-4074-9D29-8192B3996A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A98EAFF7-266D-4074-9D29-8192B3996A7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
