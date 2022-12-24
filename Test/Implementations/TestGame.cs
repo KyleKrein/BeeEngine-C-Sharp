@@ -1,4 +1,5 @@
 using BeeEngine.OpenTK;
+using BeeEngine.OpenTK.Gui;
 using ImGuiNET;
 
 namespace Test.Implementations;
@@ -16,7 +17,7 @@ public class TestGame: Game
 
     protected override void Initialize()
     {
-        
+        PushOverlay(new ImGuiLayer());
     }
 
     protected override void LoadContent()

@@ -1,4 +1,5 @@
 using BeeEngine.Drawing;
+using BeeEngine.OpenTK.Events;
 using BeeEngine.OpenTK.Gui;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -9,7 +10,7 @@ namespace BeeEngine.OpenTK;
 
 public abstract class Game: IDisposable
 {
-    ImGuiController _controller;
+    public static Game Instance { get; private set; }
     public string Title
     {
         get => _nativeWindowSettings.Title;
@@ -41,24 +42,41 @@ public abstract class Game: IDisposable
     private NativeWindowSettings _nativeWindowSettings = NativeWindowSettings.Default;
     public Game(string title, int width, int height)
     {
+        if (Instance != null)
+        {
+            throw new InvalidOperationException("Can't have two instances of the game");
+        }
+
+        Instance = this;
         _layerStack = new LayerStack();
+        _events = new EventQueue(_layerStack);
         _nativeWindowSettings.Flags = ContextFlags.ForwardCompatible;
+        _nativeWindowSettings.Profile = ContextProfile.Core;
         _nativeWindowSettings.Title = title;
         _nativeWindowSettings.Size = new Vector2i(width, height);
         _window = new GameWindow(_gameWindowSettings, _nativeWindowSettings);
         Time gameTime = new Time();
 
-        _window.Load += () => { _controller = new ImGuiController(_window.ClientSize.X, _window.ClientSize.Y); };
+        //_window.Load += () => { _controller = new ImGuiController(_window.ClientSize.X, _window.ClientSize.Y); };
         _window.Load += LoadContent;
         _window.Load += Initialize;
-        _window.Load += () => GL.ClearColor(Color4.CornflowerBlue);
+        _window.Load += () =>
+        {
+            GL.ClearColor(Color4.CornflowerBlue);
+        };
         _window.Unload += UnloadResources;
+        _window.MouseMove += (e) =>
+        {
+            _events.AddEvent(new MouseMovedEvent(e.X, e.Y, e.DeltaX, e.DeltaY));
+        };
 
         _window.Resize += (e) =>
         {
             GL.Viewport(0, 0, e.Width, e.Height); 
+            
+            _events.AddEvent(new WindowResizedEvent(e.Width, e.Height));
             // Tell ImGui of the new size
-            _controller.WindowResized(e.Width, e.Height);
+            //_controller.WindowResized(e.Width, e.Height);
         };
         
         _window.UpdateFrame += e =>
@@ -66,17 +84,19 @@ public abstract class Game: IDisposable
             gameTime.TotalTime += TimeSpan.FromMilliseconds(e.Time);
             gameTime.ElapsedTime = TimeSpan.FromMilliseconds(e.Time);
             InitializeGameObjects(gameTime);
+            _events.Dispatch();
             Update(gameTime);
             UpdateGameObjects(gameTime);
             LateUpdateGameObjects(gameTime);
         };
         _window.RenderFrame += e =>
         {
-            _controller.Update(_window, (float)e.Time);
+            //_controller.Update(_window, (float)e.Time);
             GL.Clear(ClearBufferMask.ColorBufferBit);
+            _layerStack.Update(gameTime);
             Render(gameTime);
-            _controller.Render();
-            ImGuiController.CheckGLError("End of frame");
+            //_controller.Render();
+            //ImGuiController.CheckGLError("End of frame");
             _window.SwapBuffers();
         };
         _window.Run();
@@ -115,7 +135,8 @@ public abstract class Game: IDisposable
     }
     
 
-    private LayerStack _layerStack;
+    private readonly LayerStack _layerStack;
+    private readonly EventQueue _events;
     
     protected abstract void Initialize();
     protected abstract void LoadContent();
@@ -124,8 +145,13 @@ public abstract class Game: IDisposable
 
     public void Dispose()
     {
-        _controller.Dispose();
+        //_controller.Dispose();
         _layerStack.Dispose();
         _window.Dispose();
+    }
+
+    internal GameWindow GetWindow()
+    {
+        return _window;
     }
 }

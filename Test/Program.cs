@@ -23,7 +23,7 @@ window.Dispose();
 using BeeEngine.OpenTK;
 using Test.Implementations;
 
-TestGame window = new TestGame("Pochemu", 640, 480);
+TestGame window = new TestGame("Pochemu", 1280, 720);
 
 window.Run();
 

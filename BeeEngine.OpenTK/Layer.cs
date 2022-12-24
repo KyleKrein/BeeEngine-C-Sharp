@@ -14,16 +14,14 @@ public abstract class Layer: IDisposable
         
     }
 
-    public virtual void OnUpdate()
+    public virtual void OnUpdate(Time gameTime)
     {
         
     }
 
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-        }
+        
     }
 
     public void Dispose()
@@ -32,13 +30,8 @@ public abstract class Layer: IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public virtual void OnEvent(Event e)
+    public virtual void OnEvent(IEvent e)
     {
-        switch (e)
-        {
-            case MouseClick:
-                
-                break;
-        }
+        
     }
 }

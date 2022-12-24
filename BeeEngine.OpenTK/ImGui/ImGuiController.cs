@@ -239,7 +239,7 @@ void main()
         io.MouseDown[2] = MouseState[MouseButton.Middle];
 
         var screenPoint = new Vector2i((int) MouseState.X, (int) MouseState.Y);
-        var point = screenPoint; //wnd.PointToClient(screenPoint);
+        var point = wnd.PointToClient(screenPoint);
         io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
 
         foreach (Keys key in Enum.GetValues(typeof(Keys)))
@@ -367,6 +367,7 @@ void main()
 
         // Setup orthographic projection matrix into our constant buffer
         ImGuiIOPtr io = ImGui.GetIO();
+        
         Matrix4 mvp = Matrix4.CreateOrthographicOffCenter(
             0.0f,
             io.DisplaySize.X,
@@ -374,6 +375,7 @@ void main()
             0.0f,
             -1.0f,
             1.0f);
+            
 
         GL.UseProgram(_shader);
         GL.UniformMatrix4(_shaderProjectionMatrixLocation, false, ref mvp);

@@ -11,6 +11,7 @@ public class W: NativeWindow
         Size = new Vector2i(width, height)
     })
     {
+        ProcessWindowEvents(false);
         IsEventDriven = true;
     }
 }
