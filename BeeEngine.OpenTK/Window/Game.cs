@@ -1,6 +1,5 @@
 using BeeEngine.Drawing;
 using BeeEngine.OpenTK.Gui;
-using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -42,6 +41,7 @@ public abstract class Game: IDisposable
     private NativeWindowSettings _nativeWindowSettings = NativeWindowSettings.Default;
     public Game(string title, int width, int height)
     {
+        _layerStack = new LayerStack();
         _nativeWindowSettings.Flags = ContextFlags.ForwardCompatible;
         _nativeWindowSettings.Title = title;
         _nativeWindowSettings.Size = new Vector2i(width, height);
@@ -103,6 +103,19 @@ public abstract class Game: IDisposable
     {
         
     }
+
+    public void PushLayer(Layer layer)
+    {
+        _layerStack.PushLayer(layer);
+    }
+
+    public void PushOverlay(Layer overlay)
+    {
+        _layerStack.PushOverlay(overlay);
+    }
+    
+
+    private LayerStack _layerStack;
     
     protected abstract void Initialize();
     protected abstract void LoadContent();
@@ -112,6 +125,7 @@ public abstract class Game: IDisposable
     public void Dispose()
     {
         _controller.Dispose();
+        _layerStack.Dispose();
         _window.Dispose();
     }
 }
