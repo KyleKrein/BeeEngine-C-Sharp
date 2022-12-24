@@ -363,5 +363,5 @@ public enum Key
     LastKey = 348, // 0x0000015C
 
     /// <summary>The menu key.</summary>
-    Menu = 348, // 0x0000015C
+    //Menu = 348, // 0x0000015C
 }

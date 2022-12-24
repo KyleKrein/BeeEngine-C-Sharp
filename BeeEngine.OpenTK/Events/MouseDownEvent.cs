@@ -1,12 +1,12 @@
 namespace BeeEngine.OpenTK.Events;
 
-public readonly struct MouseDownEvent: IEvent
+public class MouseDownEvent: Event
 {
     public readonly MouseButton Button;
-    public readonly int X;
-    public readonly int Y;
+    public readonly float X;
+    public readonly float Y;
 
-    public MouseDownEvent(MouseButton button, int x, int y)
+    public MouseDownEvent(MouseButton button, float x, float y)
     {
         Button = button;
         X = x;
@@ -15,6 +15,4 @@ public readonly struct MouseDownEvent: IEvent
                    EventCategory.Input |
                    EventCategory.MouseButton;
     }
-
-    public EventCategory Category { get; init; }
 }

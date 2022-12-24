@@ -1,13 +1,14 @@
 namespace BeeEngine.OpenTK.Events;
 
-public readonly struct MouseScrolledEvent: IEvent
+public class MouseScrolledEvent: Event
 {
-    public EventCategory Category { get; init; }
-    public readonly int Delta;
+    public readonly float DeltaX;
+    public readonly float DeltaY;
 
-    public MouseScrolledEvent(int delta)
+    public MouseScrolledEvent(float deltaX, float deltaY)
     {
-        Delta = delta;
+        DeltaY = deltaY;
+        DeltaX = deltaX;
         Category = EventCategory.Input |
                    EventCategory.Mouse;
     }

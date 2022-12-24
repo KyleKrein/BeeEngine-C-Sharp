@@ -239,7 +239,7 @@ void main()
         io.MouseDown[2] = MouseState[MouseButton.Middle];
 
         var screenPoint = new Vector2i((int) MouseState.X, (int) MouseState.Y);
-        var point = wnd.PointToClient(screenPoint);
+        var point = wnd.MouseState.Position;//wnd.PointToClient(screenPoint);
         io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
 
         foreach (Keys key in Enum.GetValues(typeof(Keys)))

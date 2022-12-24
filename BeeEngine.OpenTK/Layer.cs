@@ -30,7 +30,7 @@ public abstract class Layer: IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public virtual void OnEvent(IEvent e)
+    public virtual void OnEvent(EventDispatcher e)
     {
         
     }

@@ -5,6 +5,8 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using MouseButton = BeeEngine.OpenTK.Events.MouseButton;
 
 namespace BeeEngine.OpenTK;
 
@@ -58,27 +60,44 @@ public abstract class Game: IDisposable
         Time gameTime = new Time();
 
         //_window.Load += () => { _controller = new ImGuiController(_window.ClientSize.X, _window.ClientSize.Y); };
+        
+        
+        SetupEventsQueue();
+
+        SubscribeToGameloopEvents(gameTime);
+        _window.Run();
+    }
+
+    private void SetupEventsQueue()
+    {
+        _window.MouseMove += (e) => { _events.AddEvent(new MouseMovedEvent(e.X, e.Y, e.DeltaX, e.DeltaY)); };
+
+        _window.Resize += (e) =>
+        {
+            GL.Viewport(0, 0, e.Width, e.Height);
+
+            _events.AddEvent(new WindowResizedEvent(e.Width, e.Height));
+            // Tell ImGui of the new size
+            //_controller.WindowResized(e.Width, e.Height);
+        };
+        _window.MouseDown += (e) => _events.AddEvent(new MouseDownEvent((MouseButton) (int) e.Button,
+            _window.MouseState.Position.X, _window.MouseState.Position.Y));
+        _window.MouseUp += (e) => _events.AddEvent(new MouseUpEvent((MouseButton) (int) e.Button,
+            _window.MouseState.Position.X, _window.MouseState.Position.Y));
+        _window.MouseWheel += (e) => _events.AddEvent(new MouseScrolledEvent(e.OffsetX, e.OffsetY));
+        _window.KeyDown += (e) => _events.AddEvent(new KeyDownEvent((Key) (int) e.Key));
+        _window.KeyUp += (e) => _events.AddEvent(new KeyDownEvent((Key) (int) e.Key));
+    }
+
+    private void SubscribeToGameloopEvents(Time gameTime)
+    {
         _window.Load += LoadContent;
-        _window.Load += Initialize;
         _window.Load += () =>
         {
             GL.ClearColor(Color4.CornflowerBlue);
         };
         _window.Unload += UnloadResources;
-        _window.MouseMove += (e) =>
-        {
-            _events.AddEvent(new MouseMovedEvent(e.X, e.Y, e.DeltaX, e.DeltaY));
-        };
-
-        _window.Resize += (e) =>
-        {
-            GL.Viewport(0, 0, e.Width, e.Height); 
-            
-            _events.AddEvent(new WindowResizedEvent(e.Width, e.Height));
-            // Tell ImGui of the new size
-            //_controller.WindowResized(e.Width, e.Height);
-        };
-        
+        _window.Load += Initialize;
         _window.UpdateFrame += e =>
         {
             gameTime.TotalTime += TimeSpan.FromMilliseconds(e.Time);
@@ -99,8 +118,8 @@ public abstract class Game: IDisposable
             //ImGuiController.CheckGLError("End of frame");
             _window.SwapBuffers();
         };
-        _window.Run();
     }
+
 
     public void Run()
     {

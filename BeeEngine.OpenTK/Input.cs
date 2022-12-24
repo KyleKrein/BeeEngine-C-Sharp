@@ -11,7 +11,8 @@ public static class Input
     private static readonly Dictionary<MouseButton, bool> _mouseButtons;
     public static Point MousePosition { get; private set; }
     public static PointF MouseMovedDelta { get; private set; }
-    public static float MouseDelta { get; private set; }
+    public static float MouseDeltaX { get; private set; }
+    public static float MouseDeltaY { get; private set; }
 
     static Input()
     {
@@ -19,7 +20,8 @@ public static class Input
         _mouseButtons = new Dictionary<MouseButton, bool>();
         MousePosition = default;
         MouseMovedDelta = default;
-        MouseDelta = default;
+        MouseDeltaX = default;
+        MouseDeltaY = default;
         foreach (var k in Enum.GetValues<Key>())
         {
             _keys.Add(k, false);
@@ -39,7 +41,7 @@ public static class Input
         return _mouseButtons[m];
     }
 
-    internal static void OnEvent(IEvent @event)
+    internal static void OnEvent(Event @event)
     {
         if (@event.Category != EventCategory.Input)
         {
@@ -85,7 +87,8 @@ public static class Input
     }
     private static void OnMouseScrolled(MouseScrolledEvent e)
     {
-        MouseDelta = e.Delta;
+        MouseDeltaX = e.DeltaX;
+        MouseDeltaY = e.DeltaY;
     }
     private static void OnKeyPressed(KeyDownEvent e)
     {

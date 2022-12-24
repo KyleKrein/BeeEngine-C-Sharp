@@ -2,17 +2,17 @@ namespace BeeEngine.OpenTK.Events;
 
 internal sealed class EventQueue
 {
-    private readonly Queue<IEvent> _events;
+    private readonly Queue<Event> _events;
     private readonly LayerStack _layerStack;
     private readonly object locker = new object();
 
     public EventQueue(LayerStack layerStack)
     {
-        _events = new Queue<IEvent>();
+        _events = new Queue<Event>();
         _layerStack = layerStack;
     }
 
-    public void AddEvent(IEvent e)
+    public void AddEvent(Event e)
     {
         lock (locker)
         {

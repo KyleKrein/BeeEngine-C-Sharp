@@ -1,6 +1,6 @@
 namespace BeeEngine.OpenTK.Events;
 
-public readonly struct MouseMovedEvent: IEvent
+public class MouseMovedEvent: Event
 {
     public readonly float X;
     public readonly float Y;
@@ -15,6 +15,4 @@ public readonly struct MouseMovedEvent: IEvent
         DeltaY = deltaY;
         Category = EventCategory.Input | EventCategory.Mouse;
     }
-
-    public EventCategory Category { get; init; }
 }

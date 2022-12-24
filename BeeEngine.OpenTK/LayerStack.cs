@@ -44,11 +44,16 @@ internal class LayerStack: IDisposable
         }
     }
 
-    public void OnEvent(IEvent e)
+    public void OnEvent(Event e)
     {
+        EventDispatcher dispatcher = new EventDispatcher(e);
         foreach (var layer in _layers.AsEnumerable().Reverse())
         {
-            layer.OnEvent(e);
+            layer.OnEvent(dispatcher);
+            if (e.IsHandled)
+            {
+                break;
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 namespace BeeEngine.OpenTK.Events;
 
-public readonly struct WindowResizedEvent: IEvent
+public class WindowResizedEvent: Event
 {
     public readonly int Width;
     public readonly int Height;
@@ -11,6 +11,4 @@ public readonly struct WindowResizedEvent: IEvent
         Height = height;
         Category = EventCategory.Application;
     }
-
-    public EventCategory Category { get; init; }
 }
