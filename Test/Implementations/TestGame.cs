@@ -1,4 +1,5 @@
 using BeeEngine.OpenTK;
+using ImGuiNET;
 
 namespace Test.Implementations;
 
@@ -30,6 +31,6 @@ public class TestGame: Game
 
     protected override void Render(Time gameTime)
     {
-        
+        ImGui.ShowDemoWindow();
     }
 }

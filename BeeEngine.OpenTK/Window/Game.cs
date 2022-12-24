@@ -1,4 +1,6 @@
 using BeeEngine.Drawing;
+using BeeEngine.OpenTK.Gui;
+using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -8,6 +10,7 @@ namespace BeeEngine.OpenTK;
 
 public abstract class Game: IDisposable
 {
+    ImGuiController _controller;
     public string Title
     {
         get => _nativeWindowSettings.Title;
@@ -44,13 +47,19 @@ public abstract class Game: IDisposable
         _nativeWindowSettings.Size = new Vector2i(width, height);
         _window = new GameWindow(_gameWindowSettings, _nativeWindowSettings);
         Time gameTime = new Time();
-        
+
+        _window.Load += () => { _controller = new ImGuiController(_window.ClientSize.X, _window.ClientSize.Y); };
         _window.Load += LoadContent;
         _window.Load += Initialize;
         _window.Load += () => GL.ClearColor(Color4.CornflowerBlue);
         _window.Unload += UnloadResources;
 
-        _window.Resize += (e) => { GL.Viewport(0, 0, e.Width, e.Height); };
+        _window.Resize += (e) =>
+        {
+            GL.Viewport(0, 0, e.Width, e.Height); 
+            // Tell ImGui of the new size
+            _controller.WindowResized(e.Width, e.Height);
+        };
         
         _window.UpdateFrame += e =>
         {
@@ -63,13 +72,16 @@ public abstract class Game: IDisposable
         };
         _window.RenderFrame += e =>
         {
+            _controller.Update(_window, (float)e.Time);
             GL.Clear(ClearBufferMask.ColorBufferBit);
             Render(gameTime);
+            _controller.Render();
+            ImGuiController.CheckGLError("End of frame");
             _window.SwapBuffers();
         };
         _window.Run();
     }
-    
+
     public void Run()
     {
         
@@ -99,6 +111,7 @@ public abstract class Game: IDisposable
 
     public void Dispose()
     {
+        _controller.Dispose();
         _window.Dispose();
     }
 }
