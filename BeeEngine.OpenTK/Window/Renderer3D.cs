@@ -1,3 +1,5 @@
+using System.Drawing;
+using BeeEngine.Mathematics;
 using OpenTK.Graphics.OpenGL4;
 
 namespace BeeEngine.OpenTK;

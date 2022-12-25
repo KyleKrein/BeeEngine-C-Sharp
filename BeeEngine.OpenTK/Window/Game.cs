@@ -89,6 +89,7 @@ public abstract class Game: IDisposable
         _window.KeyDown += (e) => _events.AddEvent(new KeyDownEvent((Key) (int) e.Key));
         _window.KeyUp += (e) => _events.AddEvent(new KeyUpEvent((Key) (int) e.Key));
         _window.TextInput += (e) => _events.AddEvent(new KeyTypedEvent(e.Unicode));
+        //_window.Move
         /*unsafe
         {
             GLFW.SetScrollCallback(_window.WindowPtr, (window, x, y) =>

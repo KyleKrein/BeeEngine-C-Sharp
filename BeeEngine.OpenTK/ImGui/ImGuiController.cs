@@ -51,8 +51,20 @@ public class ImGuiController : IDisposable
         ImGui.SetCurrentContext(context);
         var io = ImGui.GetIO();
         io.Fonts.AddFontDefault();
-
-        io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
+        ImGui.StyleColorsDark();
+        io.BackendFlags |= ImGuiBackendFlags.HasMouseCursors
+                           | ImGuiBackendFlags.HasSetMousePos
+                           | ImGuiBackendFlags.RendererHasVtxOffset;
+        io.ConfigFlags = ImGuiConfigFlags.DockingEnable |
+                         ImGuiConfigFlags.ViewportsEnable |
+                         ImGuiConfigFlags.DpiEnableScaleViewports |
+                         ImGuiConfigFlags.DpiEnableScaleFonts;
+        var style = ImGui.GetStyle();
+        if ((io.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) != 0)
+        {
+            style.WindowRounding = 0.0f;
+            style.Colors[(int) ImGuiCol.WindowBg].W = 1.0f;
+        }
 
         CreateDeviceResources();
         SetKeyMappings();
@@ -186,28 +198,20 @@ void main()
     /// </summary>
     public void Render()
     {
-        if (_frameBegun)
-        {
-            _frameBegun = false;
-            ImGui.Render();
-            RenderImDrawData(ImGui.GetDrawData());
-        }
+        _frameBegun = false;
+        ImGui.Render();
+        RenderImDrawData(ImGui.GetDrawData());
     }
-
+    Vector2 _mouseScroll = Vector2.Zero;
     /// <summary>
     /// Updates ImGui input and IO configuration state.
     /// </summary>
     public void Update(GameWindow wnd, float deltaSeconds)
     {
-        if (_frameBegun)
-        {
-            ImGui.Render();
-        }
-
+        Render();
         SetPerFrameImGuiData(deltaSeconds);
         UpdateImGuiInput(wnd);
-
-        _frameBegun = true;
+        //MouseScroll(_mouseScroll);
         ImGui.NewFrame();
     }
 
@@ -239,9 +243,11 @@ void main()
         io.MouseDown[2] = MouseState[MouseButton.Middle];
 
         var screenPoint = new Vector2i((int) MouseState.X, (int) MouseState.Y);
-        var point = wnd.MouseState.Position;//wnd.PointToClient(screenPoint);
+        var point = wnd.MouseState.Position; //wnd.PointToClient(screenPoint);
         io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
-
+        io.MouseWheel = _mouseScroll.Y;
+        io.MouseWheelH = _mouseScroll.X;
+        _mouseScroll = Vector2.Zero;
         foreach (Keys key in Enum.GetValues(typeof(Keys)))
         {
             if (key == Keys.Unknown)
@@ -272,10 +278,11 @@ void main()
 
     internal void MouseScroll(Vector2 offset)
     {
-        ImGuiIOPtr io = ImGui.GetIO();
+        _mouseScroll = offset;
+        /*ImGuiIOPtr io = ImGui.GetIO();
 
         io.MouseWheel = offset.Y;
-        io.MouseWheelH = offset.X;
+        io.MouseWheelH = offset.X;*/
     }
 
     private static void SetKeyMappings()
@@ -367,7 +374,7 @@ void main()
 
         // Setup orthographic projection matrix into our constant buffer
         ImGuiIOPtr io = ImGui.GetIO();
-        
+
         Matrix4 mvp = Matrix4.CreateOrthographicOffCenter(
             0.0f,
             io.DisplaySize.X,
@@ -375,7 +382,7 @@ void main()
             0.0f,
             -1.0f,
             1.0f);
-            
+
 
         GL.UseProgram(_shader);
         GL.UniformMatrix4(_shaderProjectionMatrixLocation, false, ref mvp);
