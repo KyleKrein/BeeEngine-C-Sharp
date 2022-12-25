@@ -54,6 +54,8 @@ public abstract class Game: IDisposable
         _events = new EventQueue(_layerStack);
         _nativeWindowSettings.Flags = ContextFlags.ForwardCompatible;
         _nativeWindowSettings.Profile = ContextProfile.Core;
+        _nativeWindowSettings.API = ContextAPI.OpenGL;
+        _nativeWindowSettings.AutoLoadBindings = true;
         _nativeWindowSettings.Title = title;
         _nativeWindowSettings.Size = new Vector2i(width, height);
         _window = new GameWindow(_gameWindowSettings, _nativeWindowSettings);
@@ -74,9 +76,11 @@ public abstract class Game: IDisposable
 
         _window.Resize += (e) =>
         {
-            GL.Viewport(0, 0, e.Width, e.Height);
+            //GL.Viewport(0, 0, e.Width, e.Height);
 
             _events.AddEvent(new WindowResizedEvent(e.Width, e.Height));
+            
+            GL.Viewport(0,0,e.Width, e.Height);
         };
         _window.MouseDown += (e) => _events.AddEvent(new MouseDownEvent((MouseButton) (int) e.Button,
             _window.MouseState.Position.X, _window.MouseState.Position.Y));

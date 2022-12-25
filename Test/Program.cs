@@ -21,8 +21,10 @@ window.Dispose();
 
 
 using BeeEngine.OpenTK;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using Test.Implementations;
 
+GLFW.WindowHint(WindowHintBool.OpenGLForwardCompat, true);
 TestGame window = new TestGame("Pochemu", 1280, 720);
 
 window.Run();
