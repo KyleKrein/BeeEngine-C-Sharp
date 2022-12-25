@@ -65,6 +65,19 @@ public class ImGuiController : IDisposable
             style.WindowRounding = 0.0f;
             style.Colors[(int) ImGuiCol.WindowBg].W = 1.0f;
         }
+        System.Numerics.Vector2 Dpi;
+        unsafe
+        {
+            float xscale = 0;
+            float yscale = 0;
+            float* xScale = &xscale;
+            float* yScale = &xscale;
+            GLFW.GetMonitorContentScaleRaw(GLFW.GetPrimaryMonitor(), xScale, yScale);
+            Console.WriteLine($"x: {*xScale}    y: {*yScale}");
+            Dpi = new System.Numerics.Vector2(*xScale, *yScale);
+            io.DisplayFramebufferScale = Dpi;
+        }
+        ImGui.GetStyle().ScaleAllSizes(Dpi.X);
 
         CreateDeviceResources();
         SetKeyMappings();
@@ -74,7 +87,7 @@ public class ImGuiController : IDisposable
         ImGui.NewFrame();
         _frameBegun = true;
     }
-
+    
     public void WindowResized(int width, int height)
     {
         _windowWidth = width;
