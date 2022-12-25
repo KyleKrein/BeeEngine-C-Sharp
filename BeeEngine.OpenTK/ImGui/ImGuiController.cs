@@ -11,6 +11,8 @@ namespace BeeEngine.OpenTK.Gui;
 
 public class ImGuiController : IDisposable
 {
+    private PlatformID os;
+    private int _OsScale = 1;
     private bool _frameBegun;
 
     private int _vertexArray;
@@ -39,9 +41,14 @@ public class ImGuiController : IDisposable
     /// </summary>
     public ImGuiController(int width, int height)
     {
+        os = Environment.OSVersion.Platform;
+        Console.WriteLine(os);
+        if (os == PlatformID.Unix)
+        {
+            _OsScale = 2;
+        }
         _windowWidth = width;
         _windowHeight = height;
-
         int major = GL.GetInteger(GetPName.MajorVersion);
         int minor = GL.GetInteger(GetPName.MinorVersion);
 
@@ -50,11 +57,12 @@ public class ImGuiController : IDisposable
         IntPtr context = ImGui.CreateContext();
         ImGui.SetCurrentContext(context);
         var io = ImGui.GetIO();
+        
         io.Fonts.AddFontDefault();
         ImGui.StyleColorsDark();
         io.BackendFlags |= ImGuiBackendFlags.HasMouseCursors
-                           | ImGuiBackendFlags.HasSetMousePos
-                           | ImGuiBackendFlags.RendererHasVtxOffset;
+                           | ImGuiBackendFlags.HasSetMousePos;
+                           //| ImGuiBackendFlags.RendererHasVtxOffset;
         io.ConfigFlags = ImGuiConfigFlags.DockingEnable |
                          ImGuiConfigFlags.ViewportsEnable |
                          ImGuiConfigFlags.DpiEnableScaleViewports |
@@ -72,10 +80,14 @@ public class ImGuiController : IDisposable
             float yscale = 0;
             float* xScale = &xscale;
             float* yScale = &xscale;
+            
             GLFW.GetMonitorContentScaleRaw(GLFW.GetPrimaryMonitor(), xScale, yScale);
             Console.WriteLine($"x: {*xScale}    y: {*yScale}");
             Dpi = new System.Numerics.Vector2(*xScale, *yScale);
-            io.DisplayFramebufferScale = Dpi;
+            _scaleFactor = Dpi;
+            //GLFW.WindowHint(WindowHintbool, "why");
+            //GLFW.GetWindowSize(Game.Instance.GetWindow().WindowPtr,out _windowWidth, out _windowHeight);
+            //GL.Viewport(0,0,_windowWidth, _windowHeight);
         }
         ImGui.GetStyle().ScaleAllSizes(Dpi.X);
 
@@ -88,10 +100,14 @@ public class ImGuiController : IDisposable
         _frameBegun = true;
     }
     
-    public void WindowResized(int width, int height)
+    public unsafe void WindowResized(int width, int height)
     {
         _windowWidth = width;
         _windowHeight = height;
+        //GLFW.GetWindowSize(Game.Instance.GetWindow().WindowPtr,out _windowWidth, out _windowHeight);
+        _windowWidth *= _OsScale;
+        _windowHeight *= _OsScale;
+        GL.Viewport(0,0, _windowWidth, _windowHeight);
     }
 
     public void DestroyDeviceObjects()
@@ -256,7 +272,7 @@ void main()
         io.MouseDown[2] = MouseState[MouseButton.Middle];
 
         var screenPoint = new Vector2i((int) MouseState.X, (int) MouseState.Y);
-        var point = wnd.MouseState.Position; //wnd.PointToClient(screenPoint);
+        var point = screenPoint; //wnd.PointToClient(screenPoint);
         io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
         io.MouseWheel = _mouseScroll.Y;
         io.MouseWheelH = _mouseScroll.X;
@@ -384,10 +400,10 @@ void main()
                 Console.WriteLine($"Resized dear imgui index buffer to new size {_indexBufferSize}");
             }
         }
-
+        
         // Setup orthographic projection matrix into our constant buffer
         ImGuiIOPtr io = ImGui.GetIO();
-
+        
         Matrix4 mvp = Matrix4.CreateOrthographicOffCenter(
             0.0f,
             io.DisplaySize.X,
@@ -405,7 +421,7 @@ void main()
         GL.BindVertexArray(_vertexArray);
         CheckGLError("VAO");
 
-        draw_data.ScaleClipRects(io.DisplayFramebufferScale);
+        
 
         GL.Enable(EnableCap.Blend);
         GL.Enable(EnableCap.ScissorTest);
@@ -426,7 +442,7 @@ void main()
             GL.BufferSubData(BufferTarget.ElementArrayBuffer, IntPtr.Zero, cmd_list.IdxBuffer.Size * sizeof(ushort),
                 cmd_list.IdxBuffer.Data);
             CheckGLError($"Data Idx {n}");
-
+            
             for (int cmd_i = 0; cmd_i < cmd_list.CmdBuffer.Size; cmd_i++)
             {
                 ImDrawCmdPtr pcmd = cmd_list.CmdBuffer[cmd_i];
@@ -434,34 +450,33 @@ void main()
                 {
                     throw new NotImplementedException();
                 }
+
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2D, (int) pcmd.TextureId);
+                CheckGLError("Texture");
+
+                // We do _windowHeight - (int)clip.W instead of (int)clip.Y because gl has flipped Y when it comes to these coordinates
+                var clip = pcmd.ClipRect;
+                GL.Scissor((int) clip.X, _windowHeight - (int) clip.W, (int) (clip.Z - clip.X),
+                    (int) (clip.W - clip.Y));
+                CheckGLError("Scissor");
+                
+                if ((io.BackendFlags & ImGuiBackendFlags.RendererHasVtxOffset) != 0)
+                {
+                    GL.DrawElementsBaseVertex(PrimitiveType.Triangles, (int) pcmd.ElemCount,
+                        DrawElementsType.UnsignedShort, (IntPtr) (pcmd.IdxOffset * sizeof(ushort)),
+                        unchecked((int) pcmd.VtxOffset));
+                }
                 else
                 {
-                    GL.ActiveTexture(TextureUnit.Texture0);
-                    GL.BindTexture(TextureTarget.Texture2D, (int) pcmd.TextureId);
-                    CheckGLError("Texture");
-
-                    // We do _windowHeight - (int)clip.W instead of (int)clip.Y because gl has flipped Y when it comes to these coordinates
-                    var clip = pcmd.ClipRect;
-                    GL.Scissor((int) clip.X, _windowHeight - (int) clip.W, (int) (clip.Z - clip.X),
-                        (int) (clip.W - clip.Y));
-                    CheckGLError("Scissor");
-
-                    if ((io.BackendFlags & ImGuiBackendFlags.RendererHasVtxOffset) != 0)
-                    {
-                        GL.DrawElementsBaseVertex(PrimitiveType.Triangles, (int) pcmd.ElemCount,
-                            DrawElementsType.UnsignedShort, (IntPtr) (pcmd.IdxOffset * sizeof(ushort)),
-                            unchecked((int) pcmd.VtxOffset));
-                    }
-                    else
-                    {
-                        GL.DrawElements(BeginMode.Triangles, (int) pcmd.ElemCount, DrawElementsType.UnsignedShort,
-                            (int) pcmd.IdxOffset * sizeof(ushort));
-                    }
-
-                    CheckGLError("Draw");
+                    GL.DrawElements(BeginMode.Triangles, (int) pcmd.ElemCount, DrawElementsType.UnsignedShort,
+                        (int) pcmd.IdxOffset * sizeof(ushort));
                 }
+
+                CheckGLError("Draw");
             }
         }
+        draw_data.ScaleClipRects(io.DisplayFramebufferScale);
 
         GL.Disable(EnableCap.Blend);
         GL.Disable(EnableCap.ScissorTest);
