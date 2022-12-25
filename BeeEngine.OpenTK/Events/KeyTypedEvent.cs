@@ -4,11 +4,13 @@ namespace BeeEngine.OpenTK.Events;
 
 public class KeyTypedEvent: Event
 {
-    public readonly Keys Key;
+    public readonly int Key;
+    public readonly char KeyChar;
 
-    public KeyTypedEvent(Keys key)
+    public KeyTypedEvent(int key)
     {
         Key = key;
+        KeyChar = (char) key;
         Category = EventCategory.Input | EventCategory.Keyboard;
     }
 }

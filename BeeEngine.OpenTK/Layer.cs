@@ -2,7 +2,7 @@ using BeeEngine.OpenTK.Events;
 
 namespace BeeEngine.OpenTK;
 
-public abstract class Layer: IDisposable
+public abstract class Layer
 {
     public virtual void OnAttach()
     {
@@ -14,20 +14,9 @@ public abstract class Layer: IDisposable
         
     }
 
-    public virtual void OnUpdate(Time gameTime)
+    public virtual void OnUpdate()
     {
         
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
     }
 
     public virtual void OnEvent(EventDispatcher e)

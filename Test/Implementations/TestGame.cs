@@ -25,12 +25,12 @@ public class TestGame: Game
         
     }
 
-    protected override void Update(Time gameTime)
+    protected override void Update()
     {
         
     }
 
-    protected override void Render(Time gameTime)
+    protected override void Render()
     {
         ImGui.ShowDemoWindow();
     }

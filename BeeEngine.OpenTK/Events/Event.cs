@@ -37,12 +37,12 @@ public readonly ref struct EventDispatcher
         _shouldBeHandled = !NonHandleableTypes.Contains(_type);
     }
 
-    public bool Dispatch<T>(Action<T> func) where T : Event
+    public bool Dispatch<T>(Func<T, bool> func) where T : Event
     {
         if (typeof(T) != _type)
             return false;
-        func.Invoke((T)_event);
-        if (_shouldBeHandled)
+        bool handled = func.Invoke((T)_event);
+        if (handled && _shouldBeHandled)
             _event.IsHandled = true;
         return true;
     }

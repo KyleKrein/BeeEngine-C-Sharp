@@ -30,9 +30,9 @@ internal abstract class Window: IDisposable
     protected abstract void Initialize();
     protected abstract void LoadContent();
     protected abstract void UnloadContent();
-    protected abstract void Update(Time gameTime);
+    protected abstract void Update();
     protected abstract void FixedUpdate();
-    protected abstract void Render(Time gameTime);
+    protected abstract void Render();
 
     internal abstract void ReleaseUnmanagedResources();
 

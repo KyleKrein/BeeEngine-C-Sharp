@@ -40,7 +40,7 @@ internal class LayerStack: IDisposable
     {
         foreach (var layer in _layers)
         {
-            layer.Dispose();
+            layer.OnDetach();
         }
     }
 
@@ -57,11 +57,11 @@ internal class LayerStack: IDisposable
         }
     }
 
-    public void Update(Time gameTime)
+    public void Update()
     {
         foreach (var layer in _layers)
         {
-            layer.OnUpdate(gameTime);
+            layer.OnUpdate();
         }
     }
     public void Dispose()

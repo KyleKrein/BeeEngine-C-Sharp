@@ -53,18 +53,13 @@ public class ImGuiLayer : Layer
                            | ImGuiBackendFlags.RendererHasVtxOffset;
         CreateDeviceResources();
         SetKeyMappings();
-
-        SetPerFrameImGuiData(1f / 60f);
+        io.ConfigFlags = ImGuiConfigFlags.DpiEnableScaleFonts | ImGuiConfigFlags.DpiEnableScaleViewports;
+        SetPerFrameImGuiData();
         ImGui.NewFrame();
-        _frameBegun = true;
+        //_frameBegun = true;
     }
 
     public override void OnDetach()
-    {
-        Dispose();
-    }
-
-    protected override void Dispose(bool disposing)
     {
         GL.DeleteVertexArray(_vertexArray);
         GL.DeleteBuffer(_vertexBuffer);
@@ -76,18 +71,80 @@ public class ImGuiLayer : Layer
 
     public override void OnEvent(EventDispatcher dispatcher)
     {
+        dispatcher.Dispatch<MouseDownEvent>(OnMousePressed);
+        dispatcher.Dispatch<MouseUpEvent>(OnMouseReleased);
+        dispatcher.Dispatch<MouseMovedEvent>(OnMouseMoved);
+        dispatcher.Dispatch<MouseScrolledEvent>(OnMouseScrolled);
+        dispatcher.Dispatch<KeyDownEvent>(OnKeyPressed);
+        dispatcher.Dispatch<KeyUpEvent>(OnKeyReleased);
+        dispatcher.Dispatch<KeyTypedEvent>(OnKeyTyped);
         dispatcher.Dispatch<WindowResizedEvent>(OnWindowResized);
     }
-    
-    private void OnWindowResized(WindowResizedEvent e)
+
+    private Vector2 _mouseWheelOffset = Vector2.Zero;
+    private bool OnWindowResized(WindowResizedEvent e)
     {
         _windowWidth = e.Width;
         _windowHeight = e.Height;
+        return false;
     }
 
-    public override void OnUpdate(Time gameTime)
+    private bool OnMousePressed(MouseDownEvent e)
     {
-        Update(_window, gameTime.ElapsedTime.Seconds);
+        var io = ImGui.GetIO();
+        io.MouseDown[(int) e.Button] = true;
+        return false;
+    }
+    private bool OnMouseReleased(MouseUpEvent e)
+    {
+        var io = ImGui.GetIO();
+        io.MouseDown[(int) e.Button] = false;
+        return false;
+    }
+    private bool OnMouseMoved(MouseMovedEvent e)
+    {
+        var io = ImGui.GetIO();
+        io.MousePos = new System.Numerics.Vector2(e.X, e.Y);
+        return false;
+    }
+    private bool OnMouseScrolled(MouseScrolledEvent e)
+    {
+        /*var io = ImGui.GetIO();
+        io.MouseWheel = e.Offset;
+        io.MouseWheelH = e.OffsetHorizontal;*/
+        _mouseWheelOffset = new Vector2(e.OffsetHorizontal, e.Offset);
+        return false;
+    }
+    private bool OnKeyPressed(KeyDownEvent e)
+    {
+        var io = ImGui.GetIO();
+        io.KeysDown[(int) e.Key] = true;
+        io.KeyCtrl = io.KeysDown[(int) Key.LeftControl] || io.KeysDown[(int)Key.RightControl];
+        io.KeyAlt = io.KeysDown[(int) Key.LeftAlt] || io.KeysDown[(int)Key.RightAlt];
+        io.KeyShift = io.KeysDown[(int) Key.LeftShift] || io.KeysDown[(int)Key.RightShift];
+        io.KeySuper = io.KeysDown[(int) Key.LeftSuper] || io.KeysDown[(int) Key.RightSuper];
+        return false;
+    }
+    private bool OnKeyReleased(KeyUpEvent e)
+    {
+        var io = ImGui.GetIO();
+        io.KeysDown[(int) e.Key] = false;
+        return false;
+    }
+    private bool OnKeyTyped(KeyTypedEvent e)
+    {
+        PressedChars.Add(e.KeyChar);
+        return false;
+    }
+    public override void OnUpdate()
+    {
+        ImGui.Render();
+        RenderImDrawData(ImGui.GetDrawData());
+
+        SetPerFrameImGuiData();
+        HandleInput();
+        
+        ImGui.NewFrame();
     }
 
     private void CreateDeviceResources()
@@ -159,25 +216,25 @@ void main()
     private static void SetKeyMappings()
     {
         ImGuiIOPtr io = ImGui.GetIO();
-        io.KeyMap[(int) ImGuiKey.Tab] = (int) Keys.Tab;
-        io.KeyMap[(int) ImGuiKey.LeftArrow] = (int) Keys.Left;
-        io.KeyMap[(int) ImGuiKey.RightArrow] = (int) Keys.Right;
-        io.KeyMap[(int) ImGuiKey.UpArrow] = (int) Keys.Up;
-        io.KeyMap[(int) ImGuiKey.DownArrow] = (int) Keys.Down;
-        io.KeyMap[(int) ImGuiKey.PageUp] = (int) Keys.PageUp;
-        io.KeyMap[(int) ImGuiKey.PageDown] = (int) Keys.PageDown;
-        io.KeyMap[(int) ImGuiKey.Home] = (int) Keys.Home;
-        io.KeyMap[(int) ImGuiKey.End] = (int) Keys.End;
-        io.KeyMap[(int) ImGuiKey.Delete] = (int) Keys.Delete;
-        io.KeyMap[(int) ImGuiKey.Backspace] = (int) Keys.Backspace;
-        io.KeyMap[(int) ImGuiKey.Enter] = (int) Keys.Enter;
-        io.KeyMap[(int) ImGuiKey.Escape] = (int) Keys.Escape;
-        io.KeyMap[(int) ImGuiKey.A] = (int) Keys.A;
-        io.KeyMap[(int) ImGuiKey.C] = (int) Keys.C;
-        io.KeyMap[(int) ImGuiKey.V] = (int) Keys.V;
-        io.KeyMap[(int) ImGuiKey.X] = (int) Keys.X;
-        io.KeyMap[(int) ImGuiKey.Y] = (int) Keys.Y;
-        io.KeyMap[(int) ImGuiKey.Z] = (int) Keys.Z;
+        io.KeyMap[(int) ImGuiKey.Tab] = (int) Key.Tab;
+        io.KeyMap[(int) ImGuiKey.LeftArrow] = (int) Key.Left;
+        io.KeyMap[(int) ImGuiKey.RightArrow] = (int) Key.Right;
+        io.KeyMap[(int) ImGuiKey.UpArrow] = (int) Key.Up;
+        io.KeyMap[(int) ImGuiKey.DownArrow] = (int) Key.Down;
+        io.KeyMap[(int) ImGuiKey.PageUp] = (int) Key.PageUp;
+        io.KeyMap[(int) ImGuiKey.PageDown] = (int) Key.PageDown;
+        io.KeyMap[(int) ImGuiKey.Home] = (int) Key.Home;
+        io.KeyMap[(int) ImGuiKey.End] = (int) Key.End;
+        io.KeyMap[(int) ImGuiKey.Delete] = (int) Key.Delete;
+        io.KeyMap[(int) ImGuiKey.Backspace] = (int) Key.Backspace;
+        io.KeyMap[(int) ImGuiKey.Enter] = (int) Key.Enter;
+        io.KeyMap[(int) ImGuiKey.Escape] = (int) Key.Escape;
+        io.KeyMap[(int) ImGuiKey.A] = (int) Key.A;
+        io.KeyMap[(int) ImGuiKey.C] = (int) Key.C;
+        io.KeyMap[(int) ImGuiKey.V] = (int) Key.V;
+        io.KeyMap[(int) ImGuiKey.X] = (int) Key.X;
+        io.KeyMap[(int) ImGuiKey.Y] = (int) Key.Y;
+        io.KeyMap[(int) ImGuiKey.Z] = (int) Key.Z;
     }
 
     public static void LabelObject(ObjectLabelIdentifier objLabelIdent, int glObject, string name)
@@ -459,43 +516,45 @@ void main()
     }
 
     readonly List<char> PressedChars = new List<char>();
-
     /// <summary>
     /// Sets per-frame data based on the associated window.
     /// This is called by Update(float).
     /// </summary>
-    private void SetPerFrameImGuiData(float deltaSeconds)
+    private void SetPerFrameImGuiData()
     {
         ImGuiIOPtr io = ImGui.GetIO();
         io.DisplaySize = new System.Numerics.Vector2(
             _windowWidth / _scaleFactor.X,
             _windowHeight / _scaleFactor.Y);
         io.DisplayFramebufferScale = _scaleFactor;
-        io.DeltaTime = deltaSeconds; // DeltaTime is in seconds.
+        //float currentTime = (float) GLFW.GetTime();
+        io.DeltaTime = Time.DeltaTime;
+        /*_globalTime > 0.0f ? currentTime - _globalTime : 1f / 60f; //deltaSeconds; // DeltaTime is in seconds.
+    _globalTime = currentTime;*/
     }
 
-    public void Update(GameWindow wnd, float deltaSeconds)
+
+    private void HandleInput()
     {
-        if (_frameBegun)
+        var io = ImGui.GetIO();
+        io.MouseWheel = _mouseWheelOffset.Y;
+        io.MouseWheelH = _mouseWheelOffset.X;
+        _mouseWheelOffset = Vector2.Zero;
+        /*if (PressedChars.Count > 0)
         {
-            Render();
+            io.KeysDown[(int) Key.Left] = false;
+            io.KeysDown[(int) Key.Right] = false;
+            io.KeysDown[(int) Key.Up] = false;
+            io.KeysDown[(int) Key.Down] = false;
+            
+            io.KeysDown[(int) Key.Backspace] = false;
+        }*/
+        foreach (var c in PressedChars)
+        {
+            io.AddInputCharacter(c);
         }
 
-        SetPerFrameImGuiData(deltaSeconds);
-        UpdateImGuiInput(wnd);
-
-        _frameBegun = true;
-        ImGui.NewFrame();
-    }
-
-    /// <summary>
-    /// Renders the ImGui draw list data.
-    /// </summary>
-    public void Render()
-    {
-        _frameBegun = false;
-        ImGui.Render();
-        RenderImDrawData(ImGui.GetDrawData());
+        PressedChars.Clear();
     }
 
     /// <summary>

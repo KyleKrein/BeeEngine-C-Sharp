@@ -1,15 +1,18 @@
+using BeeEngine.Drawing;
+
 namespace BeeEngine.OpenTK.Events;
 
 public class MouseScrolledEvent: Event
 {
-    public readonly float DeltaX;
-    public readonly float DeltaY;
+    public readonly float Offset;
+    public readonly float OffsetHorizontal;
 
-    public MouseScrolledEvent(float deltaX, float deltaY)
+    public MouseScrolledEvent(float offsetVertical, float offsetHorizontal)
     {
-        DeltaY = deltaY;
-        DeltaX = deltaX;
         Category = EventCategory.Input |
                    EventCategory.Mouse;
+        Offset = offsetVertical;
+        OffsetHorizontal = offsetHorizontal;
+
     }
 }
