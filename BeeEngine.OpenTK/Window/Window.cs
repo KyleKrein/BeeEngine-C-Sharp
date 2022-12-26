@@ -2,41 +2,36 @@ using OpenTK.Windowing.Common;
 
 namespace BeeEngine.OpenTK;
 
-internal abstract class Window: IDisposable
+public abstract class Window: IDisposable
 {
     public virtual int Width { get; set; }
     public virtual int Height { get; set; }
     public virtual string Title { get; set; }
     
-    public virtual bool IsVSync { get; }
+    public virtual VSync VSync { get; set; }
 
-    public void SetVSync(bool enabled)
-    {
-        SetVSyncInternal(enabled);
-    }
-
-    public Window(WindowProps initSettings = new WindowProps())
+    public Window(WindowProps initSettings)
     {
         Width = initSettings.Width;
         Height = initSettings.Height;
         Title = initSettings.Title;
-        SetVSyncInternal(initSettings.EnableVSync);
     }
 
-    internal abstract void SetVSyncInternal(bool enabled);
+    public abstract void Init();
+    public abstract void Run(Action updateLoop, Action renderLoop);
+    public abstract void RunMultiThreaded(Action updateLoop, Action renderLoop);
 
     public event EventHandler<MouseButtonEventArgs> MouseClick;
+    public abstract void DispatchEvents();
+    public abstract void UpdateLayers();
+    public abstract void PushLayer(Layer layer);
+    public abstract void PushOverlay(Layer overlay);
+    public abstract void PopLayer(Layer layer);
+    public abstract void PopOverlay(Layer overlay);
 
-    protected abstract void Initialize();
-    protected abstract void LoadContent();
-    protected abstract void UnloadContent();
-    protected abstract void Update();
-    protected abstract void FixedUpdate();
-    protected abstract void Render();
+    public abstract void ReleaseUnmanagedResources();
 
-    internal abstract void ReleaseUnmanagedResources();
-
-    internal virtual void Dispose(bool disposing)
+    protected virtual void Dispose(bool disposing)
     {
         
     }
@@ -60,12 +55,14 @@ public readonly struct WindowProps
     public readonly string Title;
     public readonly int Width;
     public readonly int Height;
-    public readonly bool EnableVSync;
-    public WindowProps(string title = "BeeEngine Window", int width = 1280, int height = 720, bool enableVSync = true)
+    public readonly VSync VSync;
+    public readonly bool IsGame;
+    public WindowProps(string title = "BeeEngine Window", int width = 1280, int height = 720, VSync vSync = VSync.On, bool isGame = false)
     {
         Title = title;
         Width = width;
         Height = height;
-        EnableVSync = enableVSync;
+        VSync = vSync;
+        IsGame = isGame;
     }
 }

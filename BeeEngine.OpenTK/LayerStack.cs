@@ -1,15 +1,20 @@
 using BeeEngine.OpenTK.Events;
+using BeeEngine.OpenTK.Gui;
 
 namespace BeeEngine.OpenTK;
 
 internal class LayerStack: IDisposable
 {
     private LinkedList<Layer> _layers;
+
+    private ImGuiLayer _guiLayer;
     //private int _layersInsert = 0;
 
-    public LayerStack()
+    public LayerStack(ImGuiLayer guiLayer)
     {
+        _guiLayer = guiLayer;
         _layers = new LinkedList<Layer>();
+        _guiLayer.OnAttach();
     }
     public void PushLayer(Layer layer)
     {
@@ -42,11 +47,13 @@ internal class LayerStack: IDisposable
         {
             layer.OnDetach();
         }
+        _guiLayer.OnDetach();
     }
 
     public void OnEvent(Event e)
     {
         EventDispatcher dispatcher = new EventDispatcher(e);
+        _guiLayer.OnEvent(dispatcher);
         foreach (var layer in _layers.AsEnumerable().Reverse())
         {
             layer.OnEvent(dispatcher);
@@ -59,10 +66,17 @@ internal class LayerStack: IDisposable
 
     public void Update()
     {
+        _guiLayer.OnBegin();
         foreach (var layer in _layers)
         {
             layer.OnUpdate();
         }
+        foreach (var layer in _layers)
+        {
+            layer.OnGUIRendering();
+        }
+        _guiLayer.OnGUIRendering();
+        _guiLayer.OnEnd();
     }
     public void Dispose()
     {

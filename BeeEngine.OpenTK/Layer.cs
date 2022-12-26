@@ -19,6 +19,11 @@ public abstract class Layer
         
     }
 
+    public virtual void OnGUIRendering()
+    {
+        
+    }
+
     public virtual void OnEvent(EventDispatcher e)
     {
         

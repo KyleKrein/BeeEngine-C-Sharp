@@ -1,17 +1,18 @@
 using BeeEngine.OpenTK.Events;
+using ImGuiNET;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
 
 namespace BeeEngine.OpenTK.Gui;
 
-public class ImGuiLayer : Layer
+internal sealed class ImGuiLayerOpenGL: ImGuiLayer
 {
-    private GameWindow _window;
+    private NativeWindow _window;
     private ImGuiController _controller;
 
-    public ImGuiLayer()
+    public ImGuiLayerOpenGL()
     {
-        _window = Game.Instance.GetWindow();
+        _window = CrossPlatformWindow.Instance.GetWindow();
     }
 
     public override void OnAttach()
@@ -47,9 +48,24 @@ public class ImGuiLayer : Layer
         _controller.PressChar(e.KeyChar);
         return false;
     }
-    public override void OnUpdate()
+
+    public override void OnBegin()
+    {
+        _controller.Update(_window, Time.DeltaTime);
+    }
+
+    public override void OnGUIRendering()
+    {
+        ImGui.ShowDemoWindow();
+    }
+
+    public override void OnEnd()
     {
         _controller.Render();
+    }
+    
+    public override void OnUpdate()
+    {
         _controller.Update(_window, Time.DeltaTime);
     }
 }

@@ -11,9 +11,7 @@ namespace BeeEngine.OpenTK.Gui;
 
 public class ImGuiController : IDisposable
 {
-    private PlatformID os;
-    private int _OsScale = 1;
-    private bool _frameBegun;
+    private readonly int _osScale = 1;
 
     private int _vertexArray;
     private int _vertexBuffer;
@@ -32,27 +30,25 @@ public class ImGuiController : IDisposable
     private int _windowWidth;
     private int _windowHeight;
 
-    private System.Numerics.Vector2 _scaleFactor = System.Numerics.Vector2.One;
+    private System.Numerics.Vector2 _scaleFactor;
 
-    private static bool KHRDebugAvailable = false;
+    private static bool _khrDebugAvailable;
 
     /// <summary>
     /// Constructs a new ImGuiController.
     /// </summary>
     public ImGuiController(int width, int height)
     {
-        os = Environment.OSVersion.Platform;
-        Console.WriteLine(os);
-        if (os == PlatformID.Unix)
+        if (Application.PlatformOS == OS.Mac)
         {
-            _OsScale = 2;
+            _osScale = 2;
         }
         _windowWidth = width;
         _windowHeight = height;
         int major = GL.GetInteger(GetPName.MajorVersion);
         int minor = GL.GetInteger(GetPName.MinorVersion);
 
-        KHRDebugAvailable = (major == 4 && minor >= 3) || IsExtensionSupported("KHR_debug");
+        _khrDebugAvailable = (major == 4 && minor >= 3) || IsExtensionSupported("KHR_debug");
 
         IntPtr context = ImGui.CreateContext();
         ImGui.SetCurrentContext(context);
@@ -73,41 +69,38 @@ public class ImGuiController : IDisposable
             style.WindowRounding = 0.0f;
             style.Colors[(int) ImGuiCol.WindowBg].W = 1.0f;
         }
-        System.Numerics.Vector2 Dpi;
+        System.Numerics.Vector2 dpi;
         unsafe
         {
-            float xscale = 0;
-            float yscale = 0;
-            float* xScale = &xscale;
-            float* yScale = &xscale;
+            float xScale;
+            float yScale;
             
-            GLFW.GetMonitorContentScaleRaw(GLFW.GetPrimaryMonitor(), xScale, yScale);
-            Console.WriteLine($"x: {*xScale}    y: {*yScale}");
-            Dpi = new System.Numerics.Vector2(*xScale, *yScale);
-            _scaleFactor = Dpi;
+            GLFW.GetMonitorContentScaleRaw(GLFW.GetPrimaryMonitor(), &xScale, &yScale);
+            Console.WriteLine($"x: {xScale}    y: {yScale}");
+            dpi = new System.Numerics.Vector2(xScale, yScale);
+            _scaleFactor = dpi;
             //GLFW.WindowHint(WindowHintbool, "why");
             //GLFW.GetWindowSize(Game.Instance.GetWindow().WindowPtr,out _windowWidth, out _windowHeight);
             //GL.Viewport(0,0,_windowWidth, _windowHeight);
         }
-        ImGui.GetStyle().ScaleAllSizes(Dpi.X);
+        ImGui.GetStyle().ScaleAllSizes(dpi.X);
 
         CreateDeviceResources();
         SetKeyMappings();
 
-        SetPerFrameImGuiData(1f / 60f);
+        //SetPerFrameImGuiData(1f / 60f);
 
-        ImGui.NewFrame();
-        _frameBegun = true;
+        //ImGui.NewFrame();
+        //_frameBegun = true;
     }
     
-    public unsafe void WindowResized(int width, int height)
+    public void WindowResized(int width, int height)
     {
         _windowWidth = width;
         _windowHeight = height;
         //GLFW.GetWindowSize(Game.Instance.GetWindow().WindowPtr,out _windowWidth, out _windowHeight);
-        _windowWidth *= _OsScale;
-        _windowHeight *= _OsScale;
-        GL.Viewport(0,0, _windowWidth, _windowHeight);
+        _windowWidth *= _osScale;
+        _windowHeight *= _osScale;
     }
 
     public void DestroyDeviceObjects()
@@ -120,7 +113,7 @@ public class ImGuiController : IDisposable
         _vertexBufferSize = 10000;
         _indexBufferSize = 2000;
 
-        int prevVAO = GL.GetInteger(GetPName.VertexArrayBinding);
+        int prevVao = GL.GetInteger(GetPName.VertexArrayBinding);
         int prevArrayBuffer = GL.GetInteger(GetPName.ArrayBufferBinding);
 
         _vertexArray = GL.GenVertexArray();
@@ -139,7 +132,7 @@ public class ImGuiController : IDisposable
 
         RecreateFontDeviceTexture();
 
-        string VertexSource = @"#version 330 core
+        const string vertexSource = @"#version 330 core
 uniform mat4 projection_matrix;
 layout(location = 0) in vec2 in_position;
 layout(location = 1) in vec2 in_texCoord;
@@ -152,7 +145,7 @@ void main()
     color = in_color;
     texCoord = in_texCoord;
 }";
-        string FragmentSource = @"#version 330 core
+        const string fragmentSource = @"#version 330 core
 uniform sampler2D in_fontTexture;
 in vec4 color;
 in vec2 texCoord;
@@ -162,7 +155,7 @@ void main()
     outputColor = color * texture(in_fontTexture, texCoord);
 }";
 
-        _shader = CreateProgram("ImGui", VertexSource, FragmentSource);
+        _shader = CreateProgram("ImGui", vertexSource, fragmentSource);
         _shaderProjectionMatrixLocation = GL.GetUniformLocation(_shader, "projection_matrix");
         _shaderFontTextureLocation = GL.GetUniformLocation(_shader, "in_fontTexture");
 
@@ -175,7 +168,7 @@ void main()
         GL.EnableVertexAttribArray(1);
         GL.EnableVertexAttribArray(2);
 
-        GL.BindVertexArray(prevVAO);
+        GL.BindVertexArray(prevVao);
         GL.BindBuffer(BufferTarget.ArrayBuffer, prevArrayBuffer);
 
         CheckGLError("End of ImGui setup");
@@ -217,7 +210,7 @@ void main()
         GL.BindTexture(TextureTarget.Texture2D, prevTexture2D);
         GL.ActiveTexture((TextureUnit) prevActiveTexture);
 
-        io.Fonts.SetTexID((IntPtr) _fontTexture);
+        io.Fonts.SetTexID(_fontTexture);
 
         io.Fonts.ClearTexData();
     }
@@ -227,7 +220,6 @@ void main()
     /// </summary>
     public void Render()
     {
-        _frameBegun = false;
         ImGui.Render();
         RenderImDrawData(ImGui.GetDrawData());
     }
@@ -235,12 +227,10 @@ void main()
     /// <summary>
     /// Updates ImGui input and IO configuration state.
     /// </summary>
-    public void Update(GameWindow wnd, float deltaSeconds)
+    public void Update(NativeWindow wnd, float deltaSeconds)
     {
-        Render();
         SetPerFrameImGuiData(deltaSeconds);
         UpdateImGuiInput(wnd);
-        //MouseScroll(_mouseScroll);
         ImGui.NewFrame();
     }
 
@@ -258,20 +248,20 @@ void main()
         io.DeltaTime = deltaSeconds; // DeltaTime is in seconds.
     }
 
-    readonly List<char> PressedChars = new List<char>();
+    private readonly List<char> _pressedChars = new List<char>();
 
-    private void UpdateImGuiInput(GameWindow wnd)
+    private void UpdateImGuiInput(NativeWindow wnd)
     {
         ImGuiIOPtr io = ImGui.GetIO();
 
-        MouseState MouseState = wnd.MouseState;
-        KeyboardState KeyboardState = wnd.KeyboardState;
+        MouseState mouseState = wnd.MouseState;
+        KeyboardState keyboardState = wnd.KeyboardState;
 
-        io.MouseDown[0] = MouseState[MouseButton.Left];
-        io.MouseDown[1] = MouseState[MouseButton.Right];
-        io.MouseDown[2] = MouseState[MouseButton.Middle];
+        io.MouseDown[0] = mouseState[MouseButton.Left];
+        io.MouseDown[1] = mouseState[MouseButton.Right];
+        io.MouseDown[2] = mouseState[MouseButton.Middle];
 
-        var screenPoint = new Vector2i((int) MouseState.X, (int) MouseState.Y);
+        var screenPoint = new Vector2i((int) mouseState.X, (int) mouseState.Y);
         var point = screenPoint; //wnd.PointToClient(screenPoint);
         io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
         io.MouseWheel = _mouseScroll.Y;
@@ -284,25 +274,25 @@ void main()
                 continue;
             }
 
-            io.KeysDown[(int) key] = KeyboardState.IsKeyDown(key);
+            io.KeysDown[(int) key] = keyboardState.IsKeyDown(key);
         }
 
-        foreach (var c in PressedChars)
+        foreach (var c in _pressedChars)
         {
             io.AddInputCharacter(c);
         }
 
-        PressedChars.Clear();
+        _pressedChars.Clear();
 
-        io.KeyCtrl = KeyboardState.IsKeyDown(Keys.LeftControl) || KeyboardState.IsKeyDown(Keys.RightControl);
-        io.KeyAlt = KeyboardState.IsKeyDown(Keys.LeftAlt) || KeyboardState.IsKeyDown(Keys.RightAlt);
-        io.KeyShift = KeyboardState.IsKeyDown(Keys.LeftShift) || KeyboardState.IsKeyDown(Keys.RightShift);
-        io.KeySuper = KeyboardState.IsKeyDown(Keys.LeftSuper) || KeyboardState.IsKeyDown(Keys.RightSuper);
+        io.KeyCtrl = keyboardState.IsKeyDown(Keys.LeftControl) || keyboardState.IsKeyDown(Keys.RightControl);
+        io.KeyAlt = keyboardState.IsKeyDown(Keys.LeftAlt) || keyboardState.IsKeyDown(Keys.RightAlt);
+        io.KeyShift = keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift);
+        io.KeySuper = keyboardState.IsKeyDown(Keys.LeftSuper) || keyboardState.IsKeyDown(Keys.RightSuper);
     }
 
     internal void PressChar(char keyChar)
     {
-        PressedChars.Add(keyChar);
+        _pressedChars.Add(keyChar);
     }
 
     internal void MouseScroll(Vector2 offset)
@@ -346,7 +336,7 @@ void main()
         }
 
         // Get intial state.
-        int prevVAO = GL.GetInteger(GetPName.VertexArrayBinding);
+        int prevVao = GL.GetInteger(GetPName.VertexArrayBinding);
         int prevArrayBuffer = GL.GetInteger(GetPName.ArrayBufferBinding);
         int prevProgram = GL.GetInteger(GetPName.CurrentProgram);
         bool prevBlendEnabled = GL.GetBoolean(GetPName.Blend);
@@ -377,9 +367,9 @@ void main()
         GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBuffer);
         for (int i = 0; i < draw_data.CmdListsCount; i++)
         {
-            ImDrawListPtr cmd_list = draw_data.CmdListsRange[i];
+            ImDrawListPtr cmdList = draw_data.CmdListsRange[i];
 
-            int vertexSize = cmd_list.VtxBuffer.Size * Unsafe.SizeOf<ImDrawVert>();
+            int vertexSize = cmdList.VtxBuffer.Size * Unsafe.SizeOf<ImDrawVert>();
             if (vertexSize > _vertexBufferSize)
             {
                 int newSize = (int) Math.Max(_vertexBufferSize * 1.5f, vertexSize);
@@ -390,7 +380,7 @@ void main()
                 Console.WriteLine($"Resized dear imgui vertex buffer to new size {_vertexBufferSize}");
             }
 
-            int indexSize = cmd_list.IdxBuffer.Size * sizeof(ushort);
+            int indexSize = cmdList.IdxBuffer.Size * sizeof(ushort);
             if (indexSize > _indexBufferSize)
             {
                 int newSize = (int) Math.Max(_indexBufferSize * 1.5f, indexSize);
@@ -421,7 +411,7 @@ void main()
         GL.BindVertexArray(_vertexArray);
         CheckGLError("VAO");
 
-        
+        draw_data.ScaleClipRects(io.DisplayFramebufferScale);
 
         GL.Enable(EnableCap.Blend);
         GL.Enable(EnableCap.ScissorTest);
@@ -476,7 +466,7 @@ void main()
                 CheckGLError("Draw");
             }
         }
-        draw_data.ScaleClipRects(io.DisplayFramebufferScale);
+        
 
         GL.Disable(EnableCap.Blend);
         GL.Disable(EnableCap.ScissorTest);
@@ -485,7 +475,7 @@ void main()
         GL.BindTexture(TextureTarget.Texture2D, prevTexture2D);
         GL.ActiveTexture((TextureUnit) prevActiveTexture);
         GL.UseProgram(prevProgram);
-        GL.BindVertexArray(prevVAO);
+        GL.BindVertexArray(prevVao);
         GL.Scissor(prevScissorBox[0], prevScissorBox[1], prevScissorBox[2], prevScissorBox[3]);
         GL.BindBuffer(BufferTarget.ArrayBuffer, prevArrayBuffer);
         GL.BlendEquationSeparate((BlendEquationMode) prevBlendEquationRgb, (BlendEquationMode) prevBlendEquationAlpha);
@@ -519,7 +509,7 @@ void main()
 
     public static void LabelObject(ObjectLabelIdentifier objLabelIdent, int glObject, string name)
     {
-        if (KHRDebugAvailable)
+        if (_khrDebugAvailable)
             GL.ObjectLabel(objLabelIdent, glObject, name.Length, name);
     }
 
