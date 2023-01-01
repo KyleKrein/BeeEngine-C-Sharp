@@ -9,7 +9,14 @@ internal class OpenGLIndexBuffer: IndexBuffer
     public OpenGLIndexBuffer(uint[] indices)
     {
         Count = indices.Length;
-        GL.CreateBuffers(1, out _rendererId);
+        if (Application.PlatformOS == OS.Mac)
+        {
+            GL.GenBuffers(1, out _rendererId);
+        }
+        else
+        {
+            GL.CreateBuffers(1, out _rendererId);
+        }
         GL.BufferData(BufferTarget.ElementArrayBuffer, Count * sizeof(uint), indices, BufferUsageHint.StaticDraw);
     }
 

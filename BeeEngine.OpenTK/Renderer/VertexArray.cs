@@ -5,6 +5,8 @@ namespace BeeEngine.OpenTK.Renderer;
 
 public abstract class VertexArray: IDisposable
 {
+    public List<VertexBuffer> VertexBuffers { get; protected set; } = new List<VertexBuffer>();
+    public IndexBuffer IndexBuffer { get; protected set; }
     public abstract BufferLayout Layout { get; }
     public abstract void Bind();
     public abstract void Unbind();
@@ -12,12 +14,12 @@ public abstract class VertexArray: IDisposable
     public abstract void SetIndexBuffer(IndexBuffer buffer);
     public static VertexArray Create()
     {
-        switch (Renderer.RendererAPI)
+        switch (Renderer.API)
         {
-            case RendererAPI.OpenGL:
+            case API.OpenGL:
                 return new OpenGLVertexArray();
-            case RendererAPI.None:
-                Log.Error("{0} is not supported", Renderer.RendererAPI);
+            case API.None:
+                Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();
             default:
                 Log.Error("Unknown Renderer API is not supported");

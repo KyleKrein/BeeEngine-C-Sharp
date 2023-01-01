@@ -1,7 +1,15 @@
+using BeeEngine.Mathematics;
+
 namespace BeeEngine.OpenTK.Renderer;
 
-public enum RendererAPI
+public abstract class RendererAPI
 {
-    None = 0,
-    OpenGL = 1
+    public static API API
+    {
+        get => Renderer.API;
+        set => Renderer.API = value;
+    }
+    public abstract void SetClearColor(Color color);
+    public abstract void Clear();
+    public abstract void DrawIndexed(VertexArray vertexArray);
 }

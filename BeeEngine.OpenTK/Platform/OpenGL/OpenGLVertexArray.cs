@@ -6,13 +6,18 @@ namespace BeeEngine.OpenTK.Platform.OpenGL;
 public class OpenGLVertexArray: VertexArray
 {
     public override BufferLayout Layout { get; }
-    public List<VertexBuffer> VertexBuffers { get; private set; } = new List<VertexBuffer>();
-    public IndexBuffer IndexBuffer { get; private set; }
     private int _rendererID;
 
     public OpenGLVertexArray()
     {
-        GL.CreateVertexArrays(1, out _rendererID);
+        if (Application.PlatformOS == OS.Mac)
+        {
+            GL.GenVertexArrays(1, out _rendererID);//On Mac it crashes on CreateVertexArrays
+        }
+        else
+        {
+            GL.CreateVertexArrays(1, out _rendererID);
+        }
     }
     public override void Bind()
     {

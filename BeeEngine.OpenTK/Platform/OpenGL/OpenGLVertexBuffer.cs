@@ -9,7 +9,14 @@ internal class OpenGLVertexBuffer: VertexBuffer
     public OpenGLVertexBuffer(float[] vertices, DrawingFrequency frequency)
     {
         Count = vertices.Length;
-        GL.CreateBuffers(1, out _rendererId);
+        if (Application.PlatformOS == OS.Mac)
+        {
+            GL.GenBuffers(1, out _rendererId);
+        }
+        else
+        {
+            GL.CreateBuffers(1, out _rendererId);
+        }
         GL.BufferData(BufferTarget.ArrayBuffer, Count*sizeof(float), vertices, BufferUsageHint.StaticDraw);
     }
 

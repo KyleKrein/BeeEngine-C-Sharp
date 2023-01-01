@@ -291,7 +291,6 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
         double num = this.RenderFrequency == 0.0 ? 0.0 : 1.0 / this.RenderFrequency;
         if (totalSeconds > 0.0 && totalSeconds >= num)
         {
-            GL.Clear(ClearBufferMask.ColorBufferBit);
             this._watchRender.Restart();
             this.RenderTime = totalSeconds;
             RenderLoop.Invoke();

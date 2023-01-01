@@ -6,12 +6,12 @@ public abstract class Shader: IDisposable
 {
     public static Shader Create(string vertexSrc, string fragmentSrc)
     {
-        switch (Renderer.RendererAPI)
+        switch (Renderer.API)
         {
-            case RendererAPI.OpenGL:
+            case API.OpenGL:
                 return new OpenGlShader(vertexSrc, fragmentSrc);
-            case RendererAPI.None:
-                Log.Error("{0} is not supported", Renderer.RendererAPI);
+            case API.None:
+                Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();
             default:
                 Log.Error("Unknown Renderer API is not supported");

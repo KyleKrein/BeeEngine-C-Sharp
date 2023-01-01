@@ -2,16 +2,33 @@ namespace BeeEngine.OpenTK.Renderer;
 
 public class Renderer
 {
-    private static RendererAPI _rendererApi = RendererAPI.None;
+    private static API _api = API.None;
 
-    public static RendererAPI RendererAPI
+    // ReSharper disable once InconsistentNaming
+    public static API API
     {
-        get => _rendererApi;
+        get => _api;
         set
         {
-            if (_rendererApi != RendererAPI.None)
+            if (_api != API.None)
                 throw new Exception("Can't change Renderer api if it was assigned before");
-            _rendererApi = value;
+            _api = value;
         }
+    }
+
+    public static void BeginScene()
+    {
+        
+    }
+
+    public static void EndScene()
+    {
+        
+    }
+
+    public static void Submit(VertexArray vertexArray)
+    {
+        vertexArray.Bind();
+        RenderCommand.DrawIndexed(vertexArray);
     }
 }

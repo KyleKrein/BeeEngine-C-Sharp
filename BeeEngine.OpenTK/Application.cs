@@ -1,3 +1,5 @@
+using BeeEngine.OpenTK.Renderer;
+
 namespace BeeEngine.OpenTK;
 
 public abstract class Application: IDisposable
@@ -41,13 +43,20 @@ public abstract class Application: IDisposable
 
     private Window InitWindow(WindowProps initSettings)
     {
-        return PlatformOS switch
+        switch (PlatformOS)
         {
-            OS.Windows => new CrossPlatformWindow(initSettings),
-            OS.Linux => new CrossPlatformWindow(initSettings),
-            OS.Mac => new CrossPlatformWindow(initSettings),
-            _ => throw new PlatformNotSupportedException()
-        };
+            case OS.Windows:
+                RendererAPI.API = API.OpenGL;
+                return new CrossPlatformWindow(initSettings);
+            case OS.Linux:
+                RendererAPI.API = API.OpenGL;
+                return new CrossPlatformWindow(initSettings);
+            case OS.Mac:
+                RendererAPI.API = API.OpenGL;
+                return new CrossPlatformWindow(initSettings);
+            default:
+                throw new PlatformNotSupportedException();
+        }
     }
     
     public void Run()
@@ -70,8 +79,8 @@ public abstract class Application: IDisposable
     private readonly bool _isGame;
     private void RenderLoop()
     {
-        _window.UpdateLayers();
         Render();
+        _window.UpdateLayers();
     }
 
     private void UpdateLoop()
