@@ -24,7 +24,7 @@ public abstract class Layer
         
     }
 
-    public virtual void OnEvent(EventDispatcher e)
+    public virtual void OnEvent(ref EventDispatcher e)
     {
         
     }

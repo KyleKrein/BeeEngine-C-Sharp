@@ -25,7 +25,7 @@ internal sealed class ImGuiLayerOpenGL: ImGuiLayer
         _controller.Dispose();
     }
 
-    public override void OnEvent(EventDispatcher dispatcher)
+    public override void OnEvent(ref EventDispatcher dispatcher)
     {
         dispatcher.Dispatch<MouseScrolledEvent>(OnMouseScrolled);
         dispatcher.Dispatch<KeyTypedEvent>(OnKeyTyped);

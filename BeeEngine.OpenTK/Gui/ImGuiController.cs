@@ -76,7 +76,7 @@ public class ImGuiController : IDisposable
             float yScale;
             
             GLFW.GetMonitorContentScaleRaw(GLFW.GetPrimaryMonitor(), &xScale, &yScale);
-            Console.WriteLine($"x: {xScale}    y: {yScale}");
+            DebugLog.Info($"DPI scale is x: {xScale}    y: {yScale}");
             dpi = new System.Numerics.Vector2(xScale, yScale);
             _scaleFactor = dpi;
             //GLFW.WindowHint(WindowHintbool, "why");
@@ -377,7 +377,7 @@ void main()
                 GL.BufferData(BufferTarget.ArrayBuffer, newSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
                 _vertexBufferSize = newSize;
 
-                Console.WriteLine($"Resized dear imgui vertex buffer to new size {_vertexBufferSize}");
+                DebugLog.Info($"Resized dear imgui vertex buffer to new size {_vertexBufferSize}");
             }
 
             int indexSize = cmdList.IdxBuffer.Size * sizeof(ushort);
@@ -387,7 +387,7 @@ void main()
                 GL.BufferData(BufferTarget.ElementArrayBuffer, newSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
                 _indexBufferSize = newSize;
 
-                Console.WriteLine($"Resized dear imgui index buffer to new size {_indexBufferSize}");
+                DebugLog.Info($"Resized dear imgui index buffer to new size {_indexBufferSize}");
             }
         }
         

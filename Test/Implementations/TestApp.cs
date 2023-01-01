@@ -1,4 +1,5 @@
 using BeeEngine.OpenTK;
+using BeeEngine.OpenTK.Renderer;
 
 namespace Test.Implementations;
 
@@ -10,7 +11,10 @@ public class TestApp: Application
 
     protected override void Initialize()
     {
-        
+        BufferLayout layout = new()
+        {
+            {ShaderDataType.Float3, "Position"}
+        };
     }
 
     protected override void LoadContent()

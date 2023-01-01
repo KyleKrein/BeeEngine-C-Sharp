@@ -53,10 +53,10 @@ internal class LayerStack: IDisposable
     public void OnEvent(Event e)
     {
         EventDispatcher dispatcher = new EventDispatcher(e);
-        _guiLayer.OnEvent(dispatcher);
+        _guiLayer.OnEvent(ref dispatcher);
         foreach (var layer in _layers.AsEnumerable().Reverse())
         {
-            layer.OnEvent(dispatcher);
+            layer.OnEvent(ref dispatcher);
             if (e.IsHandled)
             {
                 break;

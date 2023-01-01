@@ -49,7 +49,7 @@ public class OpenGlShader: Shader
         if (success == 0)
         {
             string infoLog = GL.GetProgramInfoLog(Handle);
-            Console.WriteLine(infoLog);
+            Log.Error(infoLog);
         }
     }
 
@@ -60,7 +60,7 @@ public class OpenGlShader: Shader
         if (success == 0)
         {
             string infoLog = GL.GetShaderInfoLog(VertexShader);
-            Console.WriteLine(infoLog);
+            Log.Error(infoLog);
             GL.DeleteShader(VertexShader);
             compiledSuccessfully = false;
         }
@@ -69,7 +69,7 @@ public class OpenGlShader: Shader
         if (success == 0)
         {
             string infoLog = GL.GetShaderInfoLog(FragmentShader);
-            Console.WriteLine(infoLog);
+            Log.Error(infoLog);
             GL.DeleteShader(FragmentShader);
             compiledSuccessfully = false;
         }

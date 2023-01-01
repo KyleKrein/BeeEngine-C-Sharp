@@ -1,7 +1,23 @@
 namespace BeeEngine.OpenTK.Renderer;
-internal abstract class VertexBuffer: IDisposable
+
+public abstract class VertexBuffer: IDisposable
 {
     public int Count { get; protected init; }
+    private BufferLayout _layout;
+    public BufferLayout Layout
+    {
+        get => _layout;
+        set
+        {
+            if (!value.IsReadOnly)
+            {
+                value.Build();
+            }
+
+            _layout = value;
+        }
+    }
+
     public static VertexBuffer Create(float[] vertices, DrawingFrequency frequency)
     {
         return Renderer.RendererAPI switch
@@ -30,7 +46,7 @@ internal abstract class VertexBuffer: IDisposable
     }
 }
 
-internal enum DrawingFrequency
+public enum DrawingFrequency
 {
     
 }

@@ -1,6 +1,6 @@
 namespace BeeEngine.OpenTK.Renderer;
 
-internal abstract class IndexBuffer: IDisposable
+public abstract class IndexBuffer: IDisposable
 {
     public int Count { get; protected init; }
     public static IndexBuffer Create(uint[] indecis)
