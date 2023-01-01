@@ -5,13 +5,14 @@ namespace BeeEngine.OpenTK.Renderer;
 
 public abstract class IndexBuffer: IDisposable
 {
+    public int RendererID { get; protected set; }
     public int Count { get; protected init; }
-    public static IndexBuffer Create(uint[] indecis)
+    public static IndexBuffer Create(uint[] indices)
     {
         switch (Renderer.API)
         {
             case API.OpenGL:
-                return new OpenGLIndexBuffer(indecis);
+                return new OpenGLIndexBuffer(indices);
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();

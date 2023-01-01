@@ -13,11 +13,12 @@ public class OpenGLRendererAPI: RendererAPI
 
     public override void Clear()
     {
-        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+        GL.Clear(ClearBufferMask.ColorBufferBit);
     }
 
     public override void DrawIndexed(VertexArray vertexArray)
     {
-        GL.DrawElements(PrimitiveType.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, 0);
+        GL.DrawElements(PrimitiveType.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, vertexArray.IndexBuffer.RendererID);
+        GL.DrawElements(PrimitiveType.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, (int) vertexArray.IndexBuffer.RendererID);
     }
 }

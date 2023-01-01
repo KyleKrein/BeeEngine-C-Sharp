@@ -57,8 +57,8 @@ public class ImGuiController : IDisposable
         io.Fonts.AddFontDefault();
         ImGui.StyleColorsDark();
         io.BackendFlags |= ImGuiBackendFlags.HasMouseCursors
-                           | ImGuiBackendFlags.HasSetMousePos;
-                           //| ImGuiBackendFlags.RendererHasVtxOffset;
+                           | ImGuiBackendFlags.HasSetMousePos
+                           | ImGuiBackendFlags.RendererHasVtxOffset;
         io.ConfigFlags = ImGuiConfigFlags.DockingEnable |
                          ImGuiConfigFlags.ViewportsEnable |
                          ImGuiConfigFlags.DpiEnableScaleViewports |
@@ -78,7 +78,7 @@ public class ImGuiController : IDisposable
             GLFW.GetMonitorContentScaleRaw(GLFW.GetPrimaryMonitor(), &xScale, &yScale);
             DebugLog.Info($"DPI scale is x: {xScale}    y: {yScale}");
             dpi = new System.Numerics.Vector2(xScale, yScale);
-            _scaleFactor = dpi;
+            _scaleFactor = Application.PlatformOS == OS.Mac? dpi: System.Numerics.Vector2.One;
             //GLFW.WindowHint(WindowHintbool, "why");
             //GLFW.GetWindowSize(Game.Instance.GetWindow().WindowPtr,out _windowWidth, out _windowHeight);
             //GL.Viewport(0,0,_windowWidth, _windowHeight);
@@ -101,6 +101,7 @@ public class ImGuiController : IDisposable
         //GLFW.GetWindowSize(Game.Instance.GetWindow().WindowPtr,out _windowWidth, out _windowHeight);
         _windowWidth *= _osScale;
         _windowHeight *= _osScale;
+        GL.Viewport(0,0, _windowWidth, _windowHeight);
     }
 
     public void DestroyDeviceObjects()
@@ -579,7 +580,7 @@ void main()
         int i = 1;
         while ((error = GL.GetError()) != ErrorCode.NoError)
         {
-            Debug.Print($"{title} ({i++}): {error}");
+            Log.Error($"{title} ({i++}): {error}");
         }
     }
 }

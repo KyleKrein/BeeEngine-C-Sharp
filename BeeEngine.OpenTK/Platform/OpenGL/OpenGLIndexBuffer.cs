@@ -5,24 +5,26 @@ namespace BeeEngine.OpenTK.Platform.OpenGL;
 
 internal class OpenGLIndexBuffer: IndexBuffer
 {
-    private uint _rendererId;
     public OpenGLIndexBuffer(uint[] indices)
     {
         Count = indices.Length;
         if (Application.PlatformOS == OS.Mac)
         {
-            GL.GenBuffers(1, out _rendererId);
+            RendererID = GL.GenBuffer();
         }
         else
         {
-            GL.CreateBuffers(1, out _rendererId);
+            int rendererId;
+            GL.CreateBuffers(1, out rendererId);
+            RendererID = rendererId;
         }
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, RendererID);
         GL.BufferData(BufferTarget.ElementArrayBuffer, Count * sizeof(uint), indices, BufferUsageHint.StaticDraw);
     }
 
     public override void Bind()
     {
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _rendererId);
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, RendererID);
     }
 
     public override void Unbind()
@@ -32,6 +34,6 @@ internal class OpenGLIndexBuffer: IndexBuffer
 
     protected override void Dispose(bool disposing)
     {
-        GL.DeleteBuffer(_rendererId);
+        GL.DeleteBuffer(RendererID);
     }
 }

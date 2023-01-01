@@ -17,6 +17,7 @@ internal class OpenGLVertexBuffer: VertexBuffer
         {
             GL.CreateBuffers(1, out _rendererId);
         }
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
         GL.BufferData(BufferTarget.ArrayBuffer, Count*sizeof(float), vertices, BufferUsageHint.StaticDraw);
     }
 

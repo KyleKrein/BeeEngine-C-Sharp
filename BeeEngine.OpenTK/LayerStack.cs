@@ -66,11 +66,12 @@ internal class LayerStack: IDisposable
 
     public void Update()
     {
-        _guiLayer.OnBegin();
+        
         foreach (var layer in _layers)
         {
             layer.OnUpdate();
         }
+        _guiLayer.OnBegin();
         foreach (var layer in _layers)
         {
             layer.OnGUIRendering();

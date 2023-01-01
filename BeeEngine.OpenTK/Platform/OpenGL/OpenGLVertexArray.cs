@@ -42,7 +42,7 @@ public class OpenGLVertexArray: VertexArray
         {
             GL.EnableVertexAttribArray(index);
             GL.VertexAttribPointer(index, 
-                element.Size, 
+                element.GetComponentCount(), 
                 ShaderDataTypeToOpenGLType(element.Type),
                 element.Normalized, 
                 layout.Stride,

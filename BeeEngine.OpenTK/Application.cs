@@ -1,4 +1,6 @@
+using BeeEngine.Mathematics;
 using BeeEngine.OpenTK.Renderer;
+using OpenTK.Graphics.OpenGL4;
 
 namespace BeeEngine.OpenTK;
 
@@ -104,6 +106,16 @@ public abstract class Application: IDisposable
     {
         
     }
+
+    protected void PushLayer(Layer layer)
+    {
+        _window.PushLayer(layer);
+    }
+
+    protected void PushOverlay(Layer overlay)
+    {
+        _window.PushOverlay(overlay);
+    }
     protected abstract void Initialize();
     protected abstract void LoadContent();
     protected abstract void UnloadContent();
@@ -135,6 +147,9 @@ public abstract class Application: IDisposable
     {
         Dispose(false);
     }
+    
+    
+    
 }
 
 public enum OS

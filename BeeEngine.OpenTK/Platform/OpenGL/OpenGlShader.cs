@@ -22,11 +22,6 @@ public class OpenGlShader: Shader
         
         CleanUp(VertexShader, FragmentShader);
     }
-    
-    public void Use()
-    {
-        GL.UseProgram(Handle);
-    }
 
     private void CleanUp(int VertexShader, int FragmentShader)
     {
