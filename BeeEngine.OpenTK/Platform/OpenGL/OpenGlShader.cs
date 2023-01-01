@@ -1,16 +1,22 @@
+using BeeEngine.OpenTK.Renderer;
 using OpenTK.Graphics.OpenGL4;
 
 namespace BeeEngine.OpenTK;
 
-public class Shader: IDisposable
+public class OpenGlShader: Shader
 {
     int Handle;
 
-    public Shader(string vertexPath, string fragmentPath)
+    public OpenGlShader(string vertexSrc, string fragmentSrc)
     {
-        ImportShadersAndCompile(vertexPath, fragmentPath, out int VertexShader, out int FragmentShader);
+        CompileVertexAndFragmentShaders(vertexSrc, fragmentSrc, out int VertexShader, out int FragmentShader);
 
-        CheckForCompilationErrors(VertexShader, FragmentShader);
+        if (!CheckForCompilationErrors(VertexShader, FragmentShader))
+        {
+            GC.SuppressFinalize(this);
+            return;
+        }
+            
         
         CombineShadersTogether(VertexShader, FragmentShader);
         
@@ -47,59 +53,59 @@ public class Shader: IDisposable
         }
     }
 
-    private void CheckForCompilationErrors(int VertexShader, int FragmentShader)
+    private bool CheckForCompilationErrors(int VertexShader, int FragmentShader)
     {
+        bool compiledSuccessfully = true;
         GL.GetShader(VertexShader, ShaderParameter.CompileStatus, out int success);
         if (success == 0)
         {
             string infoLog = GL.GetShaderInfoLog(VertexShader);
             Console.WriteLine(infoLog);
+            GL.DeleteShader(VertexShader);
+            compiledSuccessfully = false;
         }
-
-        GL.CompileShader(FragmentShader);
 
         GL.GetShader(FragmentShader, ShaderParameter.CompileStatus, out success);
         if (success == 0)
         {
             string infoLog = GL.GetShaderInfoLog(FragmentShader);
             Console.WriteLine(infoLog);
+            GL.DeleteShader(FragmentShader);
+            compiledSuccessfully = false;
         }
+
+        return compiledSuccessfully;
     }
 
-    private void ImportShadersAndCompile(string vertexPath, string fragmentPath, out int VertexShader, out int FragmentShader)
+    private void CompileVertexAndFragmentShaders(string vertexShaderSource, string fragmentShaderSource, out int VertexShader, out int FragmentShader)
     {
-        string VertexShaderSource = File.ReadAllText(vertexPath);
-
-        string FragmentShaderSource = File.ReadAllText(fragmentPath);
         VertexShader = GL.CreateShader(ShaderType.VertexShader);
-        GL.ShaderSource(VertexShader, VertexShaderSource);
+        GL.ShaderSource(VertexShader, vertexShaderSource);
+        GL.CompileShader(VertexShader);
 
         FragmentShader = GL.CreateShader(ShaderType.FragmentShader);
-        GL.ShaderSource(FragmentShader, FragmentShaderSource);
-
-        GL.CompileShader(VertexShader);
+        GL.ShaderSource(FragmentShader, fragmentShaderSource);
+        GL.CompileShader(FragmentShader);
     }
-    private bool disposedValue = false;
 
-    protected virtual void Dispose(bool disposing)
+    public override void Bind()
     {
-        if (!disposedValue)
+        GL.UseProgram(Handle);
+    }
+
+    public override void Unbind()
+    {
+        GL.UseProgram(0);
+    }
+    private bool _disposedValue = false;
+
+    protected override void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
         {
             GL.DeleteProgram(Handle);
 
-            disposedValue = true;
+            _disposedValue = true;
         }
-    }
-
-    ~Shader()
-    {
-        GL.DeleteProgram(Handle);
-    }
-
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
     }
 }

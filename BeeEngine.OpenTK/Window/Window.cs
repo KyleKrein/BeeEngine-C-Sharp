@@ -1,8 +1,9 @@
+using BeeEngine.OpenTK.Renderer;
 using OpenTK.Windowing.Common;
 
 namespace BeeEngine.OpenTK;
 
-public abstract class Window: IDisposable
+internal abstract class Window: IDisposable
 {
     public virtual int Width { get; set; }
     public virtual int Height { get; set; }
@@ -10,6 +11,7 @@ public abstract class Window: IDisposable
     
     public virtual VSync VSync { get; set; }
 
+    public Context Context { get; init; }
     public Window(WindowProps initSettings)
     {
         Width = initSettings.Width;

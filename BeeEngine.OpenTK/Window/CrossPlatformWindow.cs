@@ -2,6 +2,7 @@ using System.Diagnostics;
 using BeeEngine.Drawing;
 using BeeEngine.OpenTK.Events;
 using BeeEngine.OpenTK.Gui;
+using BeeEngine.OpenTK.Renderer;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -121,6 +122,8 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
         _nativeWindowSettings.Title = initSettings.Title;
         _nativeWindowSettings.Size = new Vector2i(initSettings.Width, initSettings.Height);
         _window = new NativeWindow(_nativeWindowSettings);
+        var context = new OpenGLContext(_window);
+        Context = context;
         _layerStack = new LayerStack(new ImGuiLayerOpenGL());
         _events = new EventQueue(_layerStack);
         //Time gameTime = new Time();
@@ -191,9 +194,10 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
 
     public override void Init()
     {
+        Context.Init();
         _watchRender = new Stopwatch();
         _watchUpdate = new Stopwatch();
-        _window.Context?.MakeCurrent();
+        Context.MakeCurrent();
         _events.AddEvent(new WindowResizedEvent(Size.Width, Size.Height));
     }
 
@@ -230,12 +234,12 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
 
     private void RunRenderThread()
     {
-        _window.Context.MakeNoneCurrent();
+        Context.MakeNonCurrent();
         this._renderThread = new Thread(this.StartRenderThread);
     }
     private unsafe void StartRenderThread()
     {
-        _window.Context?.MakeCurrent();
+        Context.MakeCurrent();
         this._watchRender.Start();
         while (!GLFW.WindowShouldClose(_window.WindowPtr))
             this.DispatchRenderFrame();
@@ -289,11 +293,11 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
             this.RenderTime = totalSeconds;
             RenderLoop.Invoke();
             if (this.VSync == VSync.Adaptive)
-                GLFW.SwapInterval(this.IsRunningSlowly ? 0 : 1);
+                Context.SwapInterval = this.IsRunningSlowly ? 0 : 1;
         }
         
         //GL.Viewport(0,0, _window.Size.X, _window.Size.Y);
-        _window.Context.SwapBuffers();
+        Context.SwapBuffers();
         return this.RenderFrequency != 0.0 ? num - totalSeconds : 0.0;
     }
 
@@ -310,7 +314,7 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
     public override void ReleaseUnmanagedResources()
     {
         _layerStack.Dispose();
-        _window.Dispose();
+        Context.Destroy();
     }
 
     internal NativeWindow GetWindow()
