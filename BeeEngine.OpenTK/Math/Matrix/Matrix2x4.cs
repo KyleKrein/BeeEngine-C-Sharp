@@ -24,6 +24,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
+using BeeEngine.OpenTK;
 
 namespace BeeEngine.Mathematics
 {
@@ -244,8 +245,10 @@ namespace BeeEngine.Mathematics
                     return Row1[columnIndex];
                 }
 
-                throw new IndexOutOfRangeException("You tried to access this matrix at: (" + rowIndex + ", " +
-                                                   columnIndex + ")");
+                var message = "You tried to access this matrix at: (" + rowIndex + ", " +
+                                                   columnIndex + ")";
+                Log.Error(message);
+                throw new IndexOutOfRangeException(message);
             }
 
             set
@@ -260,8 +263,10 @@ namespace BeeEngine.Mathematics
                 }
                 else
                 {
-                    throw new IndexOutOfRangeException("You tried to set this matrix at: (" + rowIndex + ", " +
-                                                       columnIndex + ")");
+                    var message = "You tried to set this matrix at: (" + rowIndex + ", " +
+                                                    columnIndex + ")";
+                    Log.Error(message);
+                    throw new IndexOutOfRangeException(message);
                 }
             }
         }

@@ -1,7 +1,8 @@
+using BeeEngine.OpenTK.Renderer;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine.OpenTK.Platform.OpenGL;
 internal class OpenGLContext: Context
 {
     private NativeWindow _window;

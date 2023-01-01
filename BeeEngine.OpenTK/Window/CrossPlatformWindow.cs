@@ -2,6 +2,7 @@ using System.Diagnostics;
 using BeeEngine.Drawing;
 using BeeEngine.OpenTK.Events;
 using BeeEngine.OpenTK.Gui;
+using BeeEngine.OpenTK.Platform.OpenGL;
 using BeeEngine.OpenTK.Renderer;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -108,7 +109,9 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
     {
         if (Instance != null)
         {
-            throw new InvalidOperationException("Can't have two instances of the game");
+            var message = "Can't have two instances of the game";
+            Log.Error(message);
+            throw new InvalidOperationException(message);
         }
 
         Instance = this;

@@ -698,6 +698,7 @@ namespace BeeEngine.Mathematics
         {
             if (n < 0)
             {
+                OpenTK.Log.Error("{0} Must be positive", nameof(n));
                 throw new ArgumentOutOfRangeException(nameof(n), "Must be positive.");
             }
 

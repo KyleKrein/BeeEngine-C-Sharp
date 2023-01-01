@@ -3,15 +3,19 @@ using NotSupportedException = System.NotSupportedException;
 
 namespace BeeEngine.OpenTK.Renderer;
 
-public abstract class IndexBuffer: IDisposable
+public abstract class VertexArray: IDisposable
 {
-    public int Count { get; protected init; }
-    public static IndexBuffer Create(uint[] indecis)
+    public abstract BufferLayout Layout { get; }
+    public abstract void Bind();
+    public abstract void Unbind();
+    public abstract void AddVertexBuffer(VertexBuffer buffer);
+    public abstract void SetIndexBuffer(IndexBuffer buffer);
+    public static VertexArray Create()
     {
         switch (Renderer.RendererAPI)
         {
             case RendererAPI.OpenGL:
-                return new OpenGLIndexBuffer(indecis);
+                return new OpenGLVertexArray();
             case RendererAPI.None:
                 Log.Error("{0} is not supported", Renderer.RendererAPI);
                 throw new NotSupportedException();
@@ -21,9 +25,6 @@ public abstract class IndexBuffer: IDisposable
         }
     }
 
-    public abstract void Bind();
-    public abstract void Unbind();
-
     protected abstract void Dispose(bool disposing);
 
     public void Dispose()
@@ -32,7 +33,7 @@ public abstract class IndexBuffer: IDisposable
         GC.SuppressFinalize(this);
     }
 
-    ~IndexBuffer()
+    ~VertexArray()
     {
         Dispose(false);
     }

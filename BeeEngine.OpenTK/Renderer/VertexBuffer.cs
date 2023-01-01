@@ -1,3 +1,6 @@
+using BeeEngine.OpenTK.Platform.OpenGL;
+using NotSupportedException = System.NotSupportedException;
+
 namespace BeeEngine.OpenTK.Renderer;
 
 public abstract class VertexBuffer: IDisposable
@@ -20,13 +23,17 @@ public abstract class VertexBuffer: IDisposable
 
     public static VertexBuffer Create(float[] vertices, DrawingFrequency frequency)
     {
-        return Renderer.RendererAPI switch
+        switch (Renderer.RendererAPI)
         {
-            RendererAPI.OpenGL => new OpenGLVertexBuffer(vertices, frequency),
-            RendererAPI.None => throw new NotSupportedException(
-                "Can't create Vertex Buffers if Renderer API is not assigned"),
-            _ => throw new ArgumentOutOfRangeException(typeof(RendererAPI).ToString())
-        };
+            case RendererAPI.OpenGL:
+                return new OpenGLVertexBuffer(vertices, frequency);
+            case RendererAPI.None:
+                Log.Error("{0} is not supported", Renderer.RendererAPI);
+                throw new NotSupportedException();
+            default:
+                Log.Error("Unknown Renderer API is not supported");
+                throw new NotSupportedException();
+        }
     }
 
     public abstract void Bind();

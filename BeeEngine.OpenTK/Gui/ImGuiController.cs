@@ -438,7 +438,8 @@ void main()
                 ImDrawCmdPtr pcmd = cmd_list.CmdBuffer[cmd_i];
                 if (pcmd.UserCallback != IntPtr.Zero)
                 {
-                    throw new NotImplementedException();
+                    Log.Error("ImGui UserCallback in {0} can't be IntPtr.Zero", nameof(ImDrawCmd));
+                    return;
                 }
 
                 GL.ActiveTexture(TextureUnit.Texture0);

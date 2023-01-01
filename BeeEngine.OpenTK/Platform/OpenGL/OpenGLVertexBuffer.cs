@@ -1,6 +1,7 @@
+using BeeEngine.OpenTK.Renderer;
 using OpenTK.Graphics.OpenGL4;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine.OpenTK.Platform.OpenGL;
 
 internal class OpenGLVertexBuffer: VertexBuffer
 {

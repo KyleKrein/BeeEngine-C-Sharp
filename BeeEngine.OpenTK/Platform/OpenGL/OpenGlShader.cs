@@ -1,7 +1,7 @@
 using BeeEngine.OpenTK.Renderer;
 using OpenTK.Graphics.OpenGL4;
 
-namespace BeeEngine.OpenTK;
+namespace BeeEngine.OpenTK.Platform.OpenGL;
 
 public class OpenGlShader: Shader
 {

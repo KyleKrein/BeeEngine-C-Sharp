@@ -1,14 +1,22 @@
+using BeeEngine.OpenTK.Platform.OpenGL;
+
 namespace BeeEngine.OpenTK.Renderer;
 
 public abstract class Shader: IDisposable
 {
     public static Shader Create(string vertexSrc, string fragmentSrc)
     {
-        return Renderer.RendererAPI switch
+        switch (Renderer.RendererAPI)
         {
-            RendererAPI.OpenGL => new OpenGlShader(vertexSrc, fragmentSrc),
-            _ => throw new PlatformNotSupportedException()
-        };
+            case RendererAPI.OpenGL:
+                return new OpenGlShader(vertexSrc, fragmentSrc);
+            case RendererAPI.None:
+                Log.Error("{0} is not supported", Renderer.RendererAPI);
+                throw new NotSupportedException();
+            default:
+                Log.Error("Unknown Renderer API is not supported");
+                throw new NotSupportedException();
+        }
     }
 
     public static Shader FromFiles(string vertexPath, string fragmentPath)
