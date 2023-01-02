@@ -1,5 +1,5 @@
+using BeeEngine.OpenTK.Events;
 using BeeEngine.OpenTK.Renderer;
-using OpenTK.Compute.OpenCL;
 using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
 
@@ -11,6 +11,7 @@ public class OpenGLTexture2D: Texture2D
     private int _rendererId;
     public OpenGLTexture2D(string path)
     {
+        path = ResourceManager.ProcessFilePath(path);
         //_rendererId = GL.GenTexture();
         _path = path;
         // stb_image loads from the top-left pixel, whereas OpenGL loads from the bottom-left, causing the texture to be flipped vertically.
@@ -21,28 +22,42 @@ public class OpenGLTexture2D: Texture2D
         {
             image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
         }
-        GL.CreateTextures(TextureTarget.Texture2D, 1, out _rendererId);
-        
-        GL.TextureStorage2D(_rendererId, 1, SizedInternalFormat.Rgba32f, image.Width, image.Height);
-        //GL.TextureParameter(_rendererId, TextureParameterName.TextureMinFilter, (int)FilterMode.Linear); 
-        //GL.TextureParameterI(_rendererId, TextureParameterName.TextureMinFilter, ref filterMode);
-        //GL.TextureParameter(_rendererId, TextureParameterName.TextureMagFilter, (int)FilterMode.Linear); 
-        
-        GL.TextureSubImage2D(_rendererId, 0, 0, 0, image.Width, image.Height, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
-        
-        //GL.BindTexture(TextureTarget.Texture2D, _rendererId);
-        //GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 
-         //   0, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
-        //GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
+        if (Application.PlatformOS == OS.Mac)
+        {
+            _rendererId = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, _rendererId);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 
+                0, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+        }
+        else
+        {
+            GL.CreateTextures(TextureTarget.Texture2D, 1, out _rendererId);
+            GL.TextureStorage2D(_rendererId, 1, SizedInternalFormat.Rgba32f, image.Width, image.Height);
+            GL.TextureSubImage2D(_rendererId, 0, 0, 0, image.Width, image.Height, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
+            GL.GenerateTextureMipmap(_rendererId);
+        }
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+        
         Width = image.Width;
         Height = image.Height;
     }
     public override void Bind(int slot = 0)
     {
+        if (Application.PlatformOS == OS.Mac)
+        {
+            DebugLog.Assert(slot<=32, "Could not bind texture to slot {0}", slot);
+            GL.ActiveTexture(_textureUnits[slot]);
+            GL.BindTexture(TextureTarget.Texture2D, _rendererId);
+            return;
+        }
         GL.BindTextureUnit(slot, _rendererId);
-        //GL.BindTexture(TextureTarget.Texture2D, _rendererId);
+        //
     }
+
+    private static TextureUnit[] _textureUnits = Enum.GetValues<TextureUnit>();
 
     protected override void Dispose(bool disposing)
     {
