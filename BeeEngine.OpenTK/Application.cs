@@ -1,4 +1,6 @@
 using BeeEngine.Mathematics;
+using BeeEngine.OpenTK.Events;
+using BeeEngine.OpenTK.Platform.OpenGL;
 using BeeEngine.OpenTK.Renderer;
 using OpenTK.Graphics.OpenGL4;
 
@@ -8,6 +10,7 @@ public abstract class Application: IDisposable
 {
     private readonly Window _window;
     public static readonly OS PlatformOS;
+    private LayerStack _layerStack;
 
     public int Width
     {
@@ -36,8 +39,26 @@ public abstract class Application: IDisposable
         
         Instance = this;
         _window = InitWindow(initSettings);
-
+        InitGui();
         Renderer.Renderer.Init();
+    }
+
+    private void InitGui()
+    {
+        switch (PlatformOS)
+        {
+            case OS.Windows:
+                _layerStack.SetGUILayer(new ImGuiLayerOpenGL());
+                break;
+            case OS.Linux:
+                _layerStack.SetGUILayer(new ImGuiLayerOpenGL());
+                break;
+            case OS.Mac:
+                _layerStack.SetGUILayer(new ImGuiLayerOpenGL());
+                break;
+            default:
+                throw new PlatformNotSupportedException();
+        }
     }
 
     static Application()
@@ -51,13 +72,19 @@ public abstract class Application: IDisposable
         {
             case OS.Windows:
                 RendererAPI.API = API.OpenGL;
-                return new CrossPlatformWindow(initSettings);
+                _layerStack = new LayerStack();
+                _eventQueue = new EventQueue(_layerStack);
+                return new CrossPlatformWindow(initSettings, _eventQueue);
             case OS.Linux:
                 RendererAPI.API = API.OpenGL;
-                return new CrossPlatformWindow(initSettings);
+                _layerStack = new LayerStack();
+                _eventQueue = new EventQueue(_layerStack);
+                return new CrossPlatformWindow(initSettings, _eventQueue);
             case OS.Mac:
                 RendererAPI.API = API.OpenGL;
-                return new CrossPlatformWindow(initSettings);
+                _layerStack = new LayerStack();
+                _eventQueue = new EventQueue(_layerStack);
+                return new CrossPlatformWindow(initSettings, _eventQueue);
             default:
                 throw new PlatformNotSupportedException();
         }
@@ -81,19 +108,25 @@ public abstract class Application: IDisposable
     }
 
     private readonly bool _isGame;
+    private EventQueue _eventQueue;
+
     private void RenderLoop()
     {
         Render();
-        _window.UpdateLayers();
+        
     }
 
     private void UpdateLoop()
     {
+        _eventQueue.Dispatch();
         InitializeGameObjects();
         Update();
+        _layerStack.Update();
         UpdateGameObjects();
         LateUpdateGameObjects();
     }
+
+    protected abstract void OnEvent(ref EventDispatcher e);
     private void UpdateGameObjects()
     {
         
@@ -111,12 +144,12 @@ public abstract class Application: IDisposable
 
     protected void PushLayer(Layer layer)
     {
-        _window.PushLayer(layer);
+        _layerStack.PushLayer(layer);
     }
 
     protected void PushOverlay(Layer overlay)
     {
-        _window.PushOverlay(overlay);
+        _layerStack.PushOverlay(overlay);
     }
     protected abstract void Initialize();
     protected abstract void LoadContent();
@@ -174,6 +207,27 @@ public abstract class Application: IDisposable
     {
         return Renderer.Renderer.Shaders.Get(name);
     }
+
+    internal void Dispatch(ref EventDispatcher e)
+    {
+        e.Dispatch<WindowResizedEvent>(OnWindowResize);
+        OnEvent(ref e);
+    }
+
+    private bool OnWindowResize(WindowResizedEvent e)
+    {
+        if (Width == 0 || Height == 0)
+        {
+            IsMinimized = true;
+            return false;
+        }
+
+        IsMinimized = false;
+        Renderer.Renderer.OnWindowResized(e.Width, e.Height);
+        return false;
+    }
+
+    public bool IsMinimized { get; private set; } = false;
 }
 
 public enum OS

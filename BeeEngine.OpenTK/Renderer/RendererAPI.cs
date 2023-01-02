@@ -14,4 +14,6 @@ public abstract class RendererAPI
     public abstract void DrawIndexed(VertexArray vertexArray);
 
     public abstract void Init();
+
+    public abstract void SetViewPort(int x, int y, int width, int height);
 }

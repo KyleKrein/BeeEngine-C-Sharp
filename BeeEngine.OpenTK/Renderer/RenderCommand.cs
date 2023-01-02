@@ -39,4 +39,9 @@ public static class RenderCommand
     {
         _rendererApi.Init();
     }
+
+    public static void SetViewPort(int x, int y, int width, int height)
+    {
+        _rendererApi.SetViewPort(x, y, width, height);
+    }
 }

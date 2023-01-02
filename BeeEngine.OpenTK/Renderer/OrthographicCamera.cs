@@ -57,4 +57,10 @@ public class OrthographicCamera
         //_viewProjectionMatrix = _projectionMatrix * _viewMatrix;
         _viewProjectionMatrix = _viewMatrix * _projectionMatrix;
     }
+
+    public void SetProjectionMatrix(float left, float right, float bottom, float top)
+    {
+        _projectionMatrix = Matrix4.CreateOrthographicOffCenter(left, right, bottom, top, -1, 1);
+        RecalculateViewMatrix();
+    }
 }

@@ -1,5 +1,6 @@
 using BeeEngine.Mathematics;
 using BeeEngine.OpenTK;
+using BeeEngine.OpenTK.Events;
 using BeeEngine.OpenTK.Renderer;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
@@ -22,6 +23,7 @@ public class ExampleLayer: Layer
     private Texture2D _forestTexture;
     private Texture2D _archerTexture;
 
+    private OrthographicCameraController _cameraController;
     
     public override void OnAttach()
     {
@@ -162,10 +164,14 @@ public class ExampleLayer: Layer
         //_cube = VertexArray.Create();
         //_cube.AddVertexBuffer(cubeVertexBuffer);
         //_cube.SetIndexBuffer(cubeIndexBuffer);
+        _cameraController = new OrthographicCameraController(true);
     }
 
     public override void OnUpdate()
     {
+	    RenderCommand.Clear();
+	    Renderer.BeginScene(_cameraController);
+		_cameraController.OnUpdate();   
 	    //_cubeTransform = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(45)) *Matrix4.CreateRotationY(MathHelper.DegreesToRadians(45));
         
        // _cubeTransform = _cubeTransform * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(100) * Time.DeltaTime) *
@@ -184,6 +190,11 @@ public class ExampleLayer: Layer
 	    ImGui.Begin("Settings");
 	    ImGui.ColorEdit4("Color picker", ref color);
 	    ImGui.End();
+    }
+
+    public override void OnEvent(ref EventDispatcher e)
+    {
+	    _cameraController.OnEvent(ref e);
     }
 
     private Vector4 color = new Vector4(Color.Blue.R, Color.Blue.G, Color.Blue.B, Color.Blue.A);

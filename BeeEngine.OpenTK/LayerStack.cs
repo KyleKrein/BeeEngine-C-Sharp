@@ -8,12 +8,18 @@ internal class LayerStack: IDisposable
     private LinkedList<Layer> _layers;
 
     private ImGuiLayer _guiLayer;
+
+    private Application _app = Application.Instance;
     //private int _layersInsert = 0;
 
-    public LayerStack(ImGuiLayer guiLayer)
+    public LayerStack()
+    {
+        _layers = new LinkedList<Layer>();
+    }
+
+    internal void SetGUILayer(ImGuiLayer guiLayer)
     {
         _guiLayer = guiLayer;
-        _layers = new LinkedList<Layer>();
         _guiLayer.OnAttach();
     }
     public void PushLayer(Layer layer)
@@ -50,14 +56,13 @@ internal class LayerStack: IDisposable
         _guiLayer.OnDetach();
     }
 
-    public void OnEvent(Event e)
+    public void OnEvent(ref EventDispatcher dispatcher)
     {
-        EventDispatcher dispatcher = new EventDispatcher(e);
         _guiLayer.OnEvent(ref dispatcher);
         foreach (var layer in _layers.AsEnumerable().Reverse())
         {
             layer.OnEvent(ref dispatcher);
-            if (e.IsHandled)
+            if (dispatcher.IsHandled)
             {
                 break;
             }
@@ -66,17 +71,21 @@ internal class LayerStack: IDisposable
 
     public void Update()
     {
-        foreach (var layer in _layers)
+        if (!_app.IsMinimized)
         {
-            layer.OnUpdate();
+            foreach (var layer in _layers)
+            {
+                layer.OnUpdate();
+            }
+            _guiLayer.OnBegin();
+            foreach (var layer in _layers)
+            {
+                layer.OnGUIRendering();
+            }
+            _guiLayer.OnGUIRendering();
+            _guiLayer.OnEnd();
         }
-        _guiLayer.OnBegin();
-        foreach (var layer in _layers)
-        {
-            layer.OnGUIRendering();
-        }
-        _guiLayer.OnGUIRendering();
-        _guiLayer.OnEnd();
+        
     }
     public void Dispose()
     {

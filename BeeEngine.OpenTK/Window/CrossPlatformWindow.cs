@@ -105,7 +105,7 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
     
     private GameWindowSettings _gameWindowSettings = GameWindowSettings.Default;
     private NativeWindowSettings _nativeWindowSettings = NativeWindowSettings.Default;
-    public CrossPlatformWindow(WindowProps initSettings): base(initSettings)
+    public CrossPlatformWindow(WindowProps initSettings, EventQueue eventQueue): base(initSettings)
     {
         if (Instance != null)
         {
@@ -127,8 +127,7 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
         _window = new NativeWindow(_nativeWindowSettings);
         var context = new OpenGLContext(_window);
         Context = context;
-        _layerStack = new LayerStack(new ImGuiLayerOpenGL());
-        _events = new EventQueue(_layerStack);
+        _events = eventQueue;
         //Time gameTime = new Time();
         UpdateFrequency = 0;
         RenderFrequency = 0;
@@ -167,28 +166,6 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
         }*/
     }
 
-    public override void PushLayer(Layer layer)
-    {
-        _layerStack.PushLayer(layer);
-    }
-
-    public override void PushOverlay(Layer overlay)
-    {
-        _layerStack.PushOverlay(overlay);
-    }
-
-    public override void PopLayer(Layer layer)
-    {
-        _layerStack.PopLayer(layer);
-    }
-
-    public override void PopOverlay(Layer overlay)
-    {
-        _layerStack.PopOverlay(overlay);
-    }
-
-
-    private readonly LayerStack _layerStack;
     private readonly EventQueue _events;
     private Thread _renderThread;
     private Stopwatch _watchRender;
@@ -263,7 +240,6 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
             this._watchUpdate.Restart();
             this.UpdateTime = totalSeconds;
             Time.Update();
-            DispatchEvents();
             UpdateLoop.Invoke();
             this._updateEpsilon += totalSeconds - num2;
             if (this.UpdateFrequency > double.Epsilon)
@@ -303,19 +279,8 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
         return this.RenderFrequency != 0.0 ? num - totalSeconds : 0.0;
     }
 
-    public override void DispatchEvents()
-    {
-        _events.Dispatch();
-    }
-
-    public override void UpdateLayers()
-    {
-        _layerStack.Update();
-    }
-
     public override void ReleaseUnmanagedResources()
     {
-        _layerStack.Dispose();
         Context.Destroy();
     }
 

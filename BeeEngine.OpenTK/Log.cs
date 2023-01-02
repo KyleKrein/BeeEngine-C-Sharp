@@ -177,6 +177,60 @@ public static class Log
         }
         Error(o);
     }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AssertAndThrow(bool isOk ,string format, params object[] args)
+    {
+        if (isOk)
+        {
+            return;
+        }
+        var final = string.Format(null, format, args);
+        Error(final);
+        throw new Exception(final);
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AssertAndThrow<T>(bool isOk ,string format, T arg)
+    {
+        if (isOk)
+        {
+            return;
+        }
+        var final = string.Format(null, format, arg);
+        Error(final);
+        throw new Exception(final);
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AssertAndThrow<T0, T1>(bool isOk ,string format, T0 arg0, T1 arg1)
+    {
+        if (isOk)
+        {
+            return;
+        }
+        var final = string.Format(null, format, arg0, arg1);
+        Error(final);
+        throw new Exception(final);
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AssertAndThrow<T0, T1, T2>(bool isOk ,string format, T0 arg0, T1 arg1, T2 arg2)
+    {
+        if (isOk)
+        {
+            return;
+        }
+        var final = string.Format(null, format, arg0, arg1, arg2);
+        Error(final);
+        throw new Exception(final);
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AssertAndThrow(bool isOk ,string o)
+    {
+        if (isOk)
+        {
+            return;
+        }
+        Error(o);
+        throw new Exception(o);
+    }
 }
 public static class DebugLog
 {
@@ -377,5 +431,64 @@ public static class DebugLog
             return;
         }
         Error(o);
+    }
+    [Conditional("DEBUG")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AssertAndThrow(bool isOk ,string format, params object[] args)
+    {
+        if (isOk)
+        {
+            return;
+        }
+        var final = string.Format(null, format, args);
+        Error(final);
+        throw new Exception(final);
+    }
+    [Conditional("DEBUG")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AssertAndThrow<T>(bool isOk ,string format, T arg)
+    {
+        if (isOk)
+        {
+            return;
+        }
+        var final = string.Format(null, format, arg);
+        Error(final);
+        throw new Exception(final);
+    }
+    [Conditional("DEBUG")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AssertAndThrow<T0, T1>(bool isOk ,string format, T0 arg0, T1 arg1)
+    {
+        if (isOk)
+        {
+            return;
+        }
+        var final = string.Format(null, format, arg0, arg1);
+        Error(final);
+        throw new Exception(final);
+    }
+    [Conditional("DEBUG")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AssertAndThrow<T0, T1, T2>(bool isOk ,string format, T0 arg0, T1 arg1, T2 arg2)
+    {
+        if (isOk)
+        {
+            return;
+        }
+        var final = string.Format(null, format, arg0, arg1, arg2);
+        Error(final);
+        throw new Exception(final);
+    }
+    [Conditional("DEBUG")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AssertAndThrow(bool isOk ,string o)
+    {
+        if (isOk)
+        {
+            return;
+        }
+        Error(o);
+        throw new Exception(o);
     }
 }

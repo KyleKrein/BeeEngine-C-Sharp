@@ -60,7 +60,7 @@ public class ImGuiController : IDisposable
                            | ImGuiBackendFlags.HasSetMousePos
                            | ImGuiBackendFlags.RendererHasVtxOffset;
         io.ConfigFlags = ImGuiConfigFlags.DockingEnable |
-                         ImGuiConfigFlags.ViewportsEnable |
+                         ImGuiConfigFlags.ViewportsEnable|
                          ImGuiConfigFlags.DpiEnableScaleViewports |
                          ImGuiConfigFlags.DpiEnableScaleFonts;
         var style = ImGui.GetStyle();
@@ -101,7 +101,6 @@ public class ImGuiController : IDisposable
         //GLFW.GetWindowSize(Game.Instance.GetWindow().WindowPtr,out _windowWidth, out _windowHeight);
         _windowWidth *= _osScale;
         _windowHeight *= _osScale;
-        GL.Viewport(0,0, _windowWidth, _windowHeight);
     }
 
     public void DestroyDeviceObjects()
@@ -250,7 +249,9 @@ void main()
     }
 
     private readonly List<char> _pressedChars = new List<char>();
-    private readonly Keys[] _enumKeysValues = Enum.GetValues<Keys>(); 
+    private readonly Keys[] _enumKeysValues = Enum.GetValues<Keys>();
+    private float scale = 1;
+
     private void UpdateImGuiInput(NativeWindow wnd)
     {
         ImGuiIOPtr io = ImGui.GetIO();
@@ -404,7 +405,6 @@ void main()
             -1.0f,
             1.0f);
 
-
         GL.UseProgram(_shader);
         GL.UniformMatrix4(_shaderProjectionMatrixLocation, false, ref mvp);
         GL.Uniform1(_shaderFontTextureLocation, 0);
@@ -450,8 +450,8 @@ void main()
 
                 // We do _windowHeight - (int)clip.W instead of (int)clip.Y because gl has flipped Y when it comes to these coordinates
                 var clip = pcmd.ClipRect;
-                GL.Scissor((int) clip.X, _windowHeight - (int) clip.W, (int) (clip.Z - clip.X),
-                    (int) (clip.W - clip.Y));
+                GL.Scissor((int) clip.X, _windowHeight - (int) clip.W, (int) ((int) (clip.Z - clip.X)),
+                    (int) ((int) (clip.W - clip.Y)));
                 CheckGLError("Scissor");
                 
                 if ((io.BackendFlags & ImGuiBackendFlags.RendererHasVtxOffset) != 0)

@@ -45,4 +45,9 @@ public class Renderer
     {
         RenderCommand.Init();
     }
+
+    internal static void OnWindowResized(int width, int height)
+    {
+        RenderCommand.SetViewPort(0, 0, width, height);
+    }
 }

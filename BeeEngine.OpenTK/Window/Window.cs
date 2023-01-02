@@ -24,12 +24,6 @@ internal abstract class Window: IDisposable
     public abstract void RunMultiThreaded(Action updateLoop, Action renderLoop);
 
     public event EventHandler<MouseButtonEventArgs> MouseClick;
-    public abstract void DispatchEvents();
-    public abstract void UpdateLayers();
-    public abstract void PushLayer(Layer layer);
-    public abstract void PushOverlay(Layer overlay);
-    public abstract void PopLayer(Layer layer);
-    public abstract void PopOverlay(Layer overlay);
 
     public abstract void ReleaseUnmanagedResources();
 

@@ -6,6 +6,7 @@ namespace BeeEngine.OpenTK.Platform.OpenGL;
 
 public class OpenGLRendererAPI: RendererAPI
 {
+    private int _osScale = 1;
     public override void SetClearColor(Color color)
     {
         GL.ClearColor(color.R, color.G, color.B, color.A);
@@ -26,5 +27,14 @@ public class OpenGLRendererAPI: RendererAPI
     {
         GL.Enable(EnableCap.Blend);
         GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        if (Application.PlatformOS == OS.Mac)
+        {
+            _osScale = 2;
+        }
+    }
+
+    public override void SetViewPort(int x, int y, int width, int height)
+    {
+        GL.Viewport(x,y, width* _osScale, height* _osScale);
     }
 }
