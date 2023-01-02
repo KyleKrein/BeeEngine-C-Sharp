@@ -151,7 +151,29 @@ public abstract class Application: IDisposable
     }
     
     
-    
+    //Work with shader library
+    protected Shader LoadShader(string filepath)
+    {
+        return Renderer.Renderer.Shaders.Load(filepath);
+    }
+    protected Shader LoadShader(string name, string filepath)
+    {
+        return Renderer.Renderer.Shaders.Load(filepath);
+    }
+
+    protected void AddShader(string name, Shader shader)
+    {
+        Renderer.Renderer.Shaders.Add(name, shader);
+    }
+    protected void AddShader(Shader shader)
+    {
+        Renderer.Renderer.Shaders.Add(shader);
+    }
+
+    protected Shader GetShader(string name)
+    {
+        return Renderer.Renderer.Shaders.Get(name);
+    }
 }
 
 public enum OS

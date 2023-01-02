@@ -7,6 +7,8 @@ public class Renderer
     private static API _api = API.None;
     private static Matrix4 _viewProjectionMatrix;
 
+    public static ShaderLibrary Shaders { get; } = new ShaderLibrary();
+
     // ReSharper disable once InconsistentNaming
     public static API API
     {

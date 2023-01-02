@@ -25,8 +25,7 @@ public class ExampleLayer: Layer
     
     public override void OnAttach()
     {
-	    _textureShader = Shader.Create(@"Assets\Shaders\Texture.glsl");
-
+	    _textureShader = LoadShader(@"Assets\Shaders\Texture.glsl");
 	    _forestTexture = Texture2D.CreateFromFile(@"Assets\Textures\forest.png");
 	    _archerTexture = Texture2D.CreateFromFile(@"Assets\Textures\archer_red.png");
 	    
@@ -57,7 +56,7 @@ public class ExampleLayer: Layer
 	    _square.AddVertexBuffer(squareVertexBuffer);
 	    _square.SetIndexBuffer(squareIndexBuffer);
 	    
-	    _flatColorShader = Shader.Create(@"Assets\Shaders\FlatColor.glsl");
+	    _flatColorShader = LoadShader(@"Assets\Shaders\FlatColor.glsl");
 	    
 	    float[] cubeVertices =
 	    {
@@ -154,7 +153,8 @@ public class ExampleLayer: Layer
 				color = v_Color;
 			}
 ";
-        _triangleShader = Shader.Create(vertexSrc, fragmentSrc);
+        _triangleShader = Shader.Create("Triangle shader",vertexSrc, fragmentSrc);
+        AddShader(_triangleShader);
         /////
         /*var cubeVertexBuffer = VertexBuffer.Create(cubeVertices, 0);
         cubeVertexBuffer.Layout = layout;
@@ -171,9 +171,9 @@ public class ExampleLayer: Layer
        // _cubeTransform = _cubeTransform * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(100) * Time.DeltaTime) *
          //                Matrix4.CreateRotationY(MathHelper.DegreesToRadians(100) * Time.DeltaTime);
         //Renderer.Submit(_cube, _triangleShader, _cubeTransform);
-        //Renderer.Submit(_square, _flatColorShader, _cubeTransform, shader => shader.UploadUniformFloat4("u_Color", new BeeEngine.Mathematics.Vector4(color.X, color.Y, color.Z, color.W)));
-        _forestTexture.Bind();
-        Renderer.Submit(_square, _textureShader, _cubeTransform);
+        Renderer.Submit(_square, _flatColorShader, _cubeTransform, shader => shader.UploadUniformFloat4("u_Color", new BeeEngine.Mathematics.Vector4(color.X, color.Y, color.Z, color.W)));
+        //_forestTexture.Bind();
+        //Renderer.Submit(_square, _textureShader, _cubeTransform);
         _archerTexture.Bind();
         Renderer.Submit(_square, _textureShader, _cubeTransform * Matrix4.CreateScale(.5f));
         //Renderer.Submit(_triangle, _triangleShader, Matrix4.Identity);

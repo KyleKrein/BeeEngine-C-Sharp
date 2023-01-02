@@ -1,17 +1,30 @@
+using System.Diagnostics;
 using BeeEngine.Mathematics;
 using BeeEngine.OpenTK.Platform.OpenGL;
 
 namespace BeeEngine.OpenTK.Renderer;
 
+[DebuggerDisplay("{Name}")]
 public abstract class Shader: IDisposable
 {
-    
+    public string Name { get; internal set; }
     public static Shader Create(string filepath)
+    {
+        var lastDot = filepath.LastIndexOf('.');
+        var lastSlash = filepath.LastIndexOf('/');
+        var lastBackSlash = filepath.LastIndexOf('\\');
+        lastSlash = Math.Max(lastSlash, lastBackSlash) + 1;
+        var count = lastDot == -1 ? filepath.Length - lastSlash : lastDot - lastSlash;
+        string name = filepath.Substring(lastSlash, count);
+        return Create(name, filepath);
+    }
+
+    public static Shader Create(string name, string filepath)
     {
         switch (Renderer.API)
         {
             case API.OpenGL:
-                return new OpenGlShader(filepath);
+                return new OpenGlShader(name, filepath);
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();
@@ -20,12 +33,12 @@ public abstract class Shader: IDisposable
                 throw new NotSupportedException();
         }
     }
-    public static Shader Create(string vertexSrc, string fragmentSrc)
+    public static Shader Create(string name, string vertexSrc, string fragmentSrc)
     {
         switch (Renderer.API)
         {
             case API.OpenGL:
-                return new OpenGlShader(vertexSrc, fragmentSrc);
+                return new OpenGlShader(name ,vertexSrc, fragmentSrc);
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();

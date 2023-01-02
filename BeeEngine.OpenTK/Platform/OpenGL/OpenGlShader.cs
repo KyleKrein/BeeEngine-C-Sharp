@@ -11,33 +11,80 @@ public class OpenGlShader: Shader
         Vertex,
         Fragment,
     }
-    int Handle;
+    int _programId;
 
-    public OpenGlShader(string filepath)
+    public OpenGlShader(string name, string filepath)
     {
+        Name = name;
         var shaderSource = File.ReadAllLines(filepath);
-        var result = Preprocess(shaderSource);
-        Compile(result[BeeShaderType.Vertex], result[BeeShaderType.Fragment]);
+        Compile(Preprocess(shaderSource));
     }
-    public OpenGlShader(string vertexSrc, string fragmentSrc)
+    public OpenGlShader(string name, string vertexSrc, string fragmentSrc)
     {
-        Compile(vertexSrc, fragmentSrc);
+        Name = name;
+        Compile(new Dictionary<BeeShaderType, string>() {{BeeShaderType.Vertex, vertexSrc}, {BeeShaderType.Fragment, fragmentSrc}});
     }
 
-    private void Compile(string vertexSrc, string fragmentSrc)
+    private static ShaderType BeeToOpenGL(BeeShaderType type)
     {
-        CompileVertexAndFragmentShaders(vertexSrc, fragmentSrc, out int VertexShader, out int FragmentShader);
-
-        if (!CheckForCompilationErrors(VertexShader, FragmentShader))
+        switch (type)
         {
-            GC.SuppressFinalize(this);
-            return;
+            case BeeShaderType.Vertex:
+                return ShaderType.VertexShader;
+            case BeeShaderType.Fragment:
+                return ShaderType.FragmentShader;
+        }
+        Log.Error("Invalid shader type!");
+        throw new InvalidOperationException();
+    }
+    private void Compile(Dictionary<BeeShaderType, string> shaders)
+    {
+        var program = GL.CreateProgram();
+        List<int> shaderIds = new List<int>(shaders.Count);
+        int success = 0;
+        foreach (var shaderpair in shaders)
+        {
+            if (shaderpair.Value == String.Empty)
+            {
+                continue;
+            }
+            var shader = GL.CreateShader(BeeToOpenGL(shaderpair.Key));
+            GL.ShaderSource(shader, shaderpair.Value);
+            GL.CompileShader(shader);
+            
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out success);
+            if (success == 0)
+            {
+                string infoLog = GL.GetShaderInfoLog(shader);
+                Log.Error(infoLog);
+                GL.DeleteShader(shader);
+            }
+            shaderIds.Add(shader);
         }
 
+        Log.Assert(shaderIds.Count > 0, "No shaders to compile!");
 
-        CombineShadersTogether(VertexShader, FragmentShader);
+        _programId = program;
 
-        CleanUp(VertexShader, FragmentShader);
+        foreach (var shader in shaderIds)
+        {
+            GL.AttachShader(_programId, shader);
+        }
+
+        GL.LinkProgram(_programId);
+
+        GL.GetProgram(_programId, GetProgramParameterName.LinkStatus, out success);
+        if (success == 0)
+        {
+            string infoLog = GL.GetProgramInfoLog(_programId);
+            Log.Error(infoLog);
+        }
+
+        foreach (var shaderId in shaderIds)
+        {
+            GL.DetachShader(_programId, shaderId);
+            GL.DeleteShader(shaderId);
+        }
     }
 
     private static BeeShaderType[] _shaderTypes = Enum.GetValues<BeeShaderType>();
@@ -92,69 +139,9 @@ public class OpenGlShader: Shader
         return result;
     }
 
-    private void CleanUp(int VertexShader, int FragmentShader)
-    {
-        GL.DetachShader(Handle, VertexShader);
-        GL.DetachShader(Handle, FragmentShader);
-        GL.DeleteShader(FragmentShader);
-        GL.DeleteShader(VertexShader);
-    }
-
-    private void CombineShadersTogether(int VertexShader, int FragmentShader)
-    {
-        Handle = GL.CreateProgram();
-
-        GL.AttachShader(Handle, VertexShader);
-        GL.AttachShader(Handle, FragmentShader);
-
-        GL.LinkProgram(Handle);
-
-        GL.GetProgram(Handle, GetProgramParameterName.LinkStatus, out int success);
-        if (success == 0)
-        {
-            string infoLog = GL.GetProgramInfoLog(Handle);
-            Log.Error(infoLog);
-        }
-    }
-
-    private bool CheckForCompilationErrors(int VertexShader, int FragmentShader)
-    {
-        bool compiledSuccessfully = true;
-        GL.GetShader(VertexShader, ShaderParameter.CompileStatus, out int success);
-        if (success == 0)
-        {
-            string infoLog = GL.GetShaderInfoLog(VertexShader);
-            Log.Error(infoLog);
-            GL.DeleteShader(VertexShader);
-            compiledSuccessfully = false;
-        }
-
-        GL.GetShader(FragmentShader, ShaderParameter.CompileStatus, out success);
-        if (success == 0)
-        {
-            string infoLog = GL.GetShaderInfoLog(FragmentShader);
-            Log.Error(infoLog);
-            GL.DeleteShader(FragmentShader);
-            compiledSuccessfully = false;
-        }
-
-        return compiledSuccessfully;
-    }
-
-    private void CompileVertexAndFragmentShaders(string vertexShaderSource, string fragmentShaderSource, out int VertexShader, out int FragmentShader)
-    {
-        VertexShader = GL.CreateShader(ShaderType.VertexShader);
-        GL.ShaderSource(VertexShader, vertexShaderSource);
-        GL.CompileShader(VertexShader);
-
-        FragmentShader = GL.CreateShader(ShaderType.FragmentShader);
-        GL.ShaderSource(FragmentShader, fragmentShaderSource);
-        GL.CompileShader(FragmentShader);
-    }
-
     public override void Bind()
     {
-        GL.UseProgram(Handle);
+        GL.UseProgram(_programId);
     }
 
     public override void Unbind()
@@ -165,63 +152,63 @@ public class OpenGlShader: Shader
     public override void UploadUniformMatrix4(string name, ref Matrix4 matrix4)
     {
         global::OpenTK.Mathematics.Matrix4 newMatrix = matrix4;
-        var location = GL.GetUniformLocation(Handle, name);
+        var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.UniformMatrix4(location, false, ref newMatrix);
     }
 
     public override void UploadUniformFloat(string name, float value)
     {
-        var location = GL.GetUniformLocation(Handle, name);
+        var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform1(location, value);
     }
 
     public override void UploadUniformFloat2(string name, Vector2 vector)
     {
-        var location = GL.GetUniformLocation(Handle, name);
+        var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform2(location, vector);
     }
 
     public override void UploadUniformFloat3(string name, Vector3 vector)
     {
-        var location = GL.GetUniformLocation(Handle, name);
+        var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform3(location, vector);
     }
 
     public override void UploadUniformFloat4(string name, Vector4 vector)
     {
-        var location = GL.GetUniformLocation(Handle, name);
+        var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform4(location, vector);
     }
 
     public override void UploadUniformInt(string name, int value)
     {
-        var location = GL.GetUniformLocation(Handle, name);
+        var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform1(location, value);
     }
 
     public override void UploadUniformInt2(string name, Vector2i vector)
     {
-        var location = GL.GetUniformLocation(Handle, name);
+        var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform2(location, vector);
     }
 
     public override void UploadUniformInt3(string name, Vector3i vector)
     {
-        var location = GL.GetUniformLocation(Handle, name);
+        var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform3(location, vector);
     }
 
     public override void UploadUniformInt4(string name, Vector4i vector)
     {
-        var location = GL.GetUniformLocation(Handle, name);
+        var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform4(location, vector);
     }
@@ -234,7 +221,7 @@ public class OpenGlShader: Shader
     {
         if (!_disposedValue)
         {
-            GL.DeleteProgram(Handle);
+            GL.DeleteProgram(_programId);
 
             _disposedValue = true;
         }
