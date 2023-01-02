@@ -1,4 +1,4 @@
-namespace BeeEngine.OpenTK.Events;
+namespace BeeEngine;
 
 public class ResourceManager
 {

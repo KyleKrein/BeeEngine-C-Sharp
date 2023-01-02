@@ -1,4 +1,4 @@
-namespace BeeEngine.OpenTK.Events;
+namespace BeeEngine;
 
 /// <summary>Specifies the buttons of a mouse.</summary>
 public enum MouseButton

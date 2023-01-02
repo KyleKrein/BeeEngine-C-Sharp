@@ -13,4 +13,13 @@
       <PackageReference Include="StbImageSharp" Version="2.27.13" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.AssemblyInfoInputs.cache" />
+      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.csproj.AssemblyReference.cache" />
+      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.csproj.CoreCompileInputs.cache" />
+      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.csproj.FileListAbsolute.txt" />
+      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.dll" />
+      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.pdb" />
+    </ItemGroup>
+
 </Project>

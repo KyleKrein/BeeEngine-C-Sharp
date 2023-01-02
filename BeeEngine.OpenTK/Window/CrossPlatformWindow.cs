@@ -10,7 +10,6 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using InvalidOperationException = System.InvalidOperationException;
-using MouseButton = BeeEngine.OpenTK.Events.MouseButton;
 
 namespace BeeEngine.OpenTK;
 

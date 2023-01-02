@@ -40,6 +40,15 @@
       <Content Include="bin\Debug\net7.0\Test.exe" />
       <Content Include="bin\Debug\net7.0\Test.pdb" />
       <Content Include="bin\Debug\net7.0\Test.runtimeconfig.json" />
+      <Content Include="obj\Debug\net7.0\apphost.exe" />
+      <Content Include="obj\Debug\net7.0\Test.AssemblyInfoInputs.cache" />
+      <Content Include="obj\Debug\net7.0\Test.csproj.AssemblyReference.cache" />
+      <Content Include="obj\Debug\net7.0\Test.csproj.CopyComplete" />
+      <Content Include="obj\Debug\net7.0\Test.csproj.CoreCompileInputs.cache" />
+      <Content Include="obj\Debug\net7.0\Test.csproj.FileListAbsolute.txt" />
+      <Content Include="obj\Debug\net7.0\Test.dll" />
+      <Content Include="obj\Debug\net7.0\Test.genruntimeconfig.cache" />
+      <Content Include="obj\Debug\net7.0\Test.pdb" />
     </ItemGroup>
 
     <ItemGroup>
@@ -59,6 +68,7 @@
         <Link>bin\Debug\net7.0\Assets\Textures\water.PNG</Link>
       </None>
       <None Remove="bin\**" />
+      <None Include="bin\Debug\net7.0\Test.dll.config" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,7 +1,5 @@
 using BeeEngine.Drawing;
 using BeeEngine.OpenTK.Events;
-using OpenTK.Windowing.GraphicsLibraryFramework;
-using MouseButton = BeeEngine.OpenTK.Events.MouseButton;
 
 namespace BeeEngine.OpenTK;
 

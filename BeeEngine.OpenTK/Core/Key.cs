@@ -1,4 +1,4 @@
-namespace BeeEngine.OpenTK.Events;
+namespace BeeEngine;
 
 /// <summary>
 /// Specifies key codes and modifiers in US keyboard layout.

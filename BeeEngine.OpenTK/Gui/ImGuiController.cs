@@ -259,9 +259,9 @@ void main()
         MouseState mouseState = wnd.MouseState;
         KeyboardState keyboardState = wnd.KeyboardState;
 
-        io.MouseDown[0] = mouseState[MouseButton.Left];
-        io.MouseDown[1] = mouseState[MouseButton.Right];
-        io.MouseDown[2] = mouseState[MouseButton.Middle];
+        io.MouseDown[0] = mouseState[global::OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left];
+        io.MouseDown[1] = mouseState[global::OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Right];
+        io.MouseDown[2] = mouseState[global::OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Middle];
 
         var screenPoint = new Vector2i((int) mouseState.X, (int) mouseState.Y);
         var point = screenPoint; //wnd.PointToClient(screenPoint);
