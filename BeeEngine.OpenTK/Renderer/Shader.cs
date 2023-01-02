@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using BeeEngine.Mathematics;
+using BeeEngine.OpenTK.Events;
 using BeeEngine.OpenTK.Platform.OpenGL;
 
 namespace BeeEngine.OpenTK.Renderer;
@@ -10,6 +11,7 @@ public abstract class Shader: IDisposable
     public string Name { get; internal set; }
     public static Shader Create(string filepath)
     {
+        filepath = ResourceManager.ProcessFilePath(filepath);
         var lastDot = filepath.LastIndexOf('.');
         var lastSlash = filepath.LastIndexOf('/');
         var lastBackSlash = filepath.LastIndexOf('\\');
