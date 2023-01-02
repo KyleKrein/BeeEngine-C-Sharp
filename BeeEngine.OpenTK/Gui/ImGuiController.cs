@@ -64,7 +64,7 @@ public class ImGuiController : IDisposable
                          ImGuiConfigFlags.DpiEnableScaleViewports |
                          ImGuiConfigFlags.DpiEnableScaleFonts;
         var style = ImGui.GetStyle();
-        if ((io.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) != 0)
+        if (io.ConfigFlags.HasFlag(ImGuiConfigFlags.ViewportsEnable))
         {
             style.WindowRounding = 0.0f;
             style.Colors[(int) ImGuiCol.WindowBg].W = 1.0f;

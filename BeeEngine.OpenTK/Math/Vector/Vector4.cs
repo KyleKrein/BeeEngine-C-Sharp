@@ -2162,5 +2162,10 @@ namespace BeeEngine.Mathematics
             z = Z;
             w = W;
         }
+
+        public static implicit operator global::OpenTK.Mathematics.Vector4(Vector4 vector4)
+        {
+            return new global::OpenTK.Mathematics.Vector4(vector4.X, vector4.Y, vector4.Z, vector4.W);
+        }
     }
 }

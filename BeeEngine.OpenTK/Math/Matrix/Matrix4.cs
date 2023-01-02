@@ -1958,5 +1958,10 @@ namespace BeeEngine.Mathematics
                 Row2 == other.Row2 &&
                 Row3 == other.Row3;
         }
+
+        public static implicit operator global::OpenTK.Mathematics.Matrix4(Matrix4 matrix)
+        {
+            return new global::OpenTK.Mathematics.Matrix4(matrix.Row0, matrix.Row1, matrix.Row2, matrix.Row3);
+        }
     }
 }

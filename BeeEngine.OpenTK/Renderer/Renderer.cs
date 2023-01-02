@@ -1,8 +1,11 @@
+using BeeEngine.Mathematics;
+
 namespace BeeEngine.OpenTK.Renderer;
 
 public class Renderer
 {
     private static API _api = API.None;
+    private static Matrix4 _viewProjectionMatrix;
 
     // ReSharper disable once InconsistentNaming
     public static API API
@@ -16,9 +19,9 @@ public class Renderer
         }
     }
 
-    public static void BeginScene()
+    public static void BeginScene(OrthographicCamera camera)
     {
-        
+        _viewProjectionMatrix = camera.ViewProjectionMatrix;
     }
 
     public static void EndScene()
@@ -26,8 +29,11 @@ public class Renderer
         
     }
 
-    public static void Submit(VertexArray vertexArray)
+    public static void Submit(VertexArray vertexArray, Shader shader, Matrix4 transform)
     {
+        shader.Bind();
+        shader.UploadUniformMatrix4("u_ViewProjection",ref _viewProjectionMatrix);
+        shader.UploadUniformMatrix4("u_Transform",ref transform);
         vertexArray.Bind();
         RenderCommand.DrawIndexed(vertexArray);
     }

@@ -1,3 +1,4 @@
+using BeeEngine.Mathematics;
 using BeeEngine.OpenTK.Platform.OpenGL;
 
 namespace BeeEngine.OpenTK.Renderer;
@@ -29,6 +30,7 @@ public abstract class Shader: IDisposable
     public abstract void Bind();
 
     public abstract void Unbind();
+    public abstract void UploadUniformMatrix4(string name, ref Matrix4 matrix4);
 
     protected abstract void Dispose(bool disposing);
 

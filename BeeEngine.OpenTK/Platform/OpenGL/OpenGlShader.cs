@@ -1,3 +1,4 @@
+using BeeEngine.Mathematics;
 using BeeEngine.OpenTK.Renderer;
 using OpenTK.Graphics.OpenGL4;
 
@@ -92,6 +93,14 @@ public class OpenGlShader: Shader
     {
         GL.UseProgram(0);
     }
+
+    public override void UploadUniformMatrix4(string name, ref Matrix4 matrix4)
+    {
+        global::OpenTK.Mathematics.Matrix4 newMatrix = matrix4;
+        var location = GL.GetUniformLocation(Handle, name);
+        GL.UniformMatrix4(location, false, ref newMatrix);
+    }
+
     private bool _disposedValue = false;
 
     protected override void Dispose(bool disposing)

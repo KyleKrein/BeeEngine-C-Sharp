@@ -43,7 +43,7 @@ public static class Input
 
     internal static void OnEvent(Event @event)
     {
-        if (@event.Category != EventCategory.Input)
+        if (!@event.Category.HasFlag(EventCategory.Input))
         {
             return;
         }

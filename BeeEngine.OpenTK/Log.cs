@@ -108,30 +108,6 @@ public static class Log
             Logger.Error(format, arg0, arg1, arg2);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Info<T>(string format, params T[] args)
-    {
-        if(Logger.CurrentLogLevel >= LogLevel.Information)
-            Logger.Info(format, args);
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Debug<T>(string format, params T[] args)
-    {
-        if(Logger.CurrentLogLevel >= LogLevel.Debug)
-            Logger.Debug(format, args);
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Warning<T>(string format, params T[] args)
-    {
-        if(Logger.CurrentLogLevel >= LogLevel.Warning)
-            Logger.Warning(format, args);
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Error<T>(string format, params T[] args)
-    {
-        if(Logger.CurrentLogLevel >= LogLevel.Error)
-            Logger.Error(format, args);
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Info(string format, params object[] args)
     {
         if(Logger.CurrentLogLevel >= LogLevel.Information)
@@ -158,15 +134,6 @@ public static class Log
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Assert(bool isOk ,string format, params object[] args)
-    {
-        if (isOk)
-        {
-            return;
-        }
-        Error(format, args);
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Assert<T>(bool isOk ,string format, params T[] args)
     {
         if (isOk)
         {
@@ -331,34 +298,7 @@ public static class DebugLog
         if(Logger.CurrentLogLevel >= LogLevel.Error)
             Logger.Error(format, arg0, arg1, arg2);
     }
-    [Conditional("DEBUG")]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Info<T>(string format, params T[] args)
-    {
-        if(Logger.CurrentLogLevel >= LogLevel.Information)
-            Logger.Info(format, args);
-    }
-    [Conditional("DEBUG")]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Debug<T>(string format, params T[] args)
-    {
-        if(Logger.CurrentLogLevel >= LogLevel.Debug)
-            Logger.Debug(format, args);
-    }
-    [Conditional("DEBUG")]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Warning<T>(string format, params T[] args)
-    {
-        if(Logger.CurrentLogLevel >= LogLevel.Warning)
-            Logger.Warning(format, args);
-    }
-    [Conditional("DEBUG")]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Error<T>(string format, params T[] args)
-    {
-        if(Logger.CurrentLogLevel >= LogLevel.Error)
-            Logger.Error(format, args);
-    }
+    
     [Conditional("DEBUG")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Info(string format, params object[] args)
@@ -391,16 +331,6 @@ public static class DebugLog
     [Conditional("DEBUG")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Assert(bool isOk ,string format, params object[] args)
-    {
-        if (isOk)
-        {
-            return;
-        }
-        Error(format, args);
-    }
-    [Conditional("DEBUG")]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Assert<T>(bool isOk ,string format, params T[] args)
     {
         if (isOk)
         {

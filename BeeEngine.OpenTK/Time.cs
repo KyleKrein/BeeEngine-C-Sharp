@@ -17,3 +17,16 @@ public static class Time
         _globalTime = currentTime;
     }
 }
+
+public ref struct TimeStep
+{
+    private readonly float _time;
+
+    public TimeStep(float seconds)
+    {
+        _time = seconds;
+    }
+
+    public float Seconds => _time;
+    public float Milliseconds => _time * 1000;
+}
