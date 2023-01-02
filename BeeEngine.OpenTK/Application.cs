@@ -36,6 +36,8 @@ public abstract class Application: IDisposable
         
         Instance = this;
         _window = InitWindow(initSettings);
+
+        Renderer.Renderer.Init();
     }
 
     static Application()

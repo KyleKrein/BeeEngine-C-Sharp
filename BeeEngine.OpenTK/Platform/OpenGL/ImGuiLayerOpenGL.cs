@@ -67,6 +67,6 @@ internal sealed class ImGuiLayerOpenGL: ImGuiLayer
     
     public override void OnUpdate()
     {
-        _controller.Update(_window, Time.DeltaTime);
+        
     }
 }

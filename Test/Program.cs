@@ -1,6 +1,6 @@
 ﻿using Test.Implementations;
 
-TestApp window = new TestApp("Pochemu", 800, 600);
+TestApp window = new TestApp("Pochemu", 1280, 720);
 
 window.Run();
 

@@ -29,12 +29,18 @@ public class Renderer
         
     }
 
-    public static void Submit(VertexArray vertexArray, Shader shader, Matrix4 transform)
+    public static void Submit(VertexArray vertexArray, Shader shader, Matrix4 transform, Action<Shader> func = null)
     {
         shader.Bind();
         shader.UploadUniformMatrix4("u_ViewProjection",ref _viewProjectionMatrix);
         shader.UploadUniformMatrix4("u_Transform",ref transform);
+        func?.Invoke(shader);
         vertexArray.Bind();
         RenderCommand.DrawIndexed(vertexArray);
+    }
+
+    public static void Init()
+    {
+        RenderCommand.Init();
     }
 }

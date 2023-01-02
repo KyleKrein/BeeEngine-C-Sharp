@@ -66,7 +66,6 @@ internal class LayerStack: IDisposable
 
     public void Update()
     {
-        
         foreach (var layer in _layers)
         {
             layer.OnUpdate();

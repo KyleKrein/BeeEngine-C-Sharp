@@ -619,5 +619,10 @@ namespace BeeEngine.Mathematics
             x = X;
             y = Y;
         }
+        
+        public static implicit operator global::OpenTK.Mathematics.Vector2i(Vector2i vector)
+        {
+            return new global::OpenTK.Mathematics.Vector2i(vector.X, vector.Y);
+        }
     }
 }

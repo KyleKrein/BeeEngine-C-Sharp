@@ -18,7 +18,13 @@ public class OpenGLRendererAPI: RendererAPI
 
     public override void DrawIndexed(VertexArray vertexArray)
     {
-        GL.DrawElements(PrimitiveType.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, vertexArray.IndexBuffer.RendererID);
-        GL.DrawElements(PrimitiveType.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, (int) vertexArray.IndexBuffer.RendererID);
+        //GL.DrawElements(BeginMode.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, 0);
+        GL.DrawElements(PrimitiveType.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, (int) 0);
+    }
+
+    public override void Init()
+    {
+        GL.Enable(EnableCap.Blend);
+        GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
     }
 }

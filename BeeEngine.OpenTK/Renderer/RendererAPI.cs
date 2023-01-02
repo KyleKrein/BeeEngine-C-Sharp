@@ -12,4 +12,6 @@ public abstract class RendererAPI
     public abstract void SetClearColor(Color color);
     public abstract void Clear();
     public abstract void DrawIndexed(VertexArray vertexArray);
+
+    public abstract void Init();
 }

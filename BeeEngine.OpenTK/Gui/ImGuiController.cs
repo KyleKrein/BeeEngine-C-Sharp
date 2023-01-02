@@ -250,7 +250,7 @@ void main()
     }
 
     private readonly List<char> _pressedChars = new List<char>();
-
+    private readonly Keys[] _enumKeysValues = Enum.GetValues<Keys>(); 
     private void UpdateImGuiInput(NativeWindow wnd)
     {
         ImGuiIOPtr io = ImGui.GetIO();
@@ -268,8 +268,9 @@ void main()
         io.MouseWheel = _mouseScroll.Y;
         io.MouseWheelH = _mouseScroll.X;
         _mouseScroll = Vector2.Zero;
-        foreach (Keys key in Enum.GetValues(typeof(Keys)))
+        for (var index = 0; index < _enumKeysValues.Length; index++)
         {
+            var key = _enumKeysValues[index];
             if (key == Keys.Unknown)
             {
                 continue;

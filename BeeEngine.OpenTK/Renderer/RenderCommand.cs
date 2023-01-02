@@ -34,4 +34,9 @@ public static class RenderCommand
         Log.Error("Could not create renderer because of unknown API type");
         throw new InvalidOperationException();
     }
+
+    public static void Init()
+    {
+        _rendererApi.Init();
+    }
 }

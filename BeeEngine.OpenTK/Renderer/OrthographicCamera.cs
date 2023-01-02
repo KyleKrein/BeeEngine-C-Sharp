@@ -5,7 +5,7 @@ namespace BeeEngine.OpenTK.Renderer;
 
 public class OrthographicCamera
 {
-    private float _rotation = 0;
+    private float _rotation;
     private Vector3 _position;
     private Matrix4 _viewProjectionMatrix;
     private Matrix4 _projectionMatrix;
@@ -39,15 +39,22 @@ public class OrthographicCamera
 
     public OrthographicCamera(float left, float right, float bottom, float top)
     {
-        ProjectionMatrix = Matrix4.CreateOrthographicOffCenter(left, right, bottom, top, -1, 1);
-        ViewMatrix = Matrix4.Identity;
-        ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
+        _position = Vector3.Zero;
+        _rotation = 0.0f;
+        _projectionMatrix = Matrix4.CreateOrthographicOffCenter(left, right, bottom, top, -1, 1);
+        _viewMatrix = Matrix4.Identity;
+        //MUST BE THIS: _viewProjectionMatrix = _projectionMatrix * _viewMatrix;
+        _viewProjectionMatrix = _viewMatrix * _projectionMatrix;
     }
 
     private void RecalculateViewMatrix()
     {
-        Matrix4 transform = Matrix4.CreateTranslation(Position) * Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(Rotation));
-        ViewMatrix = transform.Inverted();
-        ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
+        Matrix4 translation = Matrix4.CreateTranslation(_position);
+        Matrix4 rotation = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(_rotation));
+        Matrix4 transform = translation * rotation;
+        _viewMatrix = transform.Inverted();
+        //MUST BE THIS:
+        //_viewProjectionMatrix = _projectionMatrix * _viewMatrix;
+        _viewProjectionMatrix = _viewMatrix * _projectionMatrix;
     }
 }
