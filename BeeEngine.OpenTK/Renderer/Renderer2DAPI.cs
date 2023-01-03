@@ -11,5 +11,5 @@ public abstract class Renderer2DAPI
     public abstract void SetColor(int r, int g, int b, int a);
     public abstract void SetTexture2D(Texture2D texture2D);
 
-    public abstract void DrawTexture2D(ref Matrix4 transform, Texture2D texture);
+    public abstract void DrawTexture2D(ref Matrix4 transform, Texture2D texture, Vector4 color, float textureScale);
 }

@@ -33,9 +33,10 @@ public class TestLayer2D: Layer
         _cameraController.OnUpdate();
         Renderer2D.BeginScene(_cameraController);
         
-        Renderer2D.DrawImage(0.5f, 0.5f, .5f,.5f, _forest);
+        
         Renderer2D.DrawImage(-0.5f, 0.2f, 1,1, _forest);
         Renderer2D.DrawRectangle(0,0,0.5f,0.5f, color);
+        Renderer2D.DrawImage(0f, 0f, -0.1f, 10f,10f, _forest, color);
     }
     public override void OnGUIRendering()
     {

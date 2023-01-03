@@ -26,15 +26,30 @@ public static class RenderCommand2D
         _rendererApi.SetCameraTransform(camera.ViewProjectionMatrix);
     }
 
-    public static void DrawRectangle(float x, float y, float width, float height, Color color)
+    public static void DrawRectangle(float x, float y, float z, float width, float height, Color color)
     {
-        Matrix4 transform = Matrix4.CreateTranslation(x, y, 0) * Matrix4.CreateScale(width, height, 1);
+        Matrix4 transform = Matrix4.CreateTranslation(x, y, z) * Matrix4.CreateScale(width, height, 1);
         _rendererApi.DrawRectangle(ref transform, color);
     }
 
+    public static void DrawTexture2D(float x, float y, float z, float width, float height, Texture2D texture)
+    {
+        Matrix4 transform = Matrix4.CreateTranslation(x, y, z) * Matrix4.CreateScale(width, height, 1);
+        _rendererApi.DrawTexture2D(ref transform, texture, Vector4.One, 1);
+    }
+    public static void DrawTexture2D(float x, float y, float z, float width, float height, Texture2D texture, Color color)
+    {
+        Matrix4 transform = Matrix4.CreateTranslation(x, y, z) * Matrix4.CreateScale(width, height, 1);
+        _rendererApi.DrawTexture2D(ref transform, texture, (Vector4) color, 1);
+    }
     public static void DrawTexture2D(float x, float y, float width, float height, Texture2D texture)
     {
         Matrix4 transform = Matrix4.CreateTranslation(x, y, 0) * Matrix4.CreateScale(width, height, 1);
-        _rendererApi.DrawTexture2D(ref transform, texture);
+        _rendererApi.DrawTexture2D(ref transform, texture, Vector4.One, 1);
+    }
+    public static void DrawTexture2D(float x, float y, float width, float height, Texture2D texture, Color color)
+    {
+        Matrix4 transform = Matrix4.CreateTranslation(x, y, 0) * Matrix4.CreateScale(width, height, 1);
+        _rendererApi.DrawTexture2D(ref transform, texture, (Vector4) color, 1);
     }
 }

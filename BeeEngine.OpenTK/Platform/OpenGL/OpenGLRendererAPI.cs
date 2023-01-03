@@ -1,6 +1,7 @@
 using BeeEngine.Mathematics;
 using BeeEngine.OpenTK.Renderer;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace BeeEngine.OpenTK.Platform.OpenGL;
 
@@ -14,7 +15,7 @@ public class OpenGLRendererAPI: RendererAPI
 
     public override void Clear()
     {
-        GL.Clear(ClearBufferMask.ColorBufferBit);
+        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
     }
 
     public override void DrawIndexed(VertexArray vertexArray)
@@ -27,6 +28,7 @@ public class OpenGLRendererAPI: RendererAPI
     {
         GL.Enable(EnableCap.Blend);
         GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        GL.Enable(EnableCap.DepthTest);
         if (Application.PlatformOS == OS.Mac)
         {
             _osScale = 2;

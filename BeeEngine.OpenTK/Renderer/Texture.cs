@@ -25,6 +25,18 @@ public abstract class Texture: IDisposable
 
 public abstract class Texture2D: Texture
 {
+    public abstract void SetData(byte[] data, uint size);
+    public abstract void SetData(IntPtr data, uint size);
+    public static Texture2D Create(uint width, uint height)
+    {
+        switch (Renderer.API)
+        {
+            case API.OpenGL:
+                return new OpenGLTexture2D(width, height);
+        }
+        Log.Error("Unknown RendererAPI!");
+        throw new PlatformNotSupportedException();
+    }
     public static Texture2D CreateFromFile(string path)
     {
         switch (Renderer.API)
@@ -35,4 +47,6 @@ public abstract class Texture2D: Texture
         Log.Error("Unknown RendererAPI!");
         throw new PlatformNotSupportedException();
     }
+
+    
 }
