@@ -49,6 +49,7 @@ public class OpenGLTexture2D: Texture2D
 
     public OpenGLTexture2D(uint width, uint height)
     {
+        DebugTimer.Start();
         Width = (int) width;
         Height = (int) height;
         if (Application.PlatformOS == OS.Mac)
@@ -68,17 +69,21 @@ public class OpenGLTexture2D: Texture2D
         }
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+        DebugTimer.End();
     }
     public override void Bind(int slot = 0)
     {
+        DebugTimer.Start("OpenGLTexture2D.Bind()");
         if (Application.PlatformOS == OS.Mac)
         {
             DebugLog.Assert(slot<=32, "Could not bind texture to slot {0}", slot);
             GL.ActiveTexture(_textureUnits[slot]);
             GL.BindTexture(TextureTarget.Texture2D, _rendererId);
+            DebugTimer.End("OpenGLTexture2D.Bind()");
             return;
         }
         GL.BindTextureUnit(slot, _rendererId);
+        DebugTimer.End("OpenGLTexture2D.Bind()");
         //
     }
 

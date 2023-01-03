@@ -1,6 +1,8 @@
 using BeeEngine.Mathematics;
+using BeeEngine.OpenTK.Core;
 using BeeEngine.OpenTK.Events;
 using BeeEngine.OpenTK.Platform.OpenGL;
+using BeeEngine.OpenTK.Profiling;
 using BeeEngine.OpenTK.Renderer;
 using OpenTK.Graphics.OpenGL4;
 
@@ -35,12 +37,20 @@ public abstract class Application: IDisposable
         {
             throw new Exception("Can't start two applications at once");
         }
+        Instrumentor.BeginSession("Startup", "startup.json");
         _isGame = initSettings.IsGame;
         
         Instance = this;
+        DebugTimer.Start("InitWindow");
         _window = InitWindow(initSettings);
+        DebugTimer.End("InitWindow");
         InitGui();
+        DebugTimer.Start("Renderer.Init");
         Renderer.Renderer.Init();
+        DebugTimer.End("Renderer.Init");
+#if DEBUG
+        PushOverlay(new DebugLayer());
+#endif
     }
 
     private void InitGui()
@@ -92,9 +102,16 @@ public abstract class Application: IDisposable
     
     public void Run()
     {
+        DebugTimer.Start("Window.Init()");
         _window.Init();
+        DebugTimer.End("Window.Init()");
+        DebugTimer.Start("LoadContent");
         LoadContent();
+        DebugTimer.End("LoadContent");
+        DebugTimer.Start("Initialize");
         Initialize();
+        DebugTimer.End("Initialize");
+        Instrumentor.EndSession();
         if (_isGame)
         {
             _window.RunMultiThreaded(UpdateLoop, RenderLoop);
@@ -118,28 +135,38 @@ public abstract class Application: IDisposable
 
     private void UpdateLoop()
     {
+        DebugTimer.Start();
         _eventQueue.Dispatch();
         InitializeGameObjects();
+        DebugTimer.Start("Update");
         Update();
+        DebugTimer.End("Update");
         _layerStack.Update();
         UpdateGameObjects();
         LateUpdateGameObjects();
+        DebugTimer.End();
     }
 
     protected abstract void OnEvent(ref EventDispatcher e);
     private void UpdateGameObjects()
     {
+        DebugTimer.Start();
         
+        DebugTimer.End();
     }
 
     private void LateUpdateGameObjects()
     {
+        DebugTimer.Start();
         
+        DebugTimer.End();
     }
 
     private void InitializeGameObjects()
     {
+        DebugTimer.Start();
         
+        DebugTimer.End();
     }
 
     protected void PushLayer(Layer layer)

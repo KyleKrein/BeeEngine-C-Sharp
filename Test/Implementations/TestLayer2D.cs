@@ -1,9 +1,13 @@
+using System.Runtime.CompilerServices;
+using BeeEngine;
 using BeeEngine.Mathematics;
 using BeeEngine.OpenTK;
+using BeeEngine.OpenTK.Core;
 using BeeEngine.OpenTK.Events;
 using BeeEngine.OpenTK.Platform.OpenGL;
 using BeeEngine.OpenTK.Renderer;
 using ImGuiNET;
+using Timer = BeeEngine.OpenTK.Timer;
 using Vector4 = System.Numerics.Vector4;
 
 namespace Test.Implementations;
@@ -30,6 +34,9 @@ public class TestLayer2D: Layer
 
     public override void OnUpdate()
     {
+        //using var t = new Timer(); 
+        
+        
         _cameraController.OnUpdate();
         Renderer2D.BeginScene(_cameraController);
         

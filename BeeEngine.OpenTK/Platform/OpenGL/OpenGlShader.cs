@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using BeeEngine.Mathematics;
 using BeeEngine.OpenTK.Renderer;
 using OpenTK.Graphics.OpenGL4;
@@ -39,6 +40,7 @@ public class OpenGlShader: Shader
     }
     private void Compile(Dictionary<BeeShaderType, string> shaders)
     {
+        DebugTimer.Start();
         var program = GL.CreateProgram();
         List<int> shaderIds = new List<int>(shaders.Count);
         int success = 0;
@@ -85,11 +87,13 @@ public class OpenGlShader: Shader
             GL.DetachShader(_programId, shaderId);
             GL.DeleteShader(shaderId);
         }
+        DebugTimer.End();
     }
 
     private static BeeShaderType[] _shaderTypes = Enum.GetValues<BeeShaderType>();
     private Dictionary<BeeShaderType, string> Preprocess(string[] source)
     {
+        DebugTimer.Start();
         Dictionary<BeeShaderType, string> result = new Dictionary<BeeShaderType, string>();
         foreach (var type in _shaderTypes)
         {
@@ -136,12 +140,15 @@ public class OpenGlShader: Shader
         {
             result[pair.Key] = pair.Value.Replace("\t", "\r\n   ");
         }
+        DebugTimer.End();
         return result;
     }
 
     public override void Bind()
     {
+        DebugTimer.Start("OpenGLShader.Bind()");
         GL.UseProgram(_programId);
+        DebugTimer.End("OpenGLShader.Bind()");
     }
 
     public override void Unbind()
@@ -151,66 +158,84 @@ public class OpenGlShader: Shader
 
     public override void UploadUniformMatrix4(string name, ref Matrix4 matrix4)
     {
+        DebugTimer.Start();
         global::OpenTK.Mathematics.Matrix4 newMatrix = matrix4;
         var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.UniformMatrix4(location, false, ref newMatrix);
+        DebugTimer.End();
     }
 
     public override void UploadUniformFloat(string name, float value)
     {
+        DebugTimer.Start();
         var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform1(location, value);
+        DebugTimer.End();
     }
 
     public override void UploadUniformFloat2(string name, Vector2 vector)
     {
+        DebugTimer.Start();
         var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform2(location, vector);
+        DebugTimer.End();
     }
 
     public override void UploadUniformFloat3(string name, Vector3 vector)
     {
+        DebugTimer.Start();
         var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform3(location, vector);
+        DebugTimer.End();
     }
 
     public override void UploadUniformFloat4(string name, Vector4 vector)
     {
+        DebugTimer.Start();
         var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform4(location, vector);
+        DebugTimer.End();
     }
 
     public override void UploadUniformInt(string name, int value)
     {
+        DebugTimer.Start();
         var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform1(location, value);
+        DebugTimer.End();
     }
 
     public override void UploadUniformInt2(string name, Vector2i vector)
     {
+        DebugTimer.Start();
         var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform2(location, vector);
+        DebugTimer.End();
     }
 
     public override void UploadUniformInt3(string name, Vector3i vector)
     {
+        DebugTimer.Start();
         var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform3(location, vector);
+        DebugTimer.End();
     }
 
     public override void UploadUniformInt4(string name, Vector4i vector)
     {
+        DebugTimer.Start();
         var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.Uniform4(location, vector);
+        DebugTimer.End();
     }
 
     private bool _disposedValue = false;

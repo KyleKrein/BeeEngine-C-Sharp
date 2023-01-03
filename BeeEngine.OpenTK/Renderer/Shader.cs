@@ -12,12 +12,7 @@ public abstract class Shader: IDisposable
     public static Shader Create(string filepath)
     {
         filepath = ResourceManager.ProcessFilePath(filepath);
-        var lastDot = filepath.LastIndexOf('.');
-        var lastSlash = filepath.LastIndexOf('/');
-        var lastBackSlash = filepath.LastIndexOf('\\');
-        lastSlash = Math.Max(lastSlash, lastBackSlash) + 1;
-        var count = lastDot == -1 ? filepath.Length - lastSlash : lastDot - lastSlash;
-        string name = filepath.Substring(lastSlash, count);
+        var name = ResourceManager.GetNameFromPath(filepath);
         return Create(name, filepath);
     }
 

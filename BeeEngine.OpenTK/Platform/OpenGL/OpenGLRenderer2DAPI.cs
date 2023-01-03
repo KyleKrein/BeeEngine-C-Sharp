@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using BeeEngine.Mathematics;
@@ -11,6 +12,7 @@ public class OpenGLRenderer2DAPI : Renderer2DAPI
     private Texture2D _blankTexture;
     public override void Init()
     {
+        DebugTimer.Start();
         _textureShader = Shader.Create("StandartBeeEngine2DShader",
             @"#version 330 core
 			
@@ -66,17 +68,20 @@ void main()
         _rectangle.SetIndexBuffer(rectangleIndexBuffer);
         _blankTexture = Texture2D.Create(1, 1);
         _blankTexture.SetData(_blankTextureData, 4);
+        DebugTimer.End();
     }
 
     private readonly byte[] _blankTextureData = new byte[] {255, 255, 255, 255};
     public override void DrawRectangle(ref Matrix4 transform, Color color)
     {
+        DebugTimer.Start();
         //_textureShader.Bind();
         UploadTransform(ref transform, _textureShader);
         _textureShader.UploadUniformFloat4("u_Color", (Vector4) color);
         _blankTexture.Bind();
         _rectangle.Bind();
         RenderCommand.DrawIndexed(_rectangle);
+        DebugTimer.End();
     }
 
     private void UploadTransform(ref Matrix4 transform, Shader shader)
@@ -101,6 +106,7 @@ void main()
     }
     public override void DrawTexture2D(ref Matrix4 transform, Texture2D texture, Vector4 color, float textureScale)
     {
+        DebugTimer.Start();
         _textureShader.UploadUniformFloat4("u_Color", color);
         _textureShader.UploadUniformFloat("u_TextureScale", textureScale);
         texture.Bind();
@@ -108,5 +114,6 @@ void main()
         UploadTransform(ref transform, _textureShader);
         _rectangle.Bind();
         RenderCommand.DrawIndexed(_rectangle);
+        DebugTimer.End();
     }
 }

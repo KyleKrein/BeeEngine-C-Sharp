@@ -31,7 +31,9 @@ internal class OpenGLContext: Context
 
     public override unsafe void SwapBuffers()
     {
+        DebugTimer.Start();
         GLFW.SwapBuffers(this._windowPtr);
+        DebugTimer.End();
     }
 
     public override unsafe void MakeCurrent()

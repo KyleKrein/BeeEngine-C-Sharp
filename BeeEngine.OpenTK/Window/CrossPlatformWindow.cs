@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using BeeEngine.Drawing;
+using BeeEngine.OpenTK.Core;
 using BeeEngine.OpenTK.Events;
 using BeeEngine.OpenTK.Gui;
 using BeeEngine.OpenTK.Platform.OpenGL;
@@ -106,6 +107,7 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
     private NativeWindowSettings _nativeWindowSettings = NativeWindowSettings.Default;
     public CrossPlatformWindow(WindowProps initSettings, EventQueue eventQueue): base(initSettings)
     {
+        DebugTimer.Start();
         if (Instance != null)
         {
             var message = "Can't have two instances of the game";
@@ -123,8 +125,10 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
         _nativeWindowSettings.AutoLoadBindings = true;
         _nativeWindowSettings.Title = initSettings.Title;
         _nativeWindowSettings.Size = new Vector2i(initSettings.Width, initSettings.Height);
+        DebugTimer.Start("Creating window");
         _window = new NativeWindow(_nativeWindowSettings);
         var context = new OpenGLContext(_window);
+        DebugTimer.End("Creating window");
         Context = context;
         _events = eventQueue;
         //Time gameTime = new Time();
@@ -135,10 +139,12 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
         VSync = initSettings.VSync;
         isMultiThreaded = initSettings.IsGame;
         SetupEventsQueue();
+        DebugTimer.End();
     }
 
     private void SetupEventsQueue()
     {
+        DebugTimer.Start();
         _window.MouseMove += (e) => { _events.AddEvent(new MouseMovedEvent(e.X, e.Y, e.DeltaX, e.DeltaY)); };
         _window.Resize += (e) =>
         {
@@ -163,6 +169,7 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
                 _events.AddEvent(new MouseScrolledEvent((float) x, (float) y));
             });
         }*/
+        DebugTimer.End();
     }
 
     private readonly EventQueue _events;
@@ -229,6 +236,7 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
     /// <returns>Time to next update frame.</returns>
     private double DispatchUpdateFrame()
     {
+        DebugTimer.Start();
         int num1 = 4;
         double totalSeconds = this._watchUpdate.Elapsed.TotalSeconds;
         double num2;
@@ -253,6 +261,7 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
             else
                 break;
         }
+        DebugTimer.End();
         return this.UpdateFrequency != 0.0 ? num2 - totalSeconds : 0.0;
     }
 
@@ -262,6 +271,7 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
     /// <returns>Time to next render frame.</returns>
     private double DispatchRenderFrame()
     {
+        DebugTimer.Start();
         double totalSeconds = this._watchRender.Elapsed.TotalSeconds;
         double num = this.RenderFrequency == 0.0 ? 0.0 : 1.0 / this.RenderFrequency;
         if (totalSeconds > 0.0 && totalSeconds >= num)
@@ -275,6 +285,7 @@ internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
         
         //GL.Viewport(0,0, _window.Size.X, _window.Size.Y);
         Context.SwapBuffers();
+        DebugTimer.End();
         return this.RenderFrequency != 0.0 ? num - totalSeconds : 0.0;
     }
 

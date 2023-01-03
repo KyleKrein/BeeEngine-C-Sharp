@@ -39,6 +39,7 @@ public class ImGuiController : IDisposable
     /// </summary>
     public ImGuiController(int width, int height)
     {
+        DebugTimer.Start();
         if (Application.PlatformOS == OS.Mac)
         {
             _osScale = 2;
@@ -92,6 +93,7 @@ public class ImGuiController : IDisposable
 
         //ImGui.NewFrame();
         //_frameBegun = true;
+        DebugTimer.End();
     }
     
     public void WindowResized(int width, int height)
@@ -110,6 +112,7 @@ public class ImGuiController : IDisposable
 
     public void CreateDeviceResources()
     {
+        DebugTimer.Start();
         _vertexBufferSize = 10000;
         _indexBufferSize = 2000;
 
@@ -172,6 +175,7 @@ void main()
         GL.BindBuffer(BufferTarget.ArrayBuffer, prevArrayBuffer);
 
         CheckGLError("End of ImGui setup");
+        DebugTimer.End();
     }
 
     /// <summary>
@@ -179,6 +183,7 @@ void main()
     /// </summary>
     public void RecreateFontDeviceTexture()
     {
+        DebugTimer.Start();
         ImGuiIOPtr io = ImGui.GetIO();
         io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height, out int bytesPerPixel);
 
@@ -213,6 +218,7 @@ void main()
         io.Fonts.SetTexID(_fontTexture);
 
         io.Fonts.ClearTexData();
+        DebugTimer.End();
     }
 
     /// <summary>
@@ -220,8 +226,10 @@ void main()
     /// </summary>
     public void Render()
     {
+        DebugTimer.Start();
         ImGui.Render();
         RenderImDrawData(ImGui.GetDrawData());
+        DebugTimer.End();
     }
     Vector2 _mouseScroll = Vector2.Zero;
     /// <summary>
@@ -333,6 +341,7 @@ void main()
 
     private void RenderImDrawData(ImDrawDataPtr draw_data)
     {
+        DebugTimer.Start();
         if (draw_data.CmdListsCount == 0)
         {
             return;
@@ -473,7 +482,7 @@ void main()
 
         GL.Disable(EnableCap.Blend);
         GL.Disable(EnableCap.ScissorTest);
-
+        DebugTimer.Start("ResetState");
         // Reset state
         GL.BindTexture(TextureTarget.Texture2D, prevTexture2D);
         GL.ActiveTexture((TextureUnit) prevActiveTexture);
@@ -495,6 +504,8 @@ void main()
         else GL.Disable(EnableCap.CullFace);
         if (prevScissorTestEnabled) GL.Enable(EnableCap.ScissorTest);
         else GL.Disable(EnableCap.ScissorTest);
+        DebugTimer.End("ResetState");
+        DebugTimer.End();
     }
 
     /// <summary>

@@ -23,6 +23,7 @@ internal sealed class EventQueue
 
     public void Dispatch()
     {
+        DebugTimer.Start();
         lock (locker)
         {
             while (_events.Count != 0)
@@ -34,6 +35,7 @@ internal sealed class EventQueue
                 _layerStack.OnEvent(ref dispatcher);
             }
         }
+        DebugTimer.End();
     }
 
     private void ApplicationOnEvent(ref EventDispatcher e)

@@ -8,6 +8,7 @@ internal class OpenGLVertexBuffer: VertexBuffer
     private uint _rendererId;
     public OpenGLVertexBuffer(float[] vertices, DrawingFrequency frequency)
     {
+        DebugTimer.Start();
         Count = vertices.Length;
         if (Application.PlatformOS == OS.Mac)
         {
@@ -19,11 +20,14 @@ internal class OpenGLVertexBuffer: VertexBuffer
         }
         GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
         GL.BufferData(BufferTarget.ArrayBuffer, Count*sizeof(float), vertices, BufferUsageHint.StaticDraw);
+        DebugTimer.End();
     }
 
     public override void Bind()
     {
+        DebugTimer.Start("OpenGLVertexBuffer.Bind()");
         GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
+        DebugTimer.End("OpenGLVertexBuffer.Bind()");
     }
 
     public override void Unbind()

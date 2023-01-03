@@ -26,6 +26,7 @@ public class OrthographicCameraController
 
     public void OnUpdate()
     {
+        DebugTimer.Start("OrthographicCameraController.OnUpdate()");
         if (Input.KeyPressed(Key.W))
         {
             _cameraPosition.Y += MovementSpeed * Time.DeltaTime;
@@ -58,28 +59,35 @@ public class OrthographicCameraController
         }
 
         Camera.Position = _cameraPosition;
+        DebugTimer.End("OrthographicCameraController.OnUpdate()");
     }
 
     public void OnEvent(ref EventDispatcher e)
     {
+        DebugTimer.Start("OrthographicCameraController.OnEvent()");
         e.Dispatch<MouseScrolledEvent>(OnMouseScrolled);
         e.Dispatch<WindowResizedEvent>(OnWindowResized);
+        DebugTimer.End("OrthographicCameraController.OnEvent()");
     }
 
     private bool OnWindowResized(WindowResizedEvent e)
     {
+        DebugTimer.Start("OrthographicCameraController.OnWindowResized()");
         _aspectRation = e.Width / (float) e.Height;
         Camera.SetProjectionMatrix(-_aspectRation * _zoomLevel, _aspectRation * _zoomLevel, -_zoomLevel,
             _zoomLevel);
+        DebugTimer.End("OrthographicCameraController.OnWindowResized()");
         return false;
     }
 
     private bool OnMouseScrolled(MouseScrolledEvent e)
     {
+        DebugTimer.Start("OrthographicCameraController.OnMouseScrolled()");
         _zoomLevel -= ZoomStep*e.Offset;
         _zoomLevel = Math.Max(_zoomLevel, 0.1f);
         Camera.SetProjectionMatrix(-_aspectRation * _zoomLevel, _aspectRation * _zoomLevel, -_zoomLevel,
             _zoomLevel);
+        DebugTimer.End("OrthographicCameraController.OnMouseScrolled()");
         return false;
     }
 

@@ -20,7 +20,9 @@ public static class RenderCommand
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void DrawIndexed(VertexArray vertexArray)
     {
+        DebugTimer.Start();
         _rendererApi.DrawIndexed(vertexArray);
+        DebugTimer.End();
     }
 
     static RenderCommand()

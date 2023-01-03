@@ -21,7 +21,9 @@ public class OpenGLVertexArray: VertexArray
     }
     public override void Bind()
     {
+        DebugTimer.Start("OpenGLVertexArray.Bind()");
         GL.BindVertexArray(_rendererID);
+        DebugTimer.End("OpenGLVertexArray.Bind()");
     }
 
     public override void Unbind()
@@ -31,6 +33,7 @@ public class OpenGLVertexArray: VertexArray
 
     public override void AddVertexBuffer(VertexBuffer buffer)
     {
+        DebugTimer.Start();
         Log.Assert(buffer.Layout.BufferElements.Count > 0, "Vertex buffer has no layout!");
         
         GL.BindVertexArray(_rendererID);
@@ -50,6 +53,7 @@ public class OpenGLVertexArray: VertexArray
             index++;
         }
         VertexBuffers.Add(buffer);
+        DebugTimer.End();
     }
 
     private VertexAttribPointerType ShaderDataTypeToOpenGLType(ShaderDataType type)
@@ -85,9 +89,11 @@ public class OpenGLVertexArray: VertexArray
     }
     public override void SetIndexBuffer(IndexBuffer buffer)
     {
+        DebugTimer.Start();
         GL.BindVertexArray(_rendererID);
         buffer.Bind();
         IndexBuffer = buffer;
+        DebugTimer.End();
     }
 
     protected override void Dispose(bool disposing)

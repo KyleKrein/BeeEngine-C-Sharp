@@ -49,6 +49,7 @@ public class OrthographicCamera
 
     private void RecalculateViewMatrix()
     {
+        DebugTimer.Start();
         Matrix4 translation = Matrix4.CreateTranslation(_position);
         Matrix4 rotation = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(_rotation));
         Matrix4 transform = translation * rotation;
@@ -56,11 +57,14 @@ public class OrthographicCamera
         //MUST BE THIS:
         //_viewProjectionMatrix = _projectionMatrix * _viewMatrix;
         _viewProjectionMatrix = _viewMatrix * _projectionMatrix;
+        DebugTimer.End();
     }
 
     public void SetProjectionMatrix(float left, float right, float bottom, float top)
     {
+        DebugTimer.Start();
         _projectionMatrix = Matrix4.CreateOrthographicOffCenter(left, right, bottom, top, -1, 1);
         RecalculateViewMatrix();
+        DebugTimer.End();
     }
 }

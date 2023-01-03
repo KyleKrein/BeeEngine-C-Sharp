@@ -71,12 +71,14 @@ internal class LayerStack: IDisposable
 
     public void Update()
     {
+        DebugTimer.Start("LayerStack.Update()");
         if (!_app.IsMinimized)
         {
             foreach (var layer in _layers)
             {
                 layer.OnUpdate();
             }
+            DebugTimer.Start("LayerStack.UpdateGUI()");
             _guiLayer.OnBegin();
             foreach (var layer in _layers)
             {
@@ -84,8 +86,9 @@ internal class LayerStack: IDisposable
             }
             _guiLayer.OnGUIRendering();
             _guiLayer.OnEnd();
+            DebugTimer.End("LayerStack.UpdateGUI()");
         }
-        
+        DebugTimer.End("LayerStack.Update()");
     }
     public void Dispose()
     {
