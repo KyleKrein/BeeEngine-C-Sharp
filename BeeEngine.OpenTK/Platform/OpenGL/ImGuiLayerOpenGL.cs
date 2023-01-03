@@ -57,7 +57,7 @@ internal sealed class ImGuiLayerOpenGL: ImGuiLayer
 
     public override void OnGUIRendering()
     {
-        ImGui.ShowDemoWindow();
+        //ImGui.ShowDemoWindow();
     }
 
     public override void OnEnd()

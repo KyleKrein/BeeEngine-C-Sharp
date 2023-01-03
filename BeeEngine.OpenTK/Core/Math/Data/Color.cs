@@ -1449,5 +1449,15 @@ namespace BeeEngine.Mathematics
                 B == other.B &&
                 A == other.A;
         }
+
+        public static implicit operator System.Numerics.Vector4(Color color)
+        {
+            return new System.Numerics.Vector4(color.R, color.G, color.B, color.A);
+        }
+
+        public static implicit operator Color(System.Numerics.Vector4 vector4)
+        {
+            return new Color(vector4.X, vector4.Y, vector4.Z, vector4.W);
+        }
     }
 }

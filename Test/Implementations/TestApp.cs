@@ -16,7 +16,8 @@ public class TestApp: Application
 
     protected override void Initialize()
     {
-        PushLayer(new ExampleLayer());
+        //PushLayer(new ExampleLayer());
+        PushLayer(new TestLayer2D());
     }
     
 
@@ -58,7 +59,6 @@ public class TestApp: Application
 
     protected override void Render()
     {
-        Renderer.EndScene();
-        //_triangle.Unbind();
+        
     }
 }

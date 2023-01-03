@@ -44,6 +44,7 @@ public class Renderer
     public static void Init()
     {
         RenderCommand.Init();
+        Renderer2D.Init();
     }
 
     internal static void OnWindowResized(int width, int height)
