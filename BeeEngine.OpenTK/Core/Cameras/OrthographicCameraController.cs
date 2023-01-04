@@ -87,6 +87,7 @@ public class OrthographicCameraController
         _zoomLevel = Math.Max(_zoomLevel, 0.1f);
         Camera.SetProjectionMatrix(-_aspectRation * _zoomLevel, _aspectRation * _zoomLevel, -_zoomLevel,
             _zoomLevel);
+        MovementSpeed = _zoomLevel;
         DebugTimer.End("OrthographicCameraController.OnMouseScrolled()");
         return false;
     }

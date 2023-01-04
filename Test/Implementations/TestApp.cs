@@ -7,7 +7,7 @@ namespace Test.Implementations;
 public class TestApp: Application
 {
     
-    public TestApp(string title, int width, int height) : base(new WindowProps(title, width, height, VSync.On, false))
+    public TestApp(string title, int width, int height) : base(new WindowProps(title, width, height, VSync.Off, false))
     {
         
     }

@@ -24,6 +24,11 @@ public class OpenGLRendererAPI: RendererAPI
         GL.DrawElements(PrimitiveType.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, (int) 0);
     }
 
+    public override void DrawIndexed(VertexArray vertexArray, int indexCount)
+    {
+        GL.DrawElements(PrimitiveType.Triangles, indexCount, DrawElementsType.UnsignedInt, (int) 0);
+    }
+
     public override void Init()
     {
         GL.Enable(EnableCap.Blend);

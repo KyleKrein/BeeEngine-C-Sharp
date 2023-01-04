@@ -20,13 +20,26 @@ public abstract class VertexBuffer: IDisposable
             _layout = value;
         }
     }
-
-    public static VertexBuffer Create(float[] vertices, DrawingFrequency frequency)
+    public static VertexBuffer Create(int size)
     {
         switch (Renderer.API)
         {
             case API.OpenGL:
-                return new OpenGLVertexBuffer(vertices, frequency);
+                return new OpenGLVertexBuffer(size);
+            case API.None:
+                Log.Error("{0} is not supported", Renderer.API);
+                throw new NotSupportedException();
+            default:
+                Log.Error("Unknown Renderer API is not supported");
+                throw new NotSupportedException();
+        }
+    }
+    public static VertexBuffer Create(float[] vertices)
+    {
+        switch (Renderer.API)
+        {
+            case API.OpenGL:
+                return new OpenGLVertexBuffer(vertices);
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();
@@ -51,6 +64,8 @@ public abstract class VertexBuffer: IDisposable
     {
         Dispose(false);
     }
+
+    public abstract void SetData(IntPtr data, int size);
 }
 
 public enum DrawingFrequency

@@ -24,6 +24,12 @@ public static class RenderCommand
         _rendererApi.DrawIndexed(vertexArray);
         DebugTimer.End();
     }
+    public static void DrawIndexed(VertexArray vertexArray, int indexCount)
+    {
+        DebugTimer.Start();
+        _rendererApi.DrawIndexed(vertexArray, indexCount);
+        DebugTimer.End();
+    }
 
     static RenderCommand()
     {

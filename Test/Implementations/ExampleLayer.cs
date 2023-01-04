@@ -47,7 +47,7 @@ public class ExampleLayer: Layer
 	    };
 
 	    _square = VertexArray.Create();
-	    var squareVertexBuffer = VertexBuffer.Create(squareVertices, 0);
+	    var squareVertexBuffer = VertexBuffer.Create(squareVertices);
 	    var squareIndexBuffer = IndexBuffer.Create(squareIndices);
 	    BufferLayout squareLayout = new BufferLayout()
 	    {
@@ -107,7 +107,7 @@ public class ExampleLayer: Layer
             0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
         };
         
-        var vertexBuffer = VertexBuffer.Create(vertices, 0);
+        var vertexBuffer = VertexBuffer.Create(vertices);
         var layout = new BufferLayout()
         {
             {ShaderDataType.Float3, "a_Position"},

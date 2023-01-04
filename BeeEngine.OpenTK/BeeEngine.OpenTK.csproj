@@ -20,6 +20,19 @@
       <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.csproj.FileListAbsolute.txt" />
       <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.dll" />
       <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.pdb" />
+      <Content Include="UnmanagedArray\UnmanagedArray.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="obj\**" />
     </ItemGroup>
 
 </Project>

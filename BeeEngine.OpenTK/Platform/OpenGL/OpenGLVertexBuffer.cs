@@ -6,9 +6,26 @@ namespace BeeEngine.OpenTK.Platform.OpenGL;
 internal class OpenGLVertexBuffer: VertexBuffer
 {
     private uint _rendererId;
-    public OpenGLVertexBuffer(float[] vertices, DrawingFrequency frequency)
+    
+    public OpenGLVertexBuffer(int size)
     {
-        DebugTimer.Start();
+        DebugTimer.Start(".ctor (int size)");
+        Count = size/sizeof(float);
+        if (Application.PlatformOS == OS.Mac)
+        {
+            GL.GenBuffers(1, out _rendererId);
+        }
+        else
+        {
+            GL.CreateBuffers(1, out _rendererId);
+        }
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
+        GL.BufferData(BufferTarget.ArrayBuffer, size, nint.Zero, BufferUsageHint.DynamicDraw);
+        DebugTimer.End(".ctor (int size)");
+    }
+    public OpenGLVertexBuffer(float[] vertices)
+    {
+        DebugTimer.Start(".ctor (float[] vertices)");
         Count = vertices.Length;
         if (Application.PlatformOS == OS.Mac)
         {
@@ -20,14 +37,16 @@ internal class OpenGLVertexBuffer: VertexBuffer
         }
         GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
         GL.BufferData(BufferTarget.ArrayBuffer, Count*sizeof(float), vertices, BufferUsageHint.StaticDraw);
-        DebugTimer.End();
+        DebugTimer.End(".ctor (float[] vertices)");
     }
+
+    
 
     public override void Bind()
     {
-        DebugTimer.Start("OpenGLVertexBuffer.Bind()");
+        DebugTimer.Start();
         GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
-        DebugTimer.End("OpenGLVertexBuffer.Bind()");
+        DebugTimer.End();
     }
 
     public override void Unbind()
@@ -38,5 +57,11 @@ internal class OpenGLVertexBuffer: VertexBuffer
     protected override void Dispose(bool disposing)
     {
         GL.DeleteBuffer(_rendererId);
+    }
+
+    public override void SetData(IntPtr data, int size)
+    {
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
+        GL.BufferSubData(BufferTarget.ArrayBuffer, 0, size ,data);
     }
 }
