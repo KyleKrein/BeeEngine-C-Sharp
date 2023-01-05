@@ -26,6 +26,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
+using Cysharp.Text;
 
 namespace BeeEngine.Mathematics
 {
@@ -1009,7 +1010,7 @@ namespace BeeEngine.Mathematics
         /// <inheritdoc/>
         public override string ToString()
         {
-            return string.Format("({0}{2} {1})", X, Y, MathHelper.ListSeparator);
+            return ZString.Format("({0}{2} {1})", X, Y, MathHelper.ListSeparator);
         }
 
         /// <inheritdoc/>

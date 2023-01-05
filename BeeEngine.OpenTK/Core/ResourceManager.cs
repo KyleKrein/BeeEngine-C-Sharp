@@ -1,3 +1,5 @@
+using Cysharp.Text;
+
 namespace BeeEngine;
 
 public class ResourceManager
@@ -17,5 +19,14 @@ public class ResourceManager
         var count = lastDot == -1 ? filepath.Length - lastSlash : lastDot - lastSlash;
         string name = filepath.Substring(lastSlash, count);
         return name;
+    }
+    public static ReadOnlySpan<char> GetNameFromPath(ReadOnlySpan<char> filepath)
+    {
+        var lastDot = filepath.LastIndexOf('.');
+        var lastSlash = filepath.LastIndexOf('/');
+        var lastBackSlash = filepath.LastIndexOf('\\');
+        lastSlash = Math.Max(lastSlash, lastBackSlash) + 1;
+        var count = lastDot == -1 ? filepath.Length - lastSlash : lastDot - lastSlash;
+        return filepath.Slice(lastSlash, count);
     }
 }

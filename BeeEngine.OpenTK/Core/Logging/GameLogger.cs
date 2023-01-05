@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Cysharp.Text;
 
 namespace BeeEngine;
 
@@ -105,30 +106,30 @@ public sealed class GameLogger: ILogger, IDisposable
             LogFile(stringBuilder.ToString());
         }
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /*[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Info(string format, params object[] args)
     {
-        var final = string.Format(null, format, args);
+        var final = ZString.Format( format, args);
         ActualLogging(final, LogLevel.Information);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Debug(string format, params object[] args)
     {
-        var final = string.Format(null, format, args);
+        var final = ZString.Format( format, args);
         ActualLogging(final, LogLevel.Debug);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Error(string format, params object[] args)
     {
-        var final = string.Format(null, format, args);
+        var final = ZString.Format( format, args);
         ActualLogging(final, LogLevel.Error);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Warning(string format, params object[] args)
     {
-        var final = string.Format(null, format, args);
+        var final = ZString.Format( format, args);
         ActualLogging(final, LogLevel.Warning);
-    }
+    }*/
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Debug(string o)
     {
@@ -188,7 +189,7 @@ public sealed class GameLogger: ILogger, IDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void LogFile(object o)
     {
-        _fileStream ??= new FileStream(string.Format(FileOutputPath, DateTime.Now.ToString("yyyy-M-dd--HH-mm-ss")),
+        _fileStream ??= new FileStream(ZString.Format(FileOutputPath, DateTime.Now.ToString("yyyy-M-dd--HH-mm-ss")),
             FileMode.Create, FileAccess.Write);
 
         byte[] bytes = Encoding.Unicode.GetBytes(o + "\r\n");

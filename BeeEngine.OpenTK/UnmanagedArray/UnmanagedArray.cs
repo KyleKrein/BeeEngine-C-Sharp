@@ -168,7 +168,7 @@ namespace UnmanageUtility
         /// <returns>reference to head item</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe ref T GetReference()
-        {
+        { 
 #if DEBUG
             if(_length == 0) {
                 Debug.Assert(_array == IntPtr.Zero);

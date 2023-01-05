@@ -150,29 +150,27 @@ void main()
     }
 
     private readonly byte[] _blankTextureData = new byte[] {255, 255, 255, 255};
-    public unsafe override void DrawRectangle(ref Vector3 position, ref Vector2 size, Color color)
+    public unsafe override void DrawRectangle(ref Vector3 position, ref Vector2 size, ref Vector4 color)
     {
-        DebugTimer.Start();
-
-        Vector4 _colorVector = (Vector4) color;
+        //DebugTimer.Start();
 
         _data.CurrentVertex->Position = position;
-        _data.CurrentVertex->Color = _colorVector;
+        _data.CurrentVertex->Color = color;
         _data.CurrentVertex->TexCoord = new Vector2(0.0f, 0.0f);
         _data.CurrentVertex++;
         
         _data.CurrentVertex->Position = new Vector3(position.X + size.X, position.Y, 0.0f);
-        _data.CurrentVertex->Color = _colorVector;
+        _data.CurrentVertex->Color = color;
         _data.CurrentVertex->TexCoord = new Vector2(1.0f, 0.0f);
         _data.CurrentVertex++;
         
         _data.CurrentVertex->Position = new Vector3(position.X + size.X, position.Y + size.Y, 0.0f);
-        _data.CurrentVertex->Color = _colorVector;
+        _data.CurrentVertex->Color = color;
         _data.CurrentVertex->TexCoord = new Vector2(1.0f, 1.0f);
         _data.CurrentVertex++;
         
         _data.CurrentVertex->Position = new Vector3(position.X, position.Y + size.Y, 0.0f);
-        _data.CurrentVertex->Color = _colorVector;
+        _data.CurrentVertex->Color = color;
         _data.CurrentVertex->TexCoord = new Vector2(0.0f, 1.0f);
         _data.CurrentVertex++;
 
@@ -184,7 +182,7 @@ void main()
         _data.BlankTexture.Bind();
         _data.Rectangle.Bind();
         RenderCommand.DrawIndexed(_data.Rectangle);*/
-        DebugTimer.End();
+        //DebugTimer.End();
     }
     public override void DrawRectangle(ref Matrix4 transform, Color color)
     {

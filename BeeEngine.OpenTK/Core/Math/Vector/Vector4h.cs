@@ -28,6 +28,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using Cysharp.Text;
 
 namespace BeeEngine.Mathematics
 {
@@ -1349,7 +1350,7 @@ namespace BeeEngine.Mathematics
         /// <inheritdoc/>
         public override string ToString()
         {
-            return string.Format
+            return ZString.Format
             (
                 "({0}{4} {1}{4} {2}{4} {3})",
                 X.ToString(),

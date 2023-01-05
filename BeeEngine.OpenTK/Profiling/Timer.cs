@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using BeeEngine.OpenTK.Core;
+using Cysharp.Text;
 
 namespace BeeEngine.OpenTK;
 
@@ -38,7 +39,7 @@ public static class DebugTimer
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static string GetName(string memberName, string memberPath)
     {
-        return string.Format("{0}: {1}", ResourceManager.GetNameFromPath(memberPath), memberName);
+        return ZString.Format("{0}: {1}", ResourceManager.GetNameFromPath(memberPath), memberName);
     }
     [Conditional("DEBUG")]
     public static void Start([System.Runtime.CompilerServices.CallerMemberName] string memberName = "", [System.Runtime.CompilerServices.CallerFilePath] string memberPath = "")

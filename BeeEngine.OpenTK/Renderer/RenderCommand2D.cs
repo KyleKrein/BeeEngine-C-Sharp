@@ -39,8 +39,9 @@ public static class RenderCommand2D
         }*/
         //_rendererApi.DrawRectangle(ref transform, color);
         var position = new Vector3(x, y, z);
-        var vector2 = new Vector2(width, height);
-        _rendererApi.DrawRectangle(ref position, ref vector2, color);
+        var size = new Vector2(width, height);
+        var color1 = (Vector4)color;
+        _rendererApi.DrawRectangle(ref position, ref size, ref color1);
     }
 
     public static void DrawTexture2D(float x, float y, float z, float width, float height, Texture2D texture)

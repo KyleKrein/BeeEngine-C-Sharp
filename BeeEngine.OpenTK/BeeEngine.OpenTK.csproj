@@ -11,6 +11,7 @@
       <PackageReference Include="ImGui.NET" Version="1.89.1" />
       <PackageReference Include="OpenTK" Version="4.7.5" />
       <PackageReference Include="StbImageSharp" Version="2.27.13" />
+      <PackageReference Include="ZString" Version="2.5.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,7 +21,6 @@
       <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.csproj.FileListAbsolute.txt" />
       <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.dll" />
       <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.pdb" />
-      <Content Include="UnmanagedArray\UnmanagedArray.csproj" />
     </ItemGroup>
 
     <ItemGroup>

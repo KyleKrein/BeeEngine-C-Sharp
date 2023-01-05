@@ -5,7 +5,7 @@ namespace BeeEngine.OpenTK.Renderer;
 public abstract class Renderer2DAPI
 {
     public abstract void Init();
-    public abstract void DrawRectangle(ref Vector3 position, ref Vector2 size, Color color);
+    public abstract void DrawRectangle(ref Vector3 position, ref Vector2 size, ref Vector4 color);
     public abstract void DrawRectangle(ref Matrix4 transform, Color color);
 
     public abstract void SetCameraTransform(Matrix4 cameraMatrix);
