@@ -6,6 +6,7 @@ using BeeEngine.OpenTK.Core;
 using BeeEngine.OpenTK.Events;
 using BeeEngine.OpenTK.Platform.OpenGL;
 using BeeEngine.OpenTK.Renderer;
+using Cysharp.Text;
 using ImGuiNET;
 using Timer = BeeEngine.OpenTK.Timer;
 using Vector4 = System.Numerics.Vector4;
@@ -45,8 +46,22 @@ public class TestLayer2D: Layer
         Color.Cyan,
         Color.Violet
     };
+    private float lastTime = Time.TotalTime;
+    private float fps = 0;
+    private float currentFps = 0;
     public override void OnUpdate()
     {
+        var now = Time.TotalTime;
+        if (now - lastTime >= 1)
+        {
+            Log.Info("{0} FPS", fps);
+            currentFps = fps;
+            lastTime = now;
+            fps = 0;
+        }
+        
+        fps++;
+        
         //using var t = new Timer(); 
         Renderer2D.ResetStatistics();
         
@@ -76,6 +91,11 @@ public class TestLayer2D: Layer
     {
         ImGui.Begin("Rectangle");
         ImGui.ColorEdit4("", ref color);
+        ImGui.End();
+
+        ImGui.Begin("Performance");
+        ImGui.Text(ZString.Format("Fps: {0}", currentFps));
+        ImGui.Text(ZString.Format("LastFrame: {0} ms", Time.DeltaTime/1000));
         ImGui.End();
     }
 

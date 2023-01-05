@@ -11,7 +11,7 @@ struct Renderer2DData
     public const int MaxRectangles = 10000;
     public const int MaxVertices = MaxRectangles * 4;
     public const int MaxIndices = MaxRectangles * 6;
-    public int MaxTextureSlots = 32;//TODO: Get rendering capabilities
+    public int MaxTextureSlots;
 
     public Shader TextureShader = null;
     public VertexArray VertexArray = null;
@@ -31,6 +31,7 @@ struct Renderer2DData
 
     public Renderer2DData()
     {
+        MaxTextureSlots = 16;//TODO: Get rendering capabilities
         TextureSlots = new Texture2D[MaxTextureSlots];
     }
 
@@ -87,7 +88,7 @@ in vec4 v_Color;
 in float v_TextureIndex;
 in float v_TilingFactor;
 
-uniform sampler2D u_Textures[32];
+uniform sampler2D u_Textures[16];
 void main()
 {
 	color = texture(u_Textures[int(v_TextureIndex)], v_TexCoord * v_TilingFactor) * v_Color;

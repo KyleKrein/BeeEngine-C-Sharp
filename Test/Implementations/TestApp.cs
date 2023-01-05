@@ -30,19 +30,11 @@ public class TestApp: Application
     {
         
     }
-    private float lastTime = Time.TotalTime;
-    private float fps = 0;
+    
     protected override void Update()
     {
 
-        if (Time.TotalTime - lastTime >= 1)
-        {
-            Log.Info("{0} FPS", fps);
-            lastTime = Time.TotalTime;
-            fps = 0;
-        }
         
-        fps++;
 
         
     }

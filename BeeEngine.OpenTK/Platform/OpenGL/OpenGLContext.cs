@@ -1,6 +1,9 @@
 using BeeEngine.OpenTK.Renderer;
+using OpenTK.Graphics.ES11;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using GL = OpenTK.Graphics.OpenGL4.GL;
+using StringName = OpenTK.Graphics.OpenGL4.StringName;
 
 namespace BeeEngine.OpenTK.Platform.OpenGL;
 internal class OpenGLContext: Context
@@ -26,7 +29,10 @@ internal class OpenGLContext: Context
 
     public override void Init()
     {
-        
+        var vendor = GL.GetString(StringName.Vendor);
+        var renderer = GL.GetString(StringName.Renderer);
+        var version = GL.GetString(StringName.Version);
+        Log.Info("OpenGL Context is initialized.\nGPU: {0} {1}\nVersion {2}", vendor, renderer, version);
     }
 
     public override unsafe void SwapBuffers()
