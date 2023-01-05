@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using BeeEngine.OpenTK.Core;
+using Cysharp.Text;
 using ImGuiNET;
 
 namespace BeeEngine.OpenTK.Profiling;
@@ -52,6 +53,13 @@ public class DebugLayer: Layer
             _numberOfFramesToCapture = 10;
             Instrumentor.BeginSession("Runtime", "runtime_profiling.json");
         }
+        ImGui.End();
+        var statistics = Renderer2D.GetStatistics();
+        ImGui.Begin("Renderer2D Statistics");
+        ImGui.Text(ZString.Format("DrawCalls: {0}", statistics.DrawCalls));
+        ImGui.Text(ZString.Format("SpriteCount: {0}", statistics.SpriteCount));
+        ImGui.Text(ZString.Format("QuadCount: {0}", statistics.QuadCount));
+        ImGui.Text(ZString.Format("TotalVertexCount: {0}", statistics.TotalVertexCount));
         ImGui.End();
     }
 }

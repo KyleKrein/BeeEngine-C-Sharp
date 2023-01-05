@@ -44,6 +44,10 @@ public static class DebugTimer
     [Conditional("DEBUG")]
     public static void Start([System.Runtime.CompilerServices.CallerMemberName] string memberName = "", [System.Runtime.CompilerServices.CallerFilePath] string memberPath = "")
     {
+        if (!Instrumentor.IsProfilingInProgress)
+        {
+            return;
+        }
         string name = GetName(memberName, memberPath);
         if (!_methods.ContainsKey(name))
         {
@@ -55,6 +59,10 @@ public static class DebugTimer
     [Conditional("DEBUG")]
     public static void End([System.Runtime.CompilerServices.CallerMemberName] string memberName = "", [System.Runtime.CompilerServices.CallerFilePath] string memberPath = "")
     {
+        if (!Instrumentor.IsProfilingInProgress)
+        {
+            return;
+        }
         var name = GetName(memberName, memberPath);
         double start = _methods[name].TimeOfDay.TotalMicroseconds * 0.001f;
         double end = DateTime.Now.TimeOfDay.TotalMicroseconds * 0.001f;

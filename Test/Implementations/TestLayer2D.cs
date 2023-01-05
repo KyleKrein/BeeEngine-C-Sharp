@@ -34,9 +34,9 @@ public class TestLayer2D: Layer
 
     private RectangleProperties _forestImageProperties = new RectangleProperties()
     {
-        X = -0.5f,
+        X = 1f,
         Y = 0.2f,
-        Rotation = 35,
+        Rotation = 0,
         Z = -0.1f
     };
 
@@ -48,6 +48,7 @@ public class TestLayer2D: Layer
     public override void OnUpdate()
     {
         //using var t = new Timer(); 
+        Renderer2D.ResetStatistics();
         
         
         _cameraController.OnUpdate();
@@ -55,17 +56,19 @@ public class TestLayer2D: Layer
 
         for (int i = 0; i < 100; i++)
         {
-            for (int j = 0; j < 100; j++)
+            for (int j = 0; j < 1000/4; j++)
             {
-                Renderer2D.DrawRectangle(j, i, 1, 1, colors[j%2]);
+                //Renderer2D.DrawRectangle(j, i, 1, 1, Color.Yellow);
+                Renderer2D.DrawImage(j,i,1,1,_forest);
             }
         }
         
         /*Renderer2D.DrawRectangle(0,0,0.5f,0.5f, color);
         Renderer2D.DrawRectangle(-1,0,0.5f,0.5f, Color.Azure);
         Renderer2D.DrawRectangle(-0.5f,0,0.5f,0.5f, Color.Crimson);
-        Renderer2D.DrawRectangle(0.5f,0,0.5f,0.5f, Color.Green);*/
-        //Renderer2D.DrawImage(ref _forestImageProperties, _forest);
+        Renderer2D.DrawRectangle(0.5f,0.5f, 0,0.5f,0.5f, Color.Green, MathHelper.DegreesToRadians(45));
+        Renderer2D.DrawImage(ref _forestImageProperties, _forest, 10);
+        */
 
         Renderer2D.EndScene();
     }

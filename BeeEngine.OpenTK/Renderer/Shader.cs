@@ -53,6 +53,7 @@ public abstract class Shader: IDisposable
     public abstract void UploadUniformFloat3(string name, Vector3 vector);
     public abstract void UploadUniformFloat4(string name, Vector4 vector);
     public abstract void UploadUniformInt(string name, int value);
+    public abstract void UploadUniformIntArray(string name, int[] values, int count);
     public abstract void UploadUniformInt2(string name, Vector2i vector);
     public abstract void UploadUniformInt3(string name, Vector3i vector);
     public abstract void UploadUniformInt4(string name, Vector4i vector);

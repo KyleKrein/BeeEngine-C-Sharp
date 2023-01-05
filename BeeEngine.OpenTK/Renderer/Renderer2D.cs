@@ -6,6 +6,14 @@ namespace BeeEngine.OpenTK;
 
 public static class Renderer2D
 {
+    public struct Statistics
+    {
+        public int DrawCalls;
+        public int QuadCount;
+        public int SpriteCount;
+        public int TotalVertexCount => QuadCount * 4;
+        
+    }
     public static void BeginScene(OrthographicCamera camera)
     {
         DebugTimer.Start();
@@ -75,5 +83,14 @@ public static class Renderer2D
         RenderCommand2D.DrawTexture2D(x, y, z, width, height, texture, color, textureMultiplier, MathHelper.DegreesToRadians(rotation));
     }
 
+    public static void ResetStatistics()
+    {
+        RenderCommand2D.ResetStatistics();
+    }
+
+    public static Statistics GetStatistics()
+    {
+        return RenderCommand2D.GetStatistics();
+    }
     
 }

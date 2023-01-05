@@ -41,7 +41,16 @@ public static class RenderCommand2D
         var position = new Vector3(x, y, z);
         var size = new Vector2(width, height);
         var color1 = (Vector4)color;
-        _rendererApi.DrawRectangle(ref position, ref size, ref color1);
+        _rendererApi.DrawRotatedRectangle(ref position, ref size, ref color1, rotationInRadians);
+        /*if (rotationInRadians == 0f)
+        {
+            _rendererApi.DrawRectangle(ref position, ref size, ref color1);
+        }
+        else
+        {
+            _rendererApi.DrawRotatedRectangle(ref position, ref size, ref color1, rotationInRadians);
+        }*/
+        
     }
 
     public static void DrawTexture2D(float x, float y, float z, float width, float height, Texture2D texture)
@@ -50,7 +59,21 @@ public static class RenderCommand2D
     }
     public static void DrawTexture2D(float x, float y, float z, float width, float height, Texture2D texture, Color color, float textureScale, float rotationInRadians)
     {
-        Matrix4 transform;
+        var position = new Vector3(x, y, z);
+        var size = new Vector2(width, height);
+        var colorVector = (Vector4)color;
+        _rendererApi.DrawRotatedTexture2D(ref position, ref size, texture, ref colorVector, textureScale, rotationInRadians);
+        /*
+        if (rotationInRadians == 0.0f)
+        {
+            _rendererApi.DrawTexture2D(ref position, ref size, texture, ref colorVector, textureScale);
+        }
+        else
+        {
+            _rendererApi.DrawRotatedTexture2D(ref position, ref size, texture, ref colorVector, textureScale, rotationInRadians);
+        }
+       */
+        /*Matrix4 transform;
         if (rotationInRadians == 0f)
         {
             transform = Matrix4.CreateTranslation(x, y, z) * Matrix4.CreateScale(width, height, 1);
@@ -59,7 +82,7 @@ public static class RenderCommand2D
         {
             transform = Matrix4.CreateTranslation(x, y, z) * Matrix4.CreateRotationZ(rotationInRadians) * Matrix4.CreateScale(width, height, 1);
         }
-        _rendererApi.DrawTexture2D(ref transform, texture, (Vector4) color, 1);
+        _rendererApi.DrawTexture2D(ref transform, texture, (Vector4) color, 1);*/
     }
     public static void DrawTexture2D(float x, float y, float width, float height, Texture2D texture)
     {
@@ -78,5 +101,15 @@ public static class RenderCommand2D
     public static void EndScene()
     {
         _rendererApi.EndScene();
+    }
+
+    public static void ResetStatistics()
+    {
+        _rendererApi.ResetStatistics();
+    }
+
+    public static Renderer2D.Statistics GetStatistics()
+    {
+        return _rendererApi.GetStatistics();
     }
 }

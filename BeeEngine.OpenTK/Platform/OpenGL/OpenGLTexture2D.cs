@@ -119,6 +119,11 @@ public class OpenGLTexture2D: Texture2D
 
     private static TextureUnit[] _textureUnits = Enum.GetValues<TextureUnit>();
 
+    public override bool Equals(object? obj)
+    {
+        return obj is not null && ((OpenGLTexture2D) obj)._rendererId == _rendererId;
+    }
+
     protected override void Dispose(bool disposing)
     {
         GL.DeleteTexture(_rendererId);

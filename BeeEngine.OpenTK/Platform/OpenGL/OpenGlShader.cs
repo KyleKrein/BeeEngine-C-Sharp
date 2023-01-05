@@ -211,6 +211,15 @@ public class OpenGlShader: Shader
         DebugTimer.End();
     }
 
+    public override void UploadUniformIntArray(string name, int[] values, int count)
+    {
+        DebugTimer.Start();
+        var location = GL.GetUniformLocation(_programId, name);
+        DebugLog.Assert(location != -1, "Could not find {0}", name);
+        GL.Uniform1(location, count, values); ;
+        DebugTimer.End();
+    }
+
     public override void UploadUniformInt2(string name, Vector2i vector)
     {
         DebugTimer.Start();

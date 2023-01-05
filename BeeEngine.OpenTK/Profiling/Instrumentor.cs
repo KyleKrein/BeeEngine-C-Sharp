@@ -32,10 +32,6 @@ public static class Instrumentor
     }
      internal static void WriteProfile(in ProfileResult result)
     {
-        if (!IsProfilingInProgress)
-        {
-            return;
-        }
         if (_profileCount++ > 0)
             _streamWriter.Write(",");
 

@@ -69,18 +69,21 @@
       </None>
       <None Remove="bin\**" />
       <None Include="bin\Debug\net7.0\Test.dll.config" />
+      <None Remove="obj\**" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="bin\Debug\net7.0\runtimes\**" />
       <Compile Remove="bin\Release\net7.0\runtimes\**" />
       <Compile Remove="bin\**" />
+      <Compile Remove="obj\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="bin\Debug\net7.0\runtimes\**" />
       <EmbeddedResource Remove="bin\Release\net7.0\runtimes\**" />
       <EmbeddedResource Remove="bin\**" />
+      <EmbeddedResource Remove="obj\**" />
     </ItemGroup>
 
 </Project>
