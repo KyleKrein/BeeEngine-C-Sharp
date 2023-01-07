@@ -1,8 +1,9 @@
 using System.Runtime.CompilerServices;
 using BeeEngine.Mathematics;
-using BeeEngine.OpenTK.Platform.OpenGL;
+using BeeEngine;
+using BeeEngine.Platform.OpenGL;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
 
 public static class RenderCommand
 {

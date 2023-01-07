@@ -1,9 +1,7 @@
 using BeeEngine.Mathematics;
-using BeeEngine.OpenTK;
-using BeeEngine.OpenTK.Events;
-using BeeEngine.OpenTK.Renderer;
+using BeeEngine.Events;
+using BeeEngine;
 using ImGuiNET;
-using OpenTK.Graphics.OpenGL4;
 using Vector4 = System.Numerics.Vector4;
 
 namespace Test.Implementations;

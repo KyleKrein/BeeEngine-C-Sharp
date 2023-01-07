@@ -1,10 +1,11 @@
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using BeeEngine.Mathematics;
+using BeeEngine;
+using BeeEngine._2D;
+using BeeEngine.SmartPointers;
 using UnmanageUtility;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
+
 
 struct Renderer2DData
 {
@@ -53,6 +54,14 @@ public class OpenGLRenderer2DAPI : Renderer2DAPI
 {
     private Renderer2DData _data;
     
+    static readonly Vector2[] textureCoords = new []
+    {
+        new Vector2(0.0f, 0.0f), 
+        new Vector2(1.0f, 0.0f), 
+        new Vector2(1.0f, 1.0f), 
+        new Vector2(0.0f, 1.0f)
+    }; 
+    const int rectVertexCount = 4;
     public unsafe override void Init()
     {
         DebugTimer.Start();
@@ -270,34 +279,16 @@ void main()
                             * Matrix4.CreateScale(new Vector3(size.X, size.Y, 1.0f));
         
         transform.Transpose();
-
-        _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[0]);
-        _data.CurrentVertex->Color = color;
-        _data.CurrentVertex->TexCoord = new Vector2(0.0f, 0.0f);
-        _data.CurrentVertex->TextureIndex = blankTextureIndex;
-        _data.CurrentVertex->TilingFactor = TilingFactor;
-        _data.CurrentVertex++;
         
-        _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[1]);
-        _data.CurrentVertex->Color = color;
-        _data.CurrentVertex->TexCoord = new Vector2(1.0f, 0.0f);
-        _data.CurrentVertex->TextureIndex = blankTextureIndex;
-        _data.CurrentVertex->TilingFactor = TilingFactor;
-        _data.CurrentVertex++;
-        
-        _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[2]);
-        _data.CurrentVertex->Color = color;
-        _data.CurrentVertex->TexCoord = new Vector2(1.0f, 1.0f);
-        _data.CurrentVertex->TextureIndex = blankTextureIndex;
-        _data.CurrentVertex->TilingFactor = TilingFactor;
-        _data.CurrentVertex++;
-        
-        _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[3]);
-        _data.CurrentVertex->Color = color;
-        _data.CurrentVertex->TexCoord = new Vector2(0.0f, 1.0f);
-        _data.CurrentVertex->TextureIndex = blankTextureIndex;
-        _data.CurrentVertex->TilingFactor = TilingFactor;
-        _data.CurrentVertex++;
+        for (int i = 0; i < rectVertexCount; i++)
+        {
+            _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[i]);
+            _data.CurrentVertex->Color = color;
+            _data.CurrentVertex->TexCoord = textureCoords[i];
+            _data.CurrentVertex->TextureIndex = blankTextureIndex;
+            _data.CurrentVertex->TilingFactor = TilingFactor;
+            _data.CurrentVertex++;
+        }
 
         _data.RectIndexCount += 6;
         
@@ -338,10 +329,17 @@ void main()
         shader.UploadUniformMatrix4("u_Transform", ref transform);
     }
 
-    public override void SetCameraTransform(Matrix4 cameraMatrix)
+    public unsafe override void SetCameraTransform(Matrix4 cameraMatrix)
     {
         _data.TextureShader.Bind();
-        _data.TextureShader.UploadUniformMatrix4("u_ViewProjection", ref cameraMatrix);
+        _data.TextureShader.UploadUniformMatrix4("u_ViewProjection", &cameraMatrix);
+    }
+
+    public override unsafe void SetCameraTransform(SharedPointer<Matrix4> cameraMatrix)
+    {
+        _data.TextureShader.Bind();
+        _data.TextureShader.UploadUniformMatrix4("u_ViewProjection", cameraMatrix.GetPtr());
+        cameraMatrix.Release();
     }
 
     public override void SetColor(int r, int g, int b, int a)
@@ -413,7 +411,6 @@ void main()
         DebugTimer.Start();
         
         IfBufferIsFullStartNewBatch();
-
         float textureIndex = 0.0f;
         for (int i = 0; i < _data.TextureSlotIndex; i++)
         {
@@ -435,33 +432,15 @@ void main()
                             * Matrix4.CreateScale(new Vector3(size.X, size.Y, 1.0f));
         transform.Transpose();
 
-        _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[0]); //new Vector3( transform * _data.RectVertexPositions[0]);
-        _data.CurrentVertex->Color = color;
-        _data.CurrentVertex->TexCoord = new Vector2(0.0f, 0.0f);
-        _data.CurrentVertex->TextureIndex = textureIndex;
-        _data.CurrentVertex->TilingFactor = textureScale;
-        _data.CurrentVertex++;
-        
-        _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[1]);
-        _data.CurrentVertex->Color = color;
-        _data.CurrentVertex->TexCoord = new Vector2(1.0f, 0.0f);
-        _data.CurrentVertex->TextureIndex = textureIndex;
-        _data.CurrentVertex->TilingFactor = textureScale;
-        _data.CurrentVertex++;
-        
-        _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[2]);
-        _data.CurrentVertex->Color = color;
-        _data.CurrentVertex->TexCoord = new Vector2(1.0f, 1.0f);
-        _data.CurrentVertex->TextureIndex = textureIndex;
-        _data.CurrentVertex->TilingFactor = textureScale;
-        _data.CurrentVertex++;
-        
-        _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[3]);
-        _data.CurrentVertex->Color = color;
-        _data.CurrentVertex->TexCoord = new Vector2(0.0f, 1.0f);
-        _data.CurrentVertex->TextureIndex = textureIndex;
-        _data.CurrentVertex->TilingFactor = textureScale;
-        _data.CurrentVertex++;
+        for (int i = 0; i < rectVertexCount; i++)
+        {
+            _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[i]);
+            _data.CurrentVertex->Color = color;
+            _data.CurrentVertex->TexCoord = textureCoords[i];
+            _data.CurrentVertex->TextureIndex = textureIndex;
+            _data.CurrentVertex->TilingFactor = textureScale;
+            _data.CurrentVertex++;
+        }
 
         _data.RectIndexCount += 6;
         
@@ -469,6 +448,12 @@ void main()
         _data.Statistics.SpriteCount++;
         
         DebugTimer.End();
+    }
+
+    public override void DrawRotatedTexture2D(ref Vector3 position, ref Vector2 size, Sprite sprite, ref Vector4 color, float textureScale,
+        float rotationInRadians)
+    {
+        
     }
 
     public override void DrawTexture2D(ref Matrix4 transform, Texture2D texture, Vector4 color, float textureScale)

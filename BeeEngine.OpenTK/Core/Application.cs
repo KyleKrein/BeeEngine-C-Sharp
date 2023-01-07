@@ -1,12 +1,11 @@
-using BeeEngine.Mathematics;
-using BeeEngine.OpenTK.Core;
-using BeeEngine.OpenTK.Events;
-using BeeEngine.OpenTK.Platform.OpenGL;
+using BeeEngine.Profiling;
+using BeeEngine;
+using BeeEngine.Core;
+using BeeEngine.Events;
 using BeeEngine.OpenTK.Profiling;
-using BeeEngine.OpenTK.Renderer;
-using OpenTK.Graphics.OpenGL4;
+using BeeEngine.Platform.OpenGL;
 
-namespace BeeEngine.OpenTK;
+namespace BeeEngine;
 
 public abstract class Application: IDisposable
 {
@@ -46,13 +45,13 @@ public abstract class Application: IDisposable
         DebugTimer.End("InitWindow");
         InitGui();
         DebugTimer.Start("Renderer.Init");
-        Renderer.Renderer.Init();
+        BeeEngine.Renderer.Init();
         DebugTimer.End("Renderer.Init");
 #if DEBUG
         PushOverlay(new DebugLayer());
 #endif
     }
-
+    [ProfileMethod]
     private void InitGui()
     {
         switch (PlatformOS)
@@ -132,10 +131,10 @@ public abstract class Application: IDisposable
         Render();
         
     }
-
+    [ProfileMethod]
     private void UpdateLoop()
     {
-        DebugTimer.Start();
+        //DebugTimer.Start();
         _eventQueue.Dispatch();
         InitializeGameObjects();
         DebugTimer.Start("Update");
@@ -144,29 +143,23 @@ public abstract class Application: IDisposable
         _layerStack.Update();
         UpdateGameObjects();
         LateUpdateGameObjects();
-        DebugTimer.End();
+        //DebugTimer.End();
     }
-
     protected abstract void OnEvent(ref EventDispatcher e);
+    [ProfileMethod]
     private void UpdateGameObjects()
     {
-        DebugTimer.Start();
         
-        DebugTimer.End();
     }
-
+    [ProfileMethod]
     private void LateUpdateGameObjects()
     {
-        DebugTimer.Start();
         
-        DebugTimer.End();
     }
-
+    [ProfileMethod]
     private void InitializeGameObjects()
     {
-        DebugTimer.Start();
         
-        DebugTimer.End();
     }
 
     protected void PushLayer(Layer layer)
@@ -214,25 +207,25 @@ public abstract class Application: IDisposable
     //Work with shader library
     protected Shader LoadShader(string filepath)
     {
-        return Renderer.Renderer.Shaders.Load(filepath);
+        return BeeEngine.Renderer.Shaders.Load(filepath);
     }
     protected Shader LoadShader(string name, string filepath)
     {
-        return Renderer.Renderer.Shaders.Load(filepath);
+        return BeeEngine.Renderer.Shaders.Load(filepath);
     }
 
     protected void AddShader(string name, Shader shader)
     {
-        Renderer.Renderer.Shaders.Add(name, shader);
+        BeeEngine.Renderer.Shaders.Add(name, shader);
     }
     protected void AddShader(Shader shader)
     {
-        Renderer.Renderer.Shaders.Add(shader);
+        BeeEngine.Renderer.Shaders.Add(shader);
     }
 
     protected Shader GetShader(string name)
     {
-        return Renderer.Renderer.Shaders.Get(name);
+        return BeeEngine.Renderer.Shaders.Get(name);
     }
 
     internal void Dispatch(ref EventDispatcher e)
@@ -250,7 +243,7 @@ public abstract class Application: IDisposable
         }
 
         IsMinimized = false;
-        Renderer.Renderer.OnWindowResized(e.Width, e.Height);
+        BeeEngine.Renderer.OnWindowResized(e.Width, e.Height);
         return false;
     }
 
@@ -261,5 +254,7 @@ public enum OS
 {
     Windows,
     Linux,
-    Mac
+    Mac,
+    IOS,
+    Android
 }

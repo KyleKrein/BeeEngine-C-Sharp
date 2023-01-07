@@ -1,13 +1,13 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using BeeEngine.OpenTK.Core;
+using BeeEngine.Core;
 using Cysharp.Text;
 
-namespace BeeEngine.OpenTK;
+namespace BeeEngine;
 
 public ref struct Timer
 {
-#if DEBUG
+#if PROFILING
     private readonly string _name;
     private DateTime _start;
     public Action<string, TimeSpan> Func;
@@ -41,7 +41,7 @@ public static class DebugTimer
     {
         return ZString.Format("{0}: {1}", ResourceManager.GetNameFromPath(memberPath), memberName);
     }
-    [Conditional("DEBUG")]
+    [Conditional("PROFILING")]
     public static void Start([System.Runtime.CompilerServices.CallerMemberName] string memberName = "", [System.Runtime.CompilerServices.CallerFilePath] string memberPath = "")
     {
         if (!Instrumentor.IsProfilingInProgress)
@@ -55,8 +55,9 @@ public static class DebugTimer
             return;
         }
         _methods[name] = DateTime.Now;
+        DebugLog.AssertAndThrow(memberName != string.Empty && memberPath != string.Empty && memberName != null && memberPath != null, "ERROR!");
     }
-    [Conditional("DEBUG")]
+    [Conditional("PROFILING")]
     public static void End([System.Runtime.CompilerServices.CallerMemberName] string memberName = "", [System.Runtime.CompilerServices.CallerFilePath] string memberPath = "")
     {
         if (!Instrumentor.IsProfilingInProgress)
@@ -64,6 +65,11 @@ public static class DebugTimer
             return;
         }
         var name = GetName(memberName, memberPath);
+        if (!_methods.ContainsKey(name))
+        {
+            _methods.Add(name, InvalidDateTime);
+            return;
+        }
         double start = _methods[name].TimeOfDay.TotalMicroseconds * 0.001f;
         double end = DateTime.Now.TimeOfDay.TotalMicroseconds * 0.001f;
         DebugLog.Assert(_methods[name] != InvalidDateTime, "Invalid time of start in {0}", name);

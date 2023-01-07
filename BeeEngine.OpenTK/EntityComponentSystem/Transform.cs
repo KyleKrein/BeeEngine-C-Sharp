@@ -1,6 +1,6 @@
 using BeeEngine.Mathematics;
 
-namespace BeeEngine.OpenTK.EntityComponentSystem;
+namespace BeeEngine.EntityComponentSystem;
 
 public sealed class Transform: Component
 {

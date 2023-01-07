@@ -1,9 +1,8 @@
 using BeeEngine.Mathematics;
-using BeeEngine.OpenTK.Renderer;
+using BeeEngine;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace BeeEngine.OpenTK.Platform.OpenGL;
+namespace BeeEngine.Platform.OpenGL;
 
 public class OpenGLRendererAPI: RendererAPI
 {

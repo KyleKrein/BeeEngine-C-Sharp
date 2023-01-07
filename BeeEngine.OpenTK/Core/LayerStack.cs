@@ -1,7 +1,8 @@
-using BeeEngine.OpenTK.Events;
-using BeeEngine.OpenTK.Gui;
+using BeeEngine.Events;
+using BeeEngine.Gui;
+using BeeEngine.OpenTK.Profiling;
 
-namespace BeeEngine.OpenTK;
+namespace BeeEngine;
 
 internal class LayerStack: IDisposable
 {
@@ -68,17 +69,17 @@ internal class LayerStack: IDisposable
             }
         }
     }
-
+    [ProfileMethod]
     public void Update()
     {
-        DebugTimer.Start("LayerStack.Update()");
+        DebugTimer.Start();
         if (!_app.IsMinimized)
         {
             foreach (var layer in _layers)
             {
                 layer.OnUpdate();
             }
-            DebugTimer.Start("LayerStack.UpdateGUI()");
+            DebugTimer.Start("UpdateGUI()");
             _guiLayer.OnBegin();
             foreach (var layer in _layers)
             {
@@ -86,9 +87,9 @@ internal class LayerStack: IDisposable
             }
             _guiLayer.OnGUIRendering();
             _guiLayer.OnEnd();
-            DebugTimer.End("LayerStack.UpdateGUI()");
+            DebugTimer.End("UpdateGUI()");
         }
-        DebugTimer.End("LayerStack.Update()");
+        DebugTimer.End();
     }
     public void Dispose()
     {

@@ -1,4 +1,4 @@
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
 
 public enum API
 {

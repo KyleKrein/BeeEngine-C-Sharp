@@ -1,4 +1,4 @@
-namespace BeeEngine.OpenTK.Events;
+namespace BeeEngine.Events;
 
 [Flags]
 public enum EventCategory

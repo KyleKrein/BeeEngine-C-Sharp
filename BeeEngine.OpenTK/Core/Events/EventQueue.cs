@@ -1,4 +1,4 @@
-namespace BeeEngine.OpenTK.Events;
+namespace BeeEngine.Events;
 
 internal sealed class EventQueue
 {

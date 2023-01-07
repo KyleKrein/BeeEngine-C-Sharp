@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using BeeEngine.Mathematics;
-using BeeEngine.OpenTK.Events;
-using BeeEngine.OpenTK.Platform.OpenGL;
+using BeeEngine;
+using BeeEngine.Platform.OpenGL;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
 
 [DebuggerDisplay("{Name}")]
 public abstract class Shader: IDisposable
@@ -48,6 +48,8 @@ public abstract class Shader: IDisposable
 
     public abstract void Unbind();
     public abstract void UploadUniformMatrix4(string name, ref Matrix4 matrix4);
+    public abstract unsafe void UploadUniformMatrix4(string name, Matrix4* matrix4);
+
     public abstract void UploadUniformFloat(string name, float value);
     public abstract void UploadUniformFloat2(string name, Vector2 vector);
     public abstract void UploadUniformFloat3(string name, Vector3 vector);

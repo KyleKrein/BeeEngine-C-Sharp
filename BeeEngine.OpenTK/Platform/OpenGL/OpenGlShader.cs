@@ -1,9 +1,8 @@
-using System.Diagnostics;
 using BeeEngine.Mathematics;
-using BeeEngine.OpenTK.Renderer;
+using BeeEngine;
 using OpenTK.Graphics.OpenGL4;
 
-namespace BeeEngine.OpenTK.Platform.OpenGL;
+namespace BeeEngine.Platform.OpenGL;
 
 public class OpenGlShader: Shader
 {
@@ -64,7 +63,7 @@ public class OpenGlShader: Shader
             shaderIds.Add(shader);
         }
 
-        Log.Assert(shaderIds.Count > 0, "No shaders to compile!");
+        Log.AssertAndThrow(shaderIds.Count > 0, "No shaders to compile!");
 
         _programId = program;
 
@@ -163,6 +162,16 @@ public class OpenGlShader: Shader
         var location = GL.GetUniformLocation(_programId, name);
         DebugLog.Assert(location != -1, "Could not find {0}", name);
         GL.UniformMatrix4(location, false, ref newMatrix);
+        DebugTimer.End();
+    }
+
+    public override unsafe void UploadUniformMatrix4(string name, Matrix4* matrix4)
+    {
+        DebugTimer.Start();
+        //global::OpenTK.Mathematics.Matrix4* newMatrix = (global::OpenTK.Mathematics.Matrix4*) matrix4;
+        var location = GL.GetUniformLocation(_programId, name);
+        DebugLog.Assert(location != -1, "Could not find {0}", name);
+        GL.UniformMatrix4(location, 1, false, (float*)matrix4);
         DebugTimer.End();
     }
 

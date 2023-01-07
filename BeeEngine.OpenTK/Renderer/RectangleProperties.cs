@@ -1,6 +1,6 @@
 using BeeEngine.Mathematics;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
 
 public struct RectangleProperties
 {

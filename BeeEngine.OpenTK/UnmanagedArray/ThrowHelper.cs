@@ -24,8 +24,6 @@ SOFTWARE.
  */
 
 #nullable enable
-using System;
-
 namespace UnmanageUtility
 {
     internal static class ThrowHelper

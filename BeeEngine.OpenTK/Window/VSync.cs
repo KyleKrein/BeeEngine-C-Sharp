@@ -1,4 +1,4 @@
-namespace BeeEngine.OpenTK;
+namespace BeeEngine;
 
 public enum VSync
 {

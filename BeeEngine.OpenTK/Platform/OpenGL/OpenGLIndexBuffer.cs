@@ -1,7 +1,7 @@
-using BeeEngine.OpenTK.Renderer;
+using BeeEngine;
 using OpenTK.Graphics.OpenGL4;
 
-namespace BeeEngine.OpenTK.Platform.OpenGL;
+namespace BeeEngine.Platform.OpenGL;
 
 internal class OpenGLIndexBuffer: IndexBuffer
 {

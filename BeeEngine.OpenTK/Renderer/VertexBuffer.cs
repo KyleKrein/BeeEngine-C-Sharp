@@ -1,7 +1,8 @@
-using BeeEngine.OpenTK.Platform.OpenGL;
+using BeeEngine;
+using BeeEngine.Platform.OpenGL;
 using NotSupportedException = System.NotSupportedException;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
 
 public abstract class VertexBuffer: IDisposable
 {

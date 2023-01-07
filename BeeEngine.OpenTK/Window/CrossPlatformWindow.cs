@@ -1,10 +1,7 @@
 using System.Diagnostics;
 using BeeEngine.Drawing;
-using BeeEngine.OpenTK.Core;
-using BeeEngine.OpenTK.Events;
-using BeeEngine.OpenTK.Gui;
-using BeeEngine.OpenTK.Platform.OpenGL;
-using BeeEngine.OpenTK.Renderer;
+using BeeEngine.Events;
+using BeeEngine.Platform.OpenGL;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -12,9 +9,9 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using InvalidOperationException = System.InvalidOperationException;
 
-namespace BeeEngine.OpenTK;
+namespace BeeEngine;
 
-internal class CrossPlatformWindow:BeeEngine.OpenTK.Window, IDisposable
+internal class CrossPlatformWindow:Window, IDisposable
 {
     public static CrossPlatformWindow Instance { get; private set; }
     public override string Title

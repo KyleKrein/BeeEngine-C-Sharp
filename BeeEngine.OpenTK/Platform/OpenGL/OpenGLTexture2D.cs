@@ -1,9 +1,8 @@
-using BeeEngine.OpenTK.Events;
-using BeeEngine.OpenTK.Renderer;
+using BeeEngine;
 using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
 
-namespace BeeEngine.OpenTK.Platform.OpenGL;
+namespace BeeEngine.Platform.OpenGL;
 
 public class OpenGLTexture2D: Texture2D
 {

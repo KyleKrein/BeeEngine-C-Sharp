@@ -1,4 +1,6 @@
-namespace BeeEngine.OpenTK.Renderer;
+using BeeEngine;
+
+namespace BeeEngine;
 
 public class ShaderLibrary
 {

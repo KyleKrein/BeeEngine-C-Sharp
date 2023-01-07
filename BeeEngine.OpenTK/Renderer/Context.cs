@@ -1,4 +1,4 @@
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
 
 internal abstract class Context
 {

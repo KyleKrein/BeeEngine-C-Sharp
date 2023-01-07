@@ -1,7 +1,7 @@
 using BeeEngine.Drawing;
-using BeeEngine.OpenTK.Events;
+using BeeEngine.Events;
 
-namespace BeeEngine.OpenTK;
+namespace BeeEngine;
 
 public static class Input
 {

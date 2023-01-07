@@ -1,7 +1,7 @@
-using BeeEngine.OpenTK.EntityComponentSystem;
-using BeeEngine.OpenTK.Platform.OpenGL;
+using BeeEngine;
+using BeeEngine.Platform.OpenGL;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
 
 public abstract class Texture: IDisposable
 {

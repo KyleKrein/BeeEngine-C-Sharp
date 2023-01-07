@@ -6,7 +6,6 @@
  * Contributions by Andy Gill, James Talton and Georg Wächter.
  */
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Globalization;
@@ -698,7 +697,7 @@ namespace BeeEngine.Mathematics
         {
             if (n < 0)
             {
-                OpenTK.Log.Error("{0} Must be positive", nameof(n));
+                BeeEngine.Log.Error("{0} Must be positive", nameof(n));
                 throw new ArgumentOutOfRangeException(nameof(n), "Must be positive.");
             }
 

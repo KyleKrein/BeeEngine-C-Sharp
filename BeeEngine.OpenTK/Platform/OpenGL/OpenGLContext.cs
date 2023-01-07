@@ -1,11 +1,10 @@
-using BeeEngine.OpenTK.Renderer;
-using OpenTK.Graphics.ES11;
+using BeeEngine;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using GL = OpenTK.Graphics.OpenGL4.GL;
 using StringName = OpenTK.Graphics.OpenGL4.StringName;
 
-namespace BeeEngine.OpenTK.Platform.OpenGL;
+namespace BeeEngine.Platform.OpenGL;
 internal class OpenGLContext: Context
 {
     private NativeWindow _window;

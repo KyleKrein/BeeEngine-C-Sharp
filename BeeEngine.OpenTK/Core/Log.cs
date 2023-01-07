@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Cysharp.Text;
 
-namespace BeeEngine.OpenTK;
+namespace BeeEngine;
 
 public static class Log
 {
@@ -310,7 +310,7 @@ public static class Log
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void AssertAndThrow(bool isOk, string o)
+    public static void AssertAndThrow([DoesNotReturnIf(false)]bool isOk, string o)
     {
         if (isOk)
         {

@@ -1,7 +1,7 @@
-using BeeEngine.OpenTK.Renderer;
+using BeeEngine;
 using OpenTK.Windowing.Common;
 
-namespace BeeEngine.OpenTK;
+namespace BeeEngine;
 
 internal abstract class Window: IDisposable
 {

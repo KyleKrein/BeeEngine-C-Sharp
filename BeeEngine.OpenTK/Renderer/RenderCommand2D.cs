@@ -1,6 +1,7 @@
 using BeeEngine.Mathematics;
+using BeeEngine;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
 
 public static class RenderCommand2D
 {
@@ -23,7 +24,7 @@ public static class RenderCommand2D
 
     public static void SetCamera(OrthographicCamera camera)
     {
-        _rendererApi.SetCameraTransform(camera.ViewProjectionMatrix);
+        _rendererApi.SetCameraTransform(camera.GetViewProjectionMatrix());
     }
 
     public static void DrawRectangle(float x, float y, float z, float width, float height, Color color, float rotationInRadians)

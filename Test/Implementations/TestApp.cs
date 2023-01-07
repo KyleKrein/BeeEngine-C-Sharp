@@ -1,6 +1,5 @@
-using BeeEngine.OpenTK;
-using BeeEngine.OpenTK.Events;
-using BeeEngine.OpenTK.Renderer;
+using BeeEngine;
+using BeeEngine.Events;
 
 namespace Test.Implementations;
 

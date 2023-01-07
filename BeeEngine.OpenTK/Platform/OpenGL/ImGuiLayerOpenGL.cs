@@ -1,10 +1,9 @@
-using BeeEngine.OpenTK.Events;
-using BeeEngine.OpenTK.Gui;
-using ImGuiNET;
+using BeeEngine.Events;
+using BeeEngine.Gui;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
 
-namespace BeeEngine.OpenTK.Platform.OpenGL;
+namespace BeeEngine.Platform.OpenGL;
 
 internal sealed class ImGuiLayerOpenGL: ImGuiLayer
 {

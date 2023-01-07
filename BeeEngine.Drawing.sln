@@ -18,5 +18,6 @@ Global
 		{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

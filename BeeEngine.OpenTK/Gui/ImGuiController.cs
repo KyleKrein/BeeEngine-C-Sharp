@@ -5,9 +5,10 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using ImGuiNET;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using BeeEngine.OpenTK.Profiling;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 
-namespace BeeEngine.OpenTK.Gui;
+namespace BeeEngine.Gui;
 
 public class ImGuiController : IDisposable
 {
@@ -33,13 +34,14 @@ public class ImGuiController : IDisposable
     private System.Numerics.Vector2 _scaleFactor;
 
     private static bool _khrDebugAvailable;
-
+    
     /// <summary>
     /// Constructs a new ImGuiController.
     /// </summary>
+    [ProfileMethod]
     public ImGuiController(int width, int height)
     {
-        DebugTimer.Start();
+        //DebugTimer.Start();
         if (Application.PlatformOS == OS.Mac)
         {
             _osScale = 2;
@@ -93,7 +95,7 @@ public class ImGuiController : IDisposable
 
         //ImGui.NewFrame();
         //_frameBegun = true;
-        DebugTimer.End();
+        //DebugTimer.End();
     }
     
     public void WindowResized(int width, int height)

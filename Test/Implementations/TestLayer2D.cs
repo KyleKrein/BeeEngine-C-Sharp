@@ -1,14 +1,8 @@
-using System.Runtime.CompilerServices;
-using BeeEngine;
 using BeeEngine.Mathematics;
-using BeeEngine.OpenTK;
-using BeeEngine.OpenTK.Core;
-using BeeEngine.OpenTK.Events;
-using BeeEngine.OpenTK.Platform.OpenGL;
-using BeeEngine.OpenTK.Renderer;
+using BeeEngine.Events;
+using BeeEngine;
 using Cysharp.Text;
 using ImGuiNET;
-using Timer = BeeEngine.OpenTK.Timer;
 using Vector4 = System.Numerics.Vector4;
 
 namespace Test.Implementations;
@@ -38,7 +32,9 @@ public class TestLayer2D: Layer
         X = 1f,
         Y = 0.2f,
         Rotation = 0,
-        Z = -0.1f
+        Z = -0.1f,
+        Width = 1.5f,
+        Height = 1f
     };
 
     private Color[] colors = new Color[2]
@@ -49,6 +45,7 @@ public class TestLayer2D: Layer
     private float lastTime = Time.TotalTime;
     private float fps = 0;
     private float currentFps = 0;
+    private float rotation = 0;
     public override void OnUpdate()
     {
         var now = Time.TotalTime;
@@ -69,22 +66,23 @@ public class TestLayer2D: Layer
         _cameraController.OnUpdate();
         Renderer2D.BeginScene(_cameraController);
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 24*5; i++)
         {
-            for (int j = 0; j < 1000/4; j++)
+            for (int j = 0; j < 30*5; j++)
             {
                 //Renderer2D.DrawRectangle(j, i, 1, 1, Color.Yellow);
-                Renderer2D.DrawImage(j,i,1,1,_forest);
+                Renderer2D.DrawImage(j,i,0,1,1,_forest, Color.White, rotation*Time.DeltaTime, 1);
             }
         }
         
-        /*Renderer2D.DrawRectangle(0,0,0.5f,0.5f, color);
+        /*
+        Renderer2D.DrawRectangle(0,0,0.5f,0.5f, color);
         Renderer2D.DrawRectangle(-1,0,0.5f,0.5f, Color.Azure);
         Renderer2D.DrawRectangle(-0.5f,0,0.5f,0.5f, Color.Crimson);
         Renderer2D.DrawRectangle(0.5f,0.5f, 0,0.5f,0.5f, Color.Green, MathHelper.DegreesToRadians(45));
-        Renderer2D.DrawImage(ref _forestImageProperties, _forest, 10);
+        Renderer2D.DrawImage(ref _forestImageProperties, _forest, 1);
         */
-
+        
         Renderer2D.EndScene();
     }
     public override void OnGUIRendering()

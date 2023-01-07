@@ -6,8 +6,6 @@
  * Contributions by Georg W�chter.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
 namespace BeeEngine.Mathematics

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Data;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
 
 public sealed class BufferLayout: IEnumerable<BufferElement>
 {

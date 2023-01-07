@@ -1,6 +1,8 @@
 using BeeEngine.Mathematics;
+using BeeEngine;
+using BeeEngine.OpenTK.Profiling;
 
-namespace BeeEngine.OpenTK.Renderer;
+namespace BeeEngine;
 
 public class Renderer
 {
@@ -30,7 +32,7 @@ public class Renderer
     {
         
     }
-
+    [ProfileMethod]
     public static void Submit(VertexArray vertexArray, Shader shader, Matrix4 transform, Action<Shader> func = null)
     {
         shader.Bind();
@@ -40,13 +42,13 @@ public class Renderer
         vertexArray.Bind();
         RenderCommand.DrawIndexed(vertexArray);
     }
-
+    [ProfileMethod]
     public static void Init()
     {
         RenderCommand.Init();
         Renderer2D.Init();
     }
-
+    [ProfileMethod]
     internal static void OnWindowResized(int width, int height)
     {
         RenderCommand.SetViewPort(0, 0, width, height);

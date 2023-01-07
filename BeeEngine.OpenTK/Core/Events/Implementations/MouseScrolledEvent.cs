@@ -1,6 +1,4 @@
-using BeeEngine.Drawing;
-
-namespace BeeEngine.OpenTK.Events;
+namespace BeeEngine.Events;
 
 public class MouseScrolledEvent: Event
 {

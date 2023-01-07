@@ -1,5 +1,4 @@
-using BeeEngine.OpenTK.Events;
-namespace BeeEngine.OpenTK.Gui;
+namespace BeeEngine.Gui;
 
 internal abstract class ImGuiLayer : Layer
 {

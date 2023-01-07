@@ -23,9 +23,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

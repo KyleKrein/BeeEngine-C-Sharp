@@ -1,5 +1,3 @@
-using Cysharp.Text;
-
 namespace BeeEngine;
 
 public class ResourceManager

@@ -1,6 +1,6 @@
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace BeeEngine.OpenTK;
+namespace BeeEngine;
 
 public static class Time
 {

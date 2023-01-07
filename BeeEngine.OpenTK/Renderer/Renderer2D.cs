@@ -1,8 +1,8 @@
 using BeeEngine.Drawing;
 using BeeEngine.Mathematics;
-using BeeEngine.OpenTK.Renderer;
+using BeeEngine;
 
-namespace BeeEngine.OpenTK;
+namespace BeeEngine;
 
 public static class Renderer2D
 {

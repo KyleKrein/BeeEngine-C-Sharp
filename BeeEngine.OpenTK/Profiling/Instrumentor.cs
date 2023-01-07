@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
 
-namespace BeeEngine.OpenTK.Core;
+namespace BeeEngine.Core;
 
 public static class Instrumentor
 {
@@ -15,14 +15,14 @@ public static class Instrumentor
         _streamWriter = null;
         _profileCount = 0;
     }
-    [Conditional("DEBUG")]
+    [Conditional("PROFILING")]
     public static void BeginSession(string name, string filepath)
     {
         _streamWriter = new StreamWriter(filepath);
         WriteHeader();
         _currentSession = name;
     }
-    [Conditional("DEBUG")]
+    [Conditional("PROFILING")]
     public static void EndSession()
     {
         WriteFooter();

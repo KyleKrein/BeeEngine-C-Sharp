@@ -1,9 +1,8 @@
-using System.Diagnostics;
-using BeeEngine.OpenTK.Core;
+using BeeEngine.Core;
 using Cysharp.Text;
 using ImGuiNET;
 
-namespace BeeEngine.OpenTK.Profiling;
+namespace BeeEngine.Profiling;
 
 public class DebugLayer: Layer
 {
