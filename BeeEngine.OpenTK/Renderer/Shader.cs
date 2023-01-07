@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using BeeEngine.Mathematics;
 using BeeEngine;
+using BeeEngine.Platform.Metal;
 using BeeEngine.Platform.OpenGL;
 
 namespace BeeEngine;
@@ -22,6 +23,8 @@ public abstract class Shader: IDisposable
         {
             case API.OpenGL:
                 return new OpenGlShader(name, filepath);
+            case API.Metal:
+                return new MetalShader(name, filepath);
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();

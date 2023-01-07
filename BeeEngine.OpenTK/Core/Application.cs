@@ -3,6 +3,7 @@ using BeeEngine;
 using BeeEngine.Core;
 using BeeEngine.Events;
 using BeeEngine.OpenTK.Profiling;
+using BeeEngine.Platform.Metal;
 using BeeEngine.Platform.OpenGL;
 
 namespace BeeEngine;
@@ -10,7 +11,7 @@ namespace BeeEngine;
 public abstract class Application: IDisposable
 {
     private readonly Window _window;
-    public static readonly OS PlatformOS;
+    public static OS PlatformOS { get; private set; }
     private LayerStack _layerStack;
 
     public int Width
@@ -65,6 +66,9 @@ public abstract class Application: IDisposable
             case OS.Mac:
                 _layerStack.SetGUILayer(new ImGuiLayerOpenGL());
                 break;
+            case OS.IOS:
+                _layerStack.SetGUILayer(new ImGuiLayerMetal());
+                break;
             default:
                 throw new PlatformNotSupportedException();
         }
@@ -73,6 +77,11 @@ public abstract class Application: IDisposable
     static Application()
     {
         PlatformOS = Environment.OSVersion.Platform == PlatformID.Unix ? OS.Mac : OS.Windows;
+    }
+
+    public static void SetPlatformOS(OS os)
+    {
+        PlatformOS = os;
     }
 
     private Window InitWindow(WindowProps initSettings)
@@ -94,6 +103,11 @@ public abstract class Application: IDisposable
                 _layerStack = new LayerStack();
                 _eventQueue = new EventQueue(_layerStack);
                 return new CrossPlatformWindow(initSettings, _eventQueue);
+            case OS.IOS:
+                RendererAPI.API = API.Metal;
+                _layerStack = new LayerStack();
+                _eventQueue = new EventQueue(_layerStack);
+                return new IOSWindow(initSettings);
             default:
                 throw new PlatformNotSupportedException();
         }

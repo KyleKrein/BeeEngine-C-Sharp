@@ -1,5 +1,6 @@
 using BeeEngine.Mathematics;
 using BeeEngine;
+using BeeEngine.Platform.Metal;
 
 namespace BeeEngine;
 
@@ -9,16 +10,20 @@ public static class RenderCommand2D
 
     static RenderCommand2D()
     {
+        
+    }
+    public static void Init()
+    {
         switch (Renderer.API)
         {
             case API.OpenGL:
                 _rendererApi = new OpenGLRenderer2DAPI();
-                return;
+                break;
+            case API.Metal:
+                _rendererApi = new MetalRenderer2DAPI();
+                break;
         }
-        Log.AssertAndThrow(false, "Unknown rendering api!");
-    }
-    public static void Init()
-    {
+        Log.AssertAndThrow(_rendererApi != null, "Unknown rendering api!");
         _rendererApi.Init();
     }
 

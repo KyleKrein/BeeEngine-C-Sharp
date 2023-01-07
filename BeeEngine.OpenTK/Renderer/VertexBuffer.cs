@@ -1,4 +1,5 @@
 using BeeEngine;
+using BeeEngine.Platform.Metal;
 using BeeEngine.Platform.OpenGL;
 using NotSupportedException = System.NotSupportedException;
 
@@ -27,6 +28,8 @@ public abstract class VertexBuffer: IDisposable
         {
             case API.OpenGL:
                 return new OpenGLVertexBuffer(size);
+            case API.Metal:
+                return new MetalVertexBuffer(size);
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();
@@ -41,6 +44,8 @@ public abstract class VertexBuffer: IDisposable
         {
             case API.OpenGL:
                 return new OpenGLVertexBuffer(vertices);
+            case API.Metal:
+                return new MetalVertexBuffer(vertices);
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();

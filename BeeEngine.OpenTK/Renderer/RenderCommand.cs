@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using BeeEngine.Mathematics;
 using BeeEngine;
+using BeeEngine.Platform.Metal;
 using BeeEngine.Platform.OpenGL;
 
 namespace BeeEngine;
@@ -34,18 +35,23 @@ public static class RenderCommand
 
     static RenderCommand()
     {
-        switch (Renderer.API)
-        {
-            case API.OpenGL:
-                _rendererApi = new OpenGLRendererAPI();
-                return;
-        }
-        Log.Error("Could not create renderer because of unknown API type");
-        throw new InvalidOperationException();
+        
     }
 
     public static void Init()
     {
+        switch (Renderer.API)
+        {
+            case API.OpenGL:
+                _rendererApi = new OpenGLRendererAPI();
+                goto SUCCESS;
+            case API.Metal:
+                _rendererApi = new MetalRendererAPI();
+                goto SUCCESS;
+        }
+        Log.Error("Could not create renderer because of unknown API type");
+        throw new InvalidOperationException();
+        SUCCESS:
         _rendererApi.Init();
     }
 

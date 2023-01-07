@@ -180,9 +180,14 @@ public sealed class GameLogger: ILogger, IDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void LogConsole(object o, LogLevel logLevel = LogLevel.Debug)
     {
-        ConsoleColor oldColor = SwitchColor(logLevel);
+        if (Application.PlatformOS != OS.IOS)
+        {
+            ConsoleColor oldColor = SwitchColor(logLevel);
+            Console.WriteLine(o);
+            Console.ForegroundColor = oldColor;
+            return;
+        }
         Console.WriteLine(o);
-        Console.ForegroundColor = oldColor;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

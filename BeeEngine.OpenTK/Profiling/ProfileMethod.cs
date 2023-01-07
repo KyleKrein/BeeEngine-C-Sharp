@@ -16,7 +16,7 @@ namespace BeeEngine.OpenTK.Profiling;
 public class ProfileMethod: Attribute
 {
     
-    [Advice(Kind.Before)]
+    [AspectInjector.Broker.Advice(Kind.Before)]
     public void Before([Argument(Source.Name)] string name, [Argument(Source.Type)] Type hostType)
     {
         //Don't forget to remove unused parameters as it improves performance!
@@ -26,7 +26,7 @@ public class ProfileMethod: Attribute
         Start(name, hostType.Name);
     }
 
-    [Advice(Kind.After)]
+    [AspectInjector.Broker.Advice(Kind.After)]
     public void After([Argument(Source.Name)] string name, [Argument(Source.ReturnValue)] object retValue, [Argument(Source.Type)] Type hostType)
     {
         //Don't forget to remove unused parameters as it improves performance!

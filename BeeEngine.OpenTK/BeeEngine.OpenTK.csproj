@@ -1,11 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net7.0; net7.0-ios</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
     </PropertyGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
+        <Reference Include="Microsof.iOS" />
+    </ItemGroup>
+    <Choose>
+        <When Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
+            <PropertyGroup>
+                <DefineConstants>IOS</DefineConstants>
+            </PropertyGroup>
+        </When>
+    </Choose>
 
     <ItemGroup>
       <PackageReference Include="ImGui.NET" Version="1.89.1" />
@@ -33,6 +44,12 @@
 
     <ItemGroup>
       <None Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.iOS">
+        <HintPath>..\..\..\..\..\usr\local\share\dotnet\packs\Microsoft.iOS.Ref\16.0.1478\ref\net7.0\Microsoft.iOS.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
     <Choose>

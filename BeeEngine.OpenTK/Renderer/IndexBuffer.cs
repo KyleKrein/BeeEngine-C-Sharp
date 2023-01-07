@@ -1,4 +1,5 @@
 using BeeEngine;
+using BeeEngine.Platform.Metal;
 using BeeEngine.Platform.OpenGL;
 using NotSupportedException = System.NotSupportedException;
 
@@ -14,6 +15,8 @@ public abstract class IndexBuffer: IDisposable
         {
             case API.OpenGL:
                 return new OpenGLIndexBuffer(indices);
+            case API.Metal:
+                return new MetalIndexBuffer(indices);
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();

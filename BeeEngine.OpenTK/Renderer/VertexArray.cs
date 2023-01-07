@@ -1,4 +1,5 @@
 using BeeEngine;
+using BeeEngine.Platform.Metal;
 using BeeEngine.Platform.OpenGL;
 using NotSupportedException = System.NotSupportedException;
 
@@ -19,6 +20,8 @@ public abstract class VertexArray: IDisposable
         {
             case API.OpenGL:
                 return new OpenGLVertexArray();
+            case API.Metal:
+                return new MetalVertexArray();
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();

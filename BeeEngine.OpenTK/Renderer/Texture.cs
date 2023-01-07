@@ -1,4 +1,5 @@
 using BeeEngine;
+using BeeEngine.Platform.Metal;
 using BeeEngine.Platform.OpenGL;
 
 namespace BeeEngine;
@@ -34,6 +35,8 @@ public abstract class Texture2D: Texture
         {
             case API.OpenGL:
                 return new OpenGLTexture2D(width, height);
+            case API.Metal:
+                return new MetalTexture2D(width, height);
         }
         Log.Error("Unknown RendererAPI!");
         throw new PlatformNotSupportedException();
@@ -44,6 +47,8 @@ public abstract class Texture2D: Texture
         {
             case API.OpenGL:
                 return new OpenGLTexture2D(path);
+            case API.Metal:
+                return new MetalTexture2D(path);
         }
         Log.Error("Unknown RendererAPI!");
         throw new PlatformNotSupportedException();

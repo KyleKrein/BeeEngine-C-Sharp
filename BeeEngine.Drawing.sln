@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeeEngine.OpenTK", "BeeEngi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeeEngine.IOS", "BeeEngine.IOS\BeeEngine.IOS.csproj", "{82503BF1-3BBC-4793-BE17-75AEE6A19999}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestiOS", "TestiOS\TestiOS.csproj", "{ED9CF985-CDCE-4984-B167-A9EA41B91F4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,5 +27,9 @@ Global
 		{82503BF1-3BBC-4793-BE17-75AEE6A19999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82503BF1-3BBC-4793-BE17-75AEE6A19999}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82503BF1-3BBC-4793-BE17-75AEE6A19999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED9CF985-CDCE-4984-B167-A9EA41B91F4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED9CF985-CDCE-4984-B167-A9EA41B91F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED9CF985-CDCE-4984-B167-A9EA41B91F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED9CF985-CDCE-4984-B167-A9EA41B91F4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
