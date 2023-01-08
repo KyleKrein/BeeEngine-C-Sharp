@@ -1,6 +1,7 @@
 using BeeEngine.Mathematics;
 using BeeEngine;
 using BeeEngine._2D;
+using BeeEngine.Platform.Metal;
 using BeeEngine.SmartPointers;
 
 namespace BeeEngine;
@@ -30,4 +31,5 @@ public abstract class Renderer2DAPI
     public abstract void Flush();
     public abstract void ResetStatistics();
     public abstract Renderer2D.Statistics GetStatistics();
+    public static Renderer2DAPI Instance { get; protected set; }
 }

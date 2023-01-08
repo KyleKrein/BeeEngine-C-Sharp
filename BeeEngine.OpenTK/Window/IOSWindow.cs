@@ -28,7 +28,9 @@ internal class MetalAppDelegate: UIApplicationDelegate
         // create a new window instance based on the screen size
         Window = new UIWindow(UIScreen.MainScreen.Bounds);
         Instance = this;
-        Window.RootViewController = new MetalViewController();
+        var viewController = new MetalViewController(EngineWindow);
+        Window.RootViewController = viewController;
+        Context._ViewDelegate = viewController;
         Window.MakeKeyAndVisible();
         EngineWindow.StartGameLoop();
         IsNotReady = false;
@@ -96,14 +98,9 @@ internal class IOSWindow: Window, IMTKViewDelegate
 
     private void Start()
     {
-        ((MetalContext)Context).Init(out _device, out _layer, out _pipelineState, out _commandQueue, out _view, out var controller);
-        TestInit();
-        /*while (isActive)
-        {
-            Draw(_view);
-        } */  
+        
     }
-
+    /*
     private void TestInit()
     {
         //TRIANGLE TEST
@@ -126,22 +123,14 @@ internal class IOSWindow: Window, IMTKViewDelegate
         };
         pipelineStateDescriptor.ColorAttachments[0].PixelFormat = MTLPixelFormat.BGRA8Unorm;
 
-        
+        /*
         _pipelineState = _device.CreateRenderPipelineState(pipelineStateDescriptor, out var error);
         if (_pipelineState == null)
         {
             throw new Exception(error.ToString());
         }
 
-    }
-
-    private IMTLDevice _device;
-    internal CAMetalLayer _layer;
-    private IMTLBuffer _vertexBuffer;
-    private IMTLRenderPipelineState _pipelineState;
-    private IMTLCommandQueue _commandQueue;
-
-    private MetalView _view;
+    }*/
     //private MetalViewController _metalViewController;
     
     //TEMP
@@ -156,7 +145,7 @@ internal class IOSWindow: Window, IMTKViewDelegate
     public IOSWindow(WindowProps initSettings) : base(initSettings)
     {
         MetalAppDelegate.EngineWindow = this;
-        Context = new MetalContext(this);
+        Context = new MetalContext();
         MetalAppDelegate.Context = (MetalContext) Context;
     }
 
@@ -210,29 +199,11 @@ internal class IOSWindow: Window, IMTKViewDelegate
 
     public void Draw(MTKView view)
     {
+        Platform.Metal.Metal.PrepareFrame();
         _updateLoop.Invoke();
-        var drawable = _layer.NextDrawable();
-        var renderPassDescriptor = view.CurrentRenderPassDescriptor;
-        renderPassDescriptor.ColorAttachments[0].Texture = drawable.Texture;
-        renderPassDescriptor.ColorAttachments[0].LoadAction = MTLLoadAction.Clear;
-        renderPassDescriptor.ColorAttachments[0].ClearColor = new MTLClearColor(0.7, 0.2, 0.7, 1);
-
-        var commandBuffer = _commandQueue.CommandBuffer();
-
-        var renderEncoder = commandBuffer.CreateRenderCommandEncoder(renderPassDescriptor);
-        renderEncoder.SetRenderPipelineState(_pipelineState);
-
-        if (_vertexBuffer != null)
-        {
-            renderEncoder.SetVertexBuffer(_vertexBuffer, 0,0);
-            renderEncoder.DrawPrimitives(MTLPrimitiveType.Triangle, 0, 3, 1);
-        }
         
         _renderLoop.Invoke();
-        renderEncoder.EndEncoding();
-        
-        commandBuffer.PresentDrawable(drawable);
-        commandBuffer.Commit();
+        Platform.Metal.Metal.Flush();
     }
 
     public void ShutDown()

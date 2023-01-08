@@ -1,17 +1,34 @@
 using BeeEngine.Mathematics;
+using Metal;
 
 namespace BeeEngine.Platform.Metal;
 
 public class MetalShader: Shader
 {
+    private MTLRenderPipelineDescriptor _renderPipelineDescriptor;
+    private IMTLRenderPipelineState _renderPipelineState;
     public MetalShader(string name, string filepath)
     {
-        
+        Name = name;
+        var file = File.ReadAllText(filepath);
+        GetNamesFromSource(out string vertexName, out string fragmentName);
+        _renderPipelineState = Metal.CreateShader(file, vertexName, fragmentName, new MTLVertexDescriptor(), out _renderPipelineDescriptor);
+    }
+
+    private void GetNamesFromSource(out string vertexName, out string fragmentName)
+    {
+        vertexName = "func_vertex";
+        fragmentName = "func_fragment";
+    }
+
+    public MetalShader(string source, string vertexName, string fragmentName, MTLVertexDescriptor vertexDescriptor)
+    {
+        _renderPipelineState = Metal.CreateShader(source, vertexName, fragmentName, vertexDescriptor, out _renderPipelineDescriptor);
     }
 
     public override void Bind()
     {
-        
+        Metal.BindShader(ref _renderPipelineState, _renderPipelineDescriptor);
     }
 
     public override void Unbind()

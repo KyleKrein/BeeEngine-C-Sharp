@@ -7,6 +7,10 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
     </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <CodesignKey>Apple Development: Aleksandr Lebedev (GM52V3CJ87)</CodesignKey>
+    </PropertyGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
         <Reference Include="Microsof.iOS" />
     </ItemGroup>

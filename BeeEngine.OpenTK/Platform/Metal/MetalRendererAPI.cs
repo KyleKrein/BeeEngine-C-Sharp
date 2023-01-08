@@ -7,7 +7,7 @@ public class MetalRendererAPI: RendererAPI
 {
     public override void SetClearColor(Color color)
     {
-        
+        Metal.ClearColor((Vector4)color);
     }
 
     public override void Clear()
@@ -18,11 +18,12 @@ public class MetalRendererAPI: RendererAPI
     public override void DrawIndexed(VertexArray vertexArray)
     {
         
+        
     }
 
     public override void DrawIndexed(VertexArray vertexArray, int indexCount)
     {
-        
+        Metal.DrawIndexedTriangles((nuint) indexCount);
     }
 
     public override void Init()

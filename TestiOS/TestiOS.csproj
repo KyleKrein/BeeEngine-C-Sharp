@@ -10,7 +10,9 @@
       <CodesignKey>iPhone Developer</CodesignKey>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <CodesignKey>iPhone Developer</CodesignKey>
+      <CodesignKey>Apple Development: Aleksandr Lebedev (GM52V3CJ87)</CodesignKey>
+      <MtouchDebug>true</MtouchDebug>
+      <IOSDebugOverWiFi>true</IOSDebugOverWiFi>
     </PropertyGroup>
     <ItemGroup>
       <ProjectReference Include="..\BeeEngine.OpenTK\BeeEngine.OpenTK.csproj" />

@@ -4,13 +4,10 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace BeeEngine.Platform.OpenGL;
 
+
 public class OpenGlShader: Shader
 {
-    private enum BeeShaderType
-    {
-        Vertex,
-        Fragment,
-    }
+    
     int _programId;
 
     public OpenGlShader(string name, string filepath)
@@ -22,22 +19,22 @@ public class OpenGlShader: Shader
     public OpenGlShader(string name, string vertexSrc, string fragmentSrc)
     {
         Name = name;
-        Compile(new Dictionary<BeeShaderType, string>() {{BeeShaderType.Vertex, vertexSrc}, {BeeShaderType.Fragment, fragmentSrc}});
+        Compile(new Dictionary<ShaderType, string>() {{ShaderType.Vertex, vertexSrc}, {ShaderType.Fragment, fragmentSrc}});
     }
 
-    private static ShaderType BeeToOpenGL(BeeShaderType type)
+    private static global::OpenTK.Graphics.OpenGL4.ShaderType BeeToOpenGL(ShaderType type)
     {
         switch (type)
         {
-            case BeeShaderType.Vertex:
-                return ShaderType.VertexShader;
-            case BeeShaderType.Fragment:
-                return ShaderType.FragmentShader;
+            case ShaderType.Vertex:
+                return global::OpenTK.Graphics.OpenGL4.ShaderType.VertexShader;
+            case ShaderType.Fragment:
+                return global::OpenTK.Graphics.OpenGL4.ShaderType.FragmentShader;
         }
         Log.Error("Invalid shader type!");
         throw new InvalidOperationException();
     }
-    private void Compile(Dictionary<BeeShaderType, string> shaders)
+    private void Compile(Dictionary<ShaderType, string> shaders)
     {
         DebugTimer.Start();
         var program = GL.CreateProgram();
@@ -89,11 +86,11 @@ public class OpenGlShader: Shader
         DebugTimer.End();
     }
 
-    private static BeeShaderType[] _shaderTypes = Enum.GetValues<BeeShaderType>();
-    private Dictionary<BeeShaderType, string> Preprocess(string[] source)
+    private static ShaderType[] _shaderTypes = Enum.GetValues<ShaderType>();
+    private Dictionary<ShaderType, string> Preprocess(string[] source)
     {
         DebugTimer.Start();
-        Dictionary<BeeShaderType, string> result = new Dictionary<BeeShaderType, string>();
+        Dictionary<ShaderType, string> result = new Dictionary<ShaderType, string>();
         foreach (var type in _shaderTypes)
         {
             result.Add(type, "");
@@ -110,15 +107,15 @@ public class OpenGlShader: Shader
         for (var index = 0; index < indexes.Count; index++)
         {
             var i = indexes[index];
-            BeeShaderType type = (BeeShaderType) (-1);
+            ShaderType type = (ShaderType) (-1);
             if (source[i].Contains("vertex"))
             {
-                type = BeeShaderType.Vertex;
+                type = ShaderType.Vertex;
             }
 
             if (source[i].Contains("pixel") || source[i].Contains("fragment"))
             {
-                type = BeeShaderType.Fragment;
+                type = ShaderType.Fragment;
             }
             Log.Assert((int)type != -1, "Doesn't support type {0}", source[i]);
             

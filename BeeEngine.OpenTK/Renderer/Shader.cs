@@ -76,3 +76,9 @@ public abstract class Shader: IDisposable
         Dispose(false);
     }
 }
+
+public enum ShaderType
+{
+    Vertex,
+    Fragment,
+}

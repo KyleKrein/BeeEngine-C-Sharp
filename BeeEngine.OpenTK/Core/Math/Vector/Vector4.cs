@@ -2166,5 +2166,10 @@ namespace BeeEngine.Mathematics
         {
             return new global::OpenTK.Mathematics.Vector4(vector4.X, vector4.Y, vector4.Z, vector4.W);
         }
+
+        public static implicit operator System.Numerics.Vector4(Vector4 vector)
+        {
+            return new System.Numerics.Vector4(vector.X, vector.Y, vector.Z, vector.W);
+        }
     }
 }
