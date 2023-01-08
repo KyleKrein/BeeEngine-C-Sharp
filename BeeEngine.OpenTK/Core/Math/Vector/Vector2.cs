@@ -124,7 +124,7 @@ namespace BeeEngine.Mathematics
         /// </remarks>
         /// <see cref="Length"/>
         /// <seealso cref="LengthSquared"/>
-        public float LengthFast => 1.0f / MathHelper.InverseSqrtFast((X * X) + (Y * Y));
+        public float LengthFast => 1.0f / MathU.InverseSqrtFast((X * X) + (Y * Y));
 
         /// <summary>
         /// Gets the square of the vector length (magnitude).
@@ -173,7 +173,7 @@ namespace BeeEngine.Mathematics
         /// </summary>
         public void NormalizeFast()
         {
-            var scale = MathHelper.InverseSqrtFast((X * X) + (Y * Y));
+            var scale = MathU.InverseSqrtFast((X * X) + (Y * Y));
             X *= scale;
             Y *= scale;
         }
@@ -575,7 +575,7 @@ namespace BeeEngine.Mathematics
         [Pure]
         public static Vector2 NormalizeFast(Vector2 vec)
         {
-            var scale = MathHelper.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y));
+            var scale = MathU.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y));
             vec.X *= scale;
             vec.Y *= scale;
             return vec;
@@ -588,7 +588,7 @@ namespace BeeEngine.Mathematics
         /// <param name="result">The normalized vector.</param>
         public static void NormalizeFast(in Vector2 vec, out Vector2 result)
         {
-            var scale = MathHelper.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y));
+            var scale = MathU.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y));
             result.X = vec.X * scale;
             result.Y = vec.Y * scale;
         }
@@ -1057,7 +1057,7 @@ namespace BeeEngine.Mathematics
         /// <inheritdoc/>
         public override string ToString()
         {
-            return ZString.Format("({0}{2} {1})", X, Y, MathHelper.ListSeparator);
+            return ZString.Format("({0}{2} {1})", X, Y, MathU.ListSeparator);
         }
 
         /// <inheritdoc/>

@@ -352,8 +352,8 @@ namespace BeeEngine.Mathematics
         [Pure]
         public static Vector2i Clamp(Vector2i vec, Vector2i min, Vector2i max)
         {
-            vec.X = MathHelper.Clamp(vec.X, min.X, max.X);
-            vec.Y = MathHelper.Clamp(vec.Y, min.Y, max.Y);
+            vec.X = MathU.Clamp(vec.X, min.X, max.X);
+            vec.Y = MathU.Clamp(vec.Y, min.Y, max.Y);
             return vec;
         }
 
@@ -366,8 +366,8 @@ namespace BeeEngine.Mathematics
         /// <param name="result">The clamped vector.</param>
         public static void Clamp(in Vector2i vec, in Vector2i min, in Vector2i max, out Vector2i result)
         {
-            result.X = MathHelper.Clamp(vec.X, min.X, max.X);
-            result.Y = MathHelper.Clamp(vec.Y, min.Y, max.Y);
+            result.X = MathU.Clamp(vec.X, min.X, max.X);
+            result.Y = MathU.Clamp(vec.Y, min.Y, max.Y);
         }
 
         /// <summary>
@@ -585,7 +585,7 @@ namespace BeeEngine.Mathematics
         /// <inheritdoc/>
         public override string ToString()
         {
-            return ZString.Format("({0}{2} {1})", X, Y, MathHelper.ListSeparator);
+            return ZString.Format("({0}{2} {1})", X, Y, MathU.ListSeparator);
         }
 
         /// <inheritdoc/>

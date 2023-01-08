@@ -24,6 +24,7 @@ public class MetalRendererAPI: RendererAPI
     public override void DrawIndexed(VertexArray vertexArray, int indexCount)
     {
         Metal.DrawIndexedTriangles((nuint) indexCount);
+        //Metal.DrawTriangles((nuint) vertexArray.VertexBuffers[0].Count, 4);
     }
 
     public override void Init()

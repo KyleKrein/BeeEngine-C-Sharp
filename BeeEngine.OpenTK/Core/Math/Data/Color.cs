@@ -193,7 +193,7 @@ namespace BeeEngine.Mathematics
         /// <returns>A System.String that describes this Color4 structure.</returns>
         public override string ToString()
         {
-            var ls = MathHelper.ListSeparator;
+            var ls = MathU.ListSeparator;
             return $"{{(R{ls} G{ls} B{ls} A) = ({R}{ls} {G}{ls} {B}{ls} {A})}}";
         }
 

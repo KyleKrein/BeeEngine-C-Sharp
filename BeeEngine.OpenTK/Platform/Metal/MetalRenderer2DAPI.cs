@@ -7,9 +7,50 @@ using UnmanageUtility;
 
 namespace BeeEngine.Platform.Metal;
 
+struct TestRenderer2DData
+{
+    public const int MaxRectangles = 10000;
+    public const int MaxVertices = MaxRectangles * 4;
+    public const int MaxIndices = MaxRectangles * 6;
+    public int MaxTextureSlots;
+
+    public Shader TextureShader = null;
+    public VertexArray VertexArray = null;
+    public Texture2D BlankTexture = null;
+
+
+    public VertexBuffer RectVertexBuffer = null;
+    public int RectIndexCount = 0;
+    public UnmanagedArray<TestRectVertices> RectVerticesBuffer;
+    //public RectVertex[] RectVerticesBuffer = null;
+    public unsafe TestRectVertices* CurrentVertex;
+
+    public Texture2D[] TextureSlots;
+    public int TextureSlotIndex = 1; // 0 = blank texture
+
+    public Vector4[] RectVertexPositions = new Vector4[4];
+
+    public TestRenderer2DData()
+    {
+        MaxTextureSlots = 16;//TODO: Get rendering capabilities
+        TextureSlots = new Texture2D[MaxTextureSlots];
+    }
+
+
+    
+
+    public Renderer2D.Statistics Statistics;
+}
+struct TestRectVertices
+{
+    public Vector4 Position;
+    public Vector4 Color;
+}
 public class MetalRenderer2DAPI: Renderer2DAPI
 {
-    private Renderer2DData _data;
+    private TestRenderer2DData _data;
+
+    
     static readonly Vector2[] textureCoords = new []
     {
         new Vector2(0.0f, 0.0f), 
@@ -28,7 +69,7 @@ public class MetalRenderer2DAPI: Renderer2DAPI
     public unsafe void InitMetal()
     {
          DebugTimer.Start();
-        _data = new Renderer2DData();
+        _data = new TestRenderer2DData();
 
         var vertexDescriptor = new MTLVertexDescriptor();
         vertexDescriptor.Attributes[0].Format = MTLVertexFormat.Float3;
@@ -56,19 +97,19 @@ public class MetalRenderer2DAPI: Renderer2DAPI
 using namespace metal;
 
 struct VertexInput{
-    float3 a_Position [[attribute(0)]];
+    float4 a_Position [[attribute(0)]];
     float4 a_Color [[attribute(1)]];
-    float2 a_TexCoord [[attribute(2)]];
-    float a_TextureIndex [[attribute(3)]];
-    float a_TilingFactor [[attribute(4)]];
+    //float2 a_TexCoord [[attribute(2)]];
+    //float a_TextureIndex [[attribute(3)]];
+    //float a_TilingFactor [[attribute(4)]];
 };
 
 struct ColorInOut{
     float4 v_Position [[position]];
     float4  v_Color;
-    float2 v_TexCoord;
-    float v_TextureIndex;
-    float v_TilingFactor;
+    //float2 v_TexCoord;
+    //float v_TextureIndex;
+    //float v_TilingFactor;
 };
 
 // Vertex shader function
@@ -76,11 +117,11 @@ vertex ColorInOut quad_vertex(const device VertexInput *vertices [[ buffer(0) ]]
 {
     ColorInOut out;
    
-    out.v_Position = float4(vertices[ID].a_Position, 1);
+    out.v_Position = vertices[ID].a_Position;//float4(vertices[ID].a_Position, 1);
     out.v_Color = vertices[ID].a_Color;
-    out.v_TexCoord = vertices[ID].a_TexCoord;
-    out.v_TextureIndex = vertices[ID].a_TextureIndex;
-    out.v_TilingFactor = vertices[ID].a_TilingFactor;
+    //out.v_TexCoord = vertices[ID].a_TexCoord;
+    //out.v_TextureIndex = vertices[ID].a_TextureIndex;
+    //out.v_TilingFactor = vertices[ID].a_TilingFactor;
     
     return out;
 }
@@ -154,16 +195,16 @@ void main()
         
         BufferLayout squareLayout = new BufferLayout()
         {
-            {ShaderDataType.Float3, "a_Position"},
+            {ShaderDataType.Float4, "a_Position"},
             {ShaderDataType.Float4, "a_Color"},
-            {ShaderDataType.Float2, "a_TexCoord"},
-            {ShaderDataType.Float, "a_TextureIndex"},
-            {ShaderDataType.Float, "a_TilingFactor"}
+            //{ShaderDataType.Float2, "a_TexCoord"},
+            //{ShaderDataType.Float, "a_TextureIndex"},
+            //{ShaderDataType.Float, "a_TilingFactor"}
         };
         _data.RectVertexBuffer.Layout = squareLayout;
         _data.VertexArray.AddVertexBuffer(_data.RectVertexBuffer);
 
-        _data.RectVerticesBuffer = new UnmanagedArray<RectVertex>(Renderer2DData.MaxVertices);
+        _data.RectVerticesBuffer = new UnmanagedArray<TestRectVertices>(Renderer2DData.MaxVertices);
 
         uint[] rectangleIndices = new uint[Renderer2DData.MaxIndices];
         uint offset = 0;
@@ -187,10 +228,10 @@ void main()
         _data.BlankTexture.SetData(_blankTextureData, 4);
         _data.TextureSlots[0] = _data.BlankTexture;
 
-        _data.RectVertexPositions[0] = new Vector4(-0.5f, -0.5f, 0.0f, 1.0f);
-        _data.RectVertexPositions[1] = new Vector4( 0.5f, -0.5f, 0.0f, 1.0f);
-        _data.RectVertexPositions[2] = new Vector4( 0.5f,  0.5f, 0.0f, 1.0f);
-        _data.RectVertexPositions[3] = new Vector4(-0.5f,  0.5f, 0.0f, 1.0f);
+        _data.RectVertexPositions[0] = new Vector4(-0.5f, 0.5f, 0.0f, 1.0f);
+        _data.RectVertexPositions[1] = new Vector4( 0.5f, 0.5f, 0.0f, 1.0f);
+        _data.RectVertexPositions[2] = new Vector4( 0.5f,  -0.5f, 0.0f, 1.0f);
+        _data.RectVertexPositions[3] = new Vector4(-0.5f,  -0.5f, 0.0f, 1.0f);
         
         
         DebugTimer.End();
@@ -208,16 +249,18 @@ void main()
         Matrix4 transform = Matrix4.CreateTranslation(position) 
                             * Matrix4.CreateRotationZ(rotationInRadians)
                             * Matrix4.CreateScale(new Vector3(size.X, size.Y, 1.0f));
+        //transform = _cameraTransform * transform;
         
         transform.Transpose();
         
         for (int i = 0; i < rectVertexCount; i++)
         {
-            _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[i]);
+            _data.CurrentVertex->Position = (transform * _data.RectVertexPositions[i]);
+            //_data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[i]);
             _data.CurrentVertex->Color = color;
-            _data.CurrentVertex->TexCoord = textureCoords[i];
-            _data.CurrentVertex->TextureIndex = blankTextureIndex;
-            _data.CurrentVertex->TilingFactor = TilingFactor;
+            //_data.CurrentVertex->TexCoord = textureCoords[i];
+            //_data.CurrentVertex->TextureIndex = blankTextureIndex;
+            //_data.CurrentVertex->TilingFactor = TilingFactor;
             _data.CurrentVertex++;
         }
 
@@ -261,11 +304,13 @@ void main()
 
         for (int i = 0; i < rectVertexCount; i++)
         {
-            _data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[i]);
+            _data.CurrentVertex->Position = transform * _data.RectVertexPositions[i];
+
+            //_data.CurrentVertex->Position = new Vector3(transform * _data.RectVertexPositions[i]);
             _data.CurrentVertex->Color = color;
-            _data.CurrentVertex->TexCoord = textureCoords[i];
-            _data.CurrentVertex->TextureIndex = textureIndex;
-            _data.CurrentVertex->TilingFactor = textureScale;
+            //_data.CurrentVertex->TexCoord = textureCoords[i];
+            //_data.CurrentVertex->TextureIndex = textureIndex;
+            //_data.CurrentVertex->TilingFactor = textureScale;
             _data.CurrentVertex++;
         }
 
@@ -302,9 +347,11 @@ void main()
         
     }
 
+    private Matrix4 _cameraTransform;
     public override unsafe void SetCameraTransform(SharedPointer<Matrix4> cameraMatrix)
     {
         _data.TextureShader.Bind();
+        _cameraTransform = cameraMatrix.Get();
         _data.TextureShader.UploadUniformMatrix4("u_ViewProjection", cameraMatrix.GetPtr());
         cameraMatrix.Release();
     }
@@ -339,7 +386,7 @@ void main()
 
     public unsafe override void BeginScene()
     {
-        _data.CurrentVertex = (RectVertex*) _data.RectVerticesBuffer.Ptr;
+        _data.CurrentVertex = (TestRectVertices*) _data.RectVerticesBuffer.Ptr;
         _data.RectIndexCount = 0;
 
         _data.TextureSlotIndex = 1;

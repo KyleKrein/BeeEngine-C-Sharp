@@ -1,3 +1,4 @@
+using BeeEngine.Events;
 using BeeEngine.Platform.Metal;
 using CoreAnimation;
 using CoreGraphics;
@@ -140,10 +141,11 @@ internal class IOSWindow: Window, IMTKViewDelegate
         -0.5f, 0.0f, 0.0f,
         0.5f, 0.0f, 0.0f
     };
-    
 
-    public IOSWindow(WindowProps initSettings) : base(initSettings)
+    private EventQueue _events;
+    public IOSWindow(WindowProps initSettings, EventQueue eventQueue) : base(initSettings)
     {
+        _events = eventQueue;
         MetalAppDelegate.EngineWindow = this;
         Context = new MetalContext();
         MetalAppDelegate.Context = (MetalContext) Context;
@@ -195,6 +197,7 @@ internal class IOSWindow: Window, IMTKViewDelegate
     {
         _width = (int) size.Width;
         _height = (int) size.Height;
+        _events.AddEvent(new WindowResizedEvent((int) size.Width,(int) size.Height));
     }
 
     public void Draw(MTKView view)

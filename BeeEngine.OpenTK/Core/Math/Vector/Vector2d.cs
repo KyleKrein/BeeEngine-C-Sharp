@@ -549,7 +549,7 @@ namespace BeeEngine.Mathematics
         [Pure]
         public static Vector2d NormalizeFast(Vector2d vec)
         {
-            var scale = MathHelper.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y));
+            var scale = MathU.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y));
             vec.X *= scale;
             vec.Y *= scale;
             return vec;
@@ -562,7 +562,7 @@ namespace BeeEngine.Mathematics
         /// <param name="result">The normalized vector.</param>
         public static void NormalizeFast(in Vector2d vec, out Vector2d result)
         {
-            var scale = MathHelper.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y));
+            var scale = MathU.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y));
             result.X = vec.X * scale;
             result.Y = vec.Y * scale;
         }
@@ -1008,7 +1008,7 @@ namespace BeeEngine.Mathematics
         /// <inheritdoc/>
         public override string ToString()
         {
-            return ZString.Format("({0}{2} {1})", X, Y, MathHelper.ListSeparator);
+            return ZString.Format("({0}{2} {1})", X, Y, MathU.ListSeparator);
         }
 
         /// <inheritdoc/>

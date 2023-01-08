@@ -80,7 +80,7 @@ public static class Renderer2D
     }
     public static void DrawImage(float x, float y, float z, float width, float height, Texture2D texture, Color color, float rotation, float textureMultiplier)
     {
-        RenderCommand2D.DrawTexture2D(x, y, z, width, height, texture, color, textureMultiplier, MathHelper.DegreesToRadians(rotation));
+        RenderCommand2D.DrawTexture2D(x, y, z, width, height, texture, color, textureMultiplier, MathU.DegreesToRadians(rotation));
     }
 
     public static void ResetStatistics()

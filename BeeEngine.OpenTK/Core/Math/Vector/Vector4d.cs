@@ -255,7 +255,7 @@ namespace BeeEngine.Mathematics
         /// </remarks>
         /// <see cref="Length"/>
         /// <seealso cref="LengthSquared"/>
-        public double LengthFast => 1.0 / MathHelper.InverseSqrtFast((X * X) + (Y * Y) + (Z * Z) + (W * W));
+        public double LengthFast => 1.0 / MathU.InverseSqrtFast((X * X) + (Y * Y) + (Z * Z) + (W * W));
 
         /// <summary>
         /// Gets the square of the vector length (magnitude).
@@ -295,7 +295,7 @@ namespace BeeEngine.Mathematics
         /// </summary>
         public void NormalizeFast()
         {
-            var scale = MathHelper.InverseSqrtFast((X * X) + (Y * Y) + (Z * Z) + (W * W));
+            var scale = MathU.InverseSqrtFast((X * X) + (Y * Y) + (Z * Z) + (W * W));
             X *= scale;
             Y *= scale;
             Z *= scale;
@@ -640,7 +640,7 @@ namespace BeeEngine.Mathematics
         [Pure]
         public static Vector4d NormalizeFast(Vector4d vec)
         {
-            var scale = MathHelper.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y) + (vec.Z * vec.Z) + (vec.W * vec.W));
+            var scale = MathU.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y) + (vec.Z * vec.Z) + (vec.W * vec.W));
             vec.X *= scale;
             vec.Y *= scale;
             vec.Z *= scale;
@@ -655,7 +655,7 @@ namespace BeeEngine.Mathematics
         /// <param name="result">The normalized vector.</param>
         public static void NormalizeFast(in Vector4d vec, out Vector4d result)
         {
-            var scale = MathHelper.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y) + (vec.Z * vec.Z) + (vec.W * vec.W));
+            var scale = MathU.InverseSqrtFast((vec.X * vec.X) + (vec.Y * vec.Y) + (vec.Z * vec.Z) + (vec.W * vec.W));
             result.X = vec.X * scale;
             result.Y = vec.Y * scale;
             result.Z = vec.Z * scale;
@@ -2105,7 +2105,7 @@ namespace BeeEngine.Mathematics
         /// <inheritdoc />
         public override string ToString()
         {
-            return ZString.Format("({0}{4} {1}{4} {2}{4} {3})", X, Y, Z, W, MathHelper.ListSeparator);
+            return ZString.Format("({0}{4} {1}{4} {2}{4} {3})", X, Y, Z, W, MathU.ListSeparator);
         }
 
         /// <inheritdoc />

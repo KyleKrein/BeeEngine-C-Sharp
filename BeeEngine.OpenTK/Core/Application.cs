@@ -107,7 +107,7 @@ public abstract class Application: IDisposable
                 RendererAPI.API = API.Metal;
                 _layerStack = new LayerStack();
                 _eventQueue = new EventQueue(_layerStack);
-                return new IOSWindow(initSettings);
+                return new IOSWindow(initSettings, _eventQueue);
             default:
                 throw new PlatformNotSupportedException();
         }

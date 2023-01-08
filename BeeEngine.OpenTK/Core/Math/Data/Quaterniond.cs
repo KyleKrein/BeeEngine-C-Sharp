@@ -211,13 +211,13 @@ namespace BeeEngine.Mathematics
             if (singularityTest > SINGULARITY_THRESHOLD * unit)
             {
                 eulerAngles.Z = 2 * Math.Atan2(q.X, q.W);
-                eulerAngles.Y = MathHelper.PiOver2;
+                eulerAngles.Y = MathU.PiOver2;
                 eulerAngles.X = 0;
             }
             else if (singularityTest < -SINGULARITY_THRESHOLD * unit)
             {
                 eulerAngles.Z = -2 * Math.Atan2(q.X, q.W);
-                eulerAngles.Y = -MathHelper.PiOver2;
+                eulerAngles.Y = -MathU.PiOver2;
                 eulerAngles.X = 0;
             }
             else
@@ -817,7 +817,7 @@ namespace BeeEngine.Mathematics
         /// <returns>A human-readable representation of the quaternion.</returns>
         public override string ToString()
         {
-            return $"V: {Xyz}{MathHelper.ListSeparator} W: {W}";
+            return $"V: {Xyz}{MathU.ListSeparator} W: {W}";
         }
     }
 }

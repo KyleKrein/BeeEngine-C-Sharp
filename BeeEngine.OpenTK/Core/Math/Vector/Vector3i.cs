@@ -400,9 +400,9 @@ namespace BeeEngine.Mathematics
         public static Vector3i Clamp(Vector3i vec, Vector3i min, Vector3i max)
         {
             Vector3i result;
-            result.X = MathHelper.Clamp(vec.X, min.X, max.X);
-            result.Y = MathHelper.Clamp(vec.Y, min.Y, max.Y);
-            result.Z = MathHelper.Clamp(vec.Z, min.Z, max.Z);
+            result.X = MathU.Clamp(vec.X, min.X, max.X);
+            result.Y = MathU.Clamp(vec.Y, min.Y, max.Y);
+            result.Z = MathU.Clamp(vec.Z, min.Z, max.Z);
             return result;
         }
 
@@ -415,9 +415,9 @@ namespace BeeEngine.Mathematics
         /// <param name="result">The clamped vector.</param>
         public static void Clamp(in Vector3i vec, in Vector3i min, in Vector3i max, out Vector3i result)
         {
-            result.X = MathHelper.Clamp(vec.X, min.X, max.X);
-            result.Y = MathHelper.Clamp(vec.Y, min.Y, max.Y);
-            result.Z = MathHelper.Clamp(vec.Z, min.Z, max.Z);
+            result.X = MathU.Clamp(vec.X, min.X, max.X);
+            result.Y = MathU.Clamp(vec.Y, min.Y, max.Y);
+            result.Z = MathU.Clamp(vec.Z, min.Z, max.Z);
         }
 
         /// <summary>
@@ -789,7 +789,7 @@ namespace BeeEngine.Mathematics
         /// <inheritdoc />
         public override string ToString()
         {
-            return ZString.Format("({0}{3} {1}{3} {2})", X, Y, Z, MathHelper.ListSeparator);
+            return ZString.Format("({0}{3} {1}{3} {2})", X, Y, Z, MathU.ListSeparator);
         }
 
         /// <inheritdoc />

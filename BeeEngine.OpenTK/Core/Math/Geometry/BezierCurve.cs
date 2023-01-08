@@ -208,7 +208,7 @@ namespace BeeEngine.Mathematics
 
             foreach (var pt in points)
             {
-                temp = MathHelper.BinomialCoefficient
+                temp = MathU.BinomialCoefficient
                 (
                     points.Count - 1, i) * (float)(Math.Pow(t, i) * Math.Pow(c, points.Count - 1 - i)
                 );
@@ -253,7 +253,7 @@ namespace BeeEngine.Mathematics
 
             foreach (var pt in points)
             {
-                temp = MathHelper.BinomialCoefficient
+                temp = MathU.BinomialCoefficient
                 (
                     points.Count - 2, i) * (float)(Math.Pow(t, i) * Math.Pow(c, points.Count - 2 - i)
                 );

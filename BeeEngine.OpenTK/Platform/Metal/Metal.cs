@@ -53,7 +53,7 @@ internal static class Metal
 
     public static IMTLRenderPipelineState CreateShader(string source, string vertexName, string fragmentName, MTLVertexDescriptor vertexDescriptor, out MTLRenderPipelineDescriptor descriptor)
     {
-        var library = Device.CreateLibrary(source, new MTLCompileOptions(), out var error);
+        var library = Device.CreateLibrary(source, new MTLCompileOptions(){}, out var error);
         //Log.Assert(library != null, "Could not create shader from source: {0}", error);
         //Log.Info("Library: {0}", library);
         var fragmentProgram = library.CreateFunction(fragmentName);
@@ -66,7 +66,7 @@ internal static class Metal
             VertexFunction = vertexProgram,
             FragmentFunction = fragmentProgram,
             SampleCount = View.SampleCount,
-            VertexDescriptor = vertexDescriptor,
+            //VertexDescriptor = vertexDescriptor,
             DepthAttachmentPixelFormat = View.DepthStencilPixelFormat,
             StencilAttachmentPixelFormat = View.DepthStencilPixelFormat
         };
@@ -114,7 +114,7 @@ internal static class Metal
 
     public static IMTLBuffer CreateBuffer(nuint size)
     {
-        return Device.CreateBuffer(size, MTLResourceOptions.StorageModeShared);
+        return Device.CreateBuffer(size, MTLResourceOptions.CpuCacheModeDefault);
     }
 
     public static IMTLBuffer CreateBuffer<T>(T[] data) where T : struct
@@ -124,7 +124,7 @@ internal static class Metal
     }
     public static IMTLBuffer CreateBuffer(nint ptr, nuint length)
     {
-        return Device.CreateBuffer(ptr,length, MTLResourceOptions.StorageModeShared);
+        return Device.CreateBuffer(ptr,length, MTLResourceOptions.CpuCacheModeDefault);
     }
 
     /*public static void CopyDataToBuffer(nint data, nint size, IMTLBuffer buffer)

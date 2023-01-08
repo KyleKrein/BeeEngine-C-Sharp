@@ -58,7 +58,7 @@ public class OrthographicCamera: IDisposable
     private unsafe void RecalculateViewMatrix()
     {
         Matrix4 translation = Matrix4.CreateTranslation(_position);
-        Matrix4 rotation = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(_rotation));
+        Matrix4 rotation = Matrix4.CreateRotationZ(MathU.DegreesToRadians(_rotation));
         Matrix4 transform = translation * rotation;
         _viewMatrix = transform.Inverted();
         //MUST BE THIS:

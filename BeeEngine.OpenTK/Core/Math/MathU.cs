@@ -15,7 +15,7 @@ namespace BeeEngine.Mathematics
     /// <summary>
     /// Contains common mathematical functions and constants.
     /// </summary>
-    public static class MathHelper
+    public static class MathU
     {
         /// <summary>
         /// Defines the value of Pi as a <see cref="float"/>.

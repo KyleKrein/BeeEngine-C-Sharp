@@ -502,7 +502,7 @@ namespace BeeEngine.Mathematics
         /// <inheritdoc/>
         public override string ToString()
         {
-            return ZString.Format("({0}{3} {1}{3} {2})", X.ToString(), Y.ToString(), Z.ToString(), MathHelper.ListSeparator);
+            return ZString.Format("({0}{3} {1}{3} {2})", X.ToString(), Y.ToString(), Z.ToString(), MathU.ListSeparator);
         }
 
         /// <inheritdoc/>

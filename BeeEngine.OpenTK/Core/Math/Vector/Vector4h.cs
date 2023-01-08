@@ -1354,7 +1354,7 @@ namespace BeeEngine.Mathematics
                 Y.ToString(),
                 Z.ToString(),
                 W.ToString(),
-                MathHelper.ListSeparator
+                MathU.ListSeparator
             );
         }
 
