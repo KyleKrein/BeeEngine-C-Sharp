@@ -17,32 +17,17 @@
     
 
     <ItemGroup>
-      <PackageReference Include="ImGui.NET" Version="1.89.1" />
-      <PackageReference Include="OpenTK" Version="4.7.5" />
-      <PackageReference Include="StbImageSharp" Version="2.27.13" />
-      <PackageReference Include="ZString" Version="2.5.0" />
+      <PackageReference Include="ImGui.NET.Branches.Docking" Version="1.88.0" PrivateAssets="all" />
+      <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="3.1.6" />
+      <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
+      <PackageReference Include="OpenTK" Version="4.7.5" PrivateAssets="all" />
+      <PackageReference Include="OpenTK.redist.glfw" Version="3.3.8.30" />
+      <PackageReference Include="StbImageSharp" Version="2.27.13" PrivateAssets="all" />
+      <PackageReference Include="ZString" Version="2.5.0" PrivateAssets="all" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.AssemblyInfoInputs.cache" />
-      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.csproj.AssemblyReference.cache" />
-      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.csproj.CoreCompileInputs.cache" />
-      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.csproj.FileListAbsolute.txt" />
-      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.dll" />
-      <Content Include="obj\Debug\net7.0\BeeEngine.OpenTK.pdb" />
-    </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="obj\**" />
-    </ItemGroup>
 
-    <ItemGroup>
-      <EmbeddedResource Remove="obj\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="obj\**" />
-    </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
         <Reference Include="Microsoft.iOS" />
     </ItemGroup>
@@ -60,9 +45,10 @@
     </ItemGroup>-->
 
     <ItemGroup>
-      <Folder Include="src\Vendors" />
+      <Folder Include="src\Vendors\DLLS" />
+      <Folder Include="src\Vendors\NativeLibraries" />
     </ItemGroup>
-
+ 
     
 
   <!--  <ItemGroup>
@@ -81,7 +67,7 @@
                 <DefineConstants>DEBUG;TRACE;PROFILING</DefineConstants>
             </PropertyGroup>
             <ItemGroup>
-                <PackageReference Include="AspectInjector" Version="2.8.1" />
+                <PackageReference Include="AspectInjector" Version="2.8.1" PrivateAssets="all" />
             </ItemGroup>
         </When>
         <When Condition=" '$(Configuration)'=='retail' ">
@@ -93,5 +79,139 @@
             </PropertyGroup>
         </When>
     </Choose>
+
+    <!--<ItemGroup>
+        &lt;!&ndash;DLLS Folder&ndash;&gt;
+        <None Include="src\Vendors\DLLS\ImGui.NET.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\DLLS\OpenTK.Core.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\DLLS\OpenTK.Graphics.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\DLLS\OpenTK.Mathematics.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\DLLS\OpenTK.Windowing.Common.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\DLLS\OpenTK.Windowing.Desktop.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\DLLS\OpenTK.Windowing.GraphicsLibraryFramework.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\DLLS\StbImageSharp.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\DLLS\ZString.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        
+        
+        &lt;!&ndash;Linux x64&ndash;&gt;
+        <None Include="src\Vendors\NativeLibraries\runtimes\linux-x64\native\libcimgui.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\NativeLibraries\runtimes\linux-x64\native\libglfw.so.3.3">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        
+        &lt;!&ndash;OSX&ndash;&gt;
+        <None Include="src\Vendors\NativeLibraries\runtimes\osx\native\libcimgui.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        
+        &lt;!&ndash;OSX ARM64&ndash;&gt;
+        <None Include="src\Vendors\NativeLibraries\runtimes\osx-arm64\native\libglfw.3.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+
+        &lt;!&ndash;OSX x64&ndash;&gt;
+        <None Include="src\Vendors\NativeLibraries\runtimes\osx-x64\native\libglfw.3.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        
+        &lt;!&ndash;Win x64&ndash;&gt;
+        <None Include="src\Vendors\NativeLibraries\runtimes\win-x64\native\cimgui.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\NativeLibraries\runtimes\win-x64\native\glfw3.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        
+        &lt;!&ndash;Win x86&ndash;&gt;
+        <None Include="src\Vendors\NativeLibraries\runtimes\win-x86\native\cimgui.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="src\Vendors\NativeLibraries\runtimes\win-x86\native\glfw3.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>&ndash;&gt;
+        <ItemGroup>
+        &lt;!&ndash;Targets file&ndash;&gt;
+        <None Include="BeeEngine.targets">
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+    </ItemGroup>-->
+    
+    <!--TODO: Rewrite it to make nuget place dlls dynamically-->
+    <ItemGroup>
+        <Content Include="src/Vendors/DLLS/*.*" PackagePath="lib\net7.0\">
+            <PackageCopyToOutput>true</PackageCopyToOutput>
+        </Content>
+        <Content Include="src/Vendors/DLLS/*.*" PackagePath="lib\net7.0-ios16.1\">
+            <PackageCopyToOutput>true</PackageCopyToOutput>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="src/Vendors/NativeLibraries/runtimes/**/native/*.*" Pack="true" PackagePath="contentFiles/runtimes/">
+            <PackageCopyToOutput>true</PackageCopyToOutput>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="BeeEngine.targets" PackagePath="build/BeeEngine.targets">
+            <PackageCopyToOutput>true</PackageCopyToOutput>
+            
+        </Content>
+    </ItemGroup>
 
 </Project>

@@ -86,4 +86,10 @@
       <EmbeddedResource Remove="obj\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="ImGui.NET.Branches.Docking" Version="1.88.0" />
+      <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="3.1.6" />
+      <PackageReference Include="ZString" Version="2.5.0" />
+    </ItemGroup>
+
 </Project>
