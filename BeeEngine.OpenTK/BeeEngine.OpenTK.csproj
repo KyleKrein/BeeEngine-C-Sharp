@@ -1,26 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net7.0; net7.0-ios</TargetFrameworks>
+        <TargetFrameworks>net7.0;net7.0-ios</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>BeeEngine</PackageId>
+        <Authors>Alex Lebedev</Authors>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <CodesignKey>Apple Development: Aleksandr Lebedev (GM52V3CJ87)</CodesignKey>
     </PropertyGroup>
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
-        <Reference Include="Microsof.iOS" />
-    </ItemGroup>
-    <Choose>
-        <When Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
-            <PropertyGroup>
-                <DefineConstants>IOS</DefineConstants>
-            </PropertyGroup>
-        </When>
-    </Choose>
+    
 
     <ItemGroup>
       <PackageReference Include="ImGui.NET" Version="1.89.1" />
@@ -49,12 +43,33 @@
     <ItemGroup>
       <None Remove="obj\**" />
     </ItemGroup>
-
-    <ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
+        <Reference Include="Microsoft.iOS" />
+    </ItemGroup>
+    <Choose>
+        <When Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
+            <PropertyGroup>
+                <DefineConstants>IOS</DefineConstants>
+            </PropertyGroup>
+        </When>
+    </Choose>
+    <!--<ItemGroup>
       <Reference Include="Microsoft.iOS">
         <HintPath>..\..\..\..\..\usr\local\share\dotnet\packs\Microsoft.iOS.Ref\16.0.1478\ref\net7.0\Microsoft.iOS.dll</HintPath>
       </Reference>
+    </ItemGroup>-->
+
+    <ItemGroup>
+      <Folder Include="src\Vendors" />
     </ItemGroup>
+
+    
+
+  <!--  <ItemGroup>
+      <Reference Include="Microsoft.iOS">
+        <HintPath>..\..\..\Program Files\dotnet\packs\Microsoft.iOS.Ref\16.1.1481\ref\net7.0\Microsoft.iOS.dll</HintPath>
+      </Reference>
+    </ItemGroup>-->
 
     <Choose>
         <When Condition=" '$(Configuration)'=='Debug' ">
