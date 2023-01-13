@@ -5,6 +5,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using ImGuiNET;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using BeeEngine.Events;
 using BeeEngine.OpenTK.Profiling;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 
@@ -97,7 +98,23 @@ internal class ImGuiController : IDisposable
         //_frameBegun = true;
         //DebugTimer.End();
     }
-    
+
+    /*public void OnEvent(ref EventDispatcher e)
+    {
+        e.Dispatch<KeyDownEvent>(KeyDownEvent);
+        e.Dispatch<MouseDownEvent>(MouseDownEvent);
+    }
+
+    private bool MouseDownEvent(MouseDownEvent arg)
+    {
+        
+    }
+
+    private bool KeyDownEvent(KeyDownEvent arg)
+    {
+        
+    }*/
+
     public void WindowResized(int width, int height)
     {
         _windowWidth = width;

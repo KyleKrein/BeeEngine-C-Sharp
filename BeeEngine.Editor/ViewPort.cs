@@ -21,10 +21,13 @@ public sealed class ViewPort
         _orthographicCameraController = new OrthographicCameraController();
     }
 
+    private bool isFocused = false, isHovered = false;
     public void OnEvent(ref EventDispatcher e)
     {
-        if(e.Category.HasFlag(EventCategory.Application))
+        if (e.Category.HasFlag(EventCategory.Application))
+        {
             return;
+        }
         _orthographicCameraController.OnEvent(ref e);
     }
     public required Action Func;
@@ -58,6 +61,16 @@ public sealed class ViewPort
         }
         ImGui.Image(_frameBuffer.ColorAttachment, new Vector2(_width, _height), new Vector2(0, 1), new Vector2(1, 0));
         ImGui.PopStyleVar();
+        isFocused = ImGui.IsWindowFocused();
+        isHovered = ImGui.IsWindowHovered();
+        if (!isFocused || !isHovered)
+        {
+            _orthographicCameraController.Disable();
+        }
+        else
+        {
+            _orthographicCameraController.Enable();
+        }
         ImGui.End();
         _frameBuffer.Unbind();
     }

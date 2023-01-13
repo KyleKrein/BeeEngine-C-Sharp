@@ -10,6 +10,7 @@ public class OrthographicCameraController
 {
     private float _aspectRation;
     public OrthographicCamera Camera { get; }
+    public bool Enabled { get; private set; } = true;
     public bool Rotation { get; set; }
     private float _zoomLevel = 1.0f;
     private Vector3 _cameraPosition = Vector3.Zero;
@@ -29,6 +30,8 @@ public class OrthographicCameraController
     [ProfileMethod]
     public void OnUpdate()
     {
+        if(!Enabled)
+            return;
         //DebugTimer.Start();
         if (Input.KeyPressed(Key.W))
         {
@@ -67,9 +70,13 @@ public class OrthographicCameraController
     [ProfileMethod]
     public void OnEvent(ref EventDispatcher e)
     {
+        e.Dispatch<WindowResizedEvent>(OnWindowResized);
+        if (!Enabled)
+        {
+            return;
+        }
         DebugTimer.Start();
         e.Dispatch<MouseScrolledEvent>(OnMouseScrolled);
-        e.Dispatch<WindowResizedEvent>(OnWindowResized);
         DebugTimer.End();
     }
 
@@ -92,7 +99,27 @@ public class OrthographicCameraController
             _zoomLevel);
         MovementSpeed = _zoomLevel;
         DebugTimer.End();
-        return false;
+        return true;
+    }
+
+    public void Enable()
+    {
+        if (Enabled)
+        {
+            return;
+        }
+
+        Enabled = true;
+    }
+
+    public void Disable()
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        Enabled = false;
     }
 
     public static implicit operator OrthographicCamera(OrthographicCameraController controller)
