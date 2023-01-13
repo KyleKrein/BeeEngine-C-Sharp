@@ -17,13 +17,11 @@
     
 
     <ItemGroup>
-      <PackageReference Include="ImGui.NET.Branches.Docking" Version="1.88.0" PrivateAssets="all" />
-      <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="3.1.6" />
-      <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
-      <PackageReference Include="OpenTK" Version="4.7.5" PrivateAssets="all" />
+      <PackageReference Include="ImGui.NET.Branches.Docking" Version="1.88.0" />
+      <PackageReference Include="OpenTK" Version="4.7.5" />  <!--PrivateAssets="all"-->
       <PackageReference Include="OpenTK.redist.glfw" Version="3.3.8.30" />
-      <PackageReference Include="StbImageSharp" Version="2.27.13" PrivateAssets="all" />
-      <PackageReference Include="ZString" Version="2.5.0" PrivateAssets="all" />
+      <PackageReference Include="StbImageSharp" Version="2.27.13" />
+      <PackageReference Include="ZString" Version="2.5.0" />
     </ItemGroup>
 
 
@@ -194,14 +192,14 @@
     </ItemGroup>-->
     
     <!--TODO: Rewrite it to make nuget place dlls dynamically-->
-    <ItemGroup>
+    <!--<ItemGroup>
         <Content Include="src/Vendors/DLLS/*.*" PackagePath="lib\net7.0\">
             <PackageCopyToOutput>true</PackageCopyToOutput>
         </Content>
         <Content Include="src/Vendors/DLLS/*.*" PackagePath="lib\net7.0-ios16.1\">
             <PackageCopyToOutput>true</PackageCopyToOutput>
         </Content>
-    </ItemGroup>
+    </ItemGroup>-->
     <ItemGroup>
         <Content Include="src/Vendors/NativeLibraries/runtimes/**/native/*.*" Pack="true" PackagePath="contentFiles/runtimes/">
             <PackageCopyToOutput>true</PackageCopyToOutput>

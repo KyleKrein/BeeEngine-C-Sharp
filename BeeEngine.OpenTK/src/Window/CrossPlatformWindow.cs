@@ -102,7 +102,7 @@ internal class CrossPlatformWindow:Window, IDisposable
     
     private GameWindowSettings _gameWindowSettings = GameWindowSettings.Default;
     private NativeWindowSettings _nativeWindowSettings = NativeWindowSettings.Default;
-    public CrossPlatformWindow(WindowProps initSettings, EventQueue eventQueue): base(initSettings)
+    public CrossPlatformWindow(WindowProps initSettings, EventQueue eventQueue)
     {
         DebugTimer.Start();
         if (Instance != null)

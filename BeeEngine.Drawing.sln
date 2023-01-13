@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeeEngine.IOS", "BeeEngine.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestiOS", "TestiOS\TestiOS.csproj", "{ED9CF985-CDCE-4984-B167-A9EA41B91F4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeeEngine.Editor", "BeeEngine.Editor\BeeEngine.Editor.csproj", "{56CFB886-CF38-46F7-AD39-06B6160D332C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,5 +33,9 @@ Global
 		{ED9CF985-CDCE-4984-B167-A9EA41B91F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED9CF985-CDCE-4984-B167-A9EA41B91F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED9CF985-CDCE-4984-B167-A9EA41B91F4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56CFB886-CF38-46F7-AD39-06B6160D332C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56CFB886-CF38-46F7-AD39-06B6160D332C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56CFB886-CF38-46F7-AD39-06B6160D332C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56CFB886-CF38-46F7-AD39-06B6160D332C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

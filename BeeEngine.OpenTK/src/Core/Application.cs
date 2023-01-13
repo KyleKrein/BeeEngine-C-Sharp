@@ -31,7 +31,7 @@ public abstract class Application: IDisposable
         set => _window.VSync = value;
     }
     public static Application? Instance { get; private set; }
-    public Application(WindowProps initSettings = default)
+    public Application(WindowProps initSettings)
     {
         if (Instance!=null)
         {

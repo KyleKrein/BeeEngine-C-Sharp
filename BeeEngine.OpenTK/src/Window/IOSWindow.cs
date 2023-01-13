@@ -145,7 +145,7 @@ internal class IOSWindow: Window, IMTKViewDelegate
     };
 
     private EventQueue _events;
-    public IOSWindow(WindowProps initSettings, EventQueue eventQueue) : base(initSettings)
+    public IOSWindow(WindowProps initSettings, EventQueue eventQueue)
     {
         _events = eventQueue;
         MetalAppDelegate.EngineWindow = this;

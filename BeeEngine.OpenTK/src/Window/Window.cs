@@ -12,12 +12,6 @@ internal abstract class Window: IDisposable
     public virtual VSync VSync { get; set; }
 
     public Context Context { get; init; }
-    public Window(WindowProps initSettings)
-    {
-        Width = initSettings.Width;
-        Height = initSettings.Height;
-        Title = initSettings.Title;
-    }
 
     public abstract void Init();
     public abstract void Run(Action updateLoop, Action renderLoop);
@@ -53,6 +47,15 @@ public readonly struct WindowProps
     public readonly int Height;
     public readonly VSync VSync;
     public readonly bool IsGame;
+
+    public WindowProps()
+    {
+        Title = "BeeEngine Window";
+        Width = 1280;
+        Height = 720;
+        VSync = VSync.On;
+        IsGame = false;
+    }
     public WindowProps(string title = "BeeEngine Window", int width = 1280, int height = 720, VSync vSync = VSync.On, bool isGame = false)
     {
         Title = title;

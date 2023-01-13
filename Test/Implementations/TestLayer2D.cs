@@ -42,23 +42,10 @@ public class TestLayer2D: Layer
         Color.Cyan,
         Color.Violet
     };
-    private float lastTime = Time.TotalTime;
-    private float fps = 0;
-    private float currentFps = 0;
+    
     private float rotation = 0;
     public override void OnUpdate()
-    {
-        var now = Time.TotalTime;
-        if (now - lastTime >= 1)
-        {
-            Log.Info("{0} FPS", fps);
-            currentFps = fps;
-            lastTime = now;
-            fps = 0;
-        }
-        
-        fps++;
-        
+    { 
         //using var t = new Timer(); 
         Renderer2D.ResetStatistics();
         
@@ -91,10 +78,7 @@ public class TestLayer2D: Layer
         ImGui.ColorEdit4("", ref color);
         ImGui.End();
 
-        ImGui.Begin("Performance");
-        ImGui.Text(ZString.Format("Fps: {0}", currentFps));
-        ImGui.Text(ZString.Format("LastFrame: {0} ms", Time.DeltaTime/1000));
-        ImGui.End();
+        
     }
 
     private Vector4 color = Color.Aquamarine;

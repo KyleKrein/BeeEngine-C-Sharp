@@ -269,7 +269,7 @@ void main()
     {
         DebugTimer.Start();
 
-        IfBufferIsFullStartNewBatch();
+        FlushAndReset();
 
         const float blankTextureIndex = 0.0f;
         const float TilingFactor = 1.0f;
@@ -302,7 +302,7 @@ void main()
         DebugTimer.End();
     }
 
-    private void IfBufferIsFullStartNewBatch()
+    private void FlushAndReset()
     {
         if (_data.RectIndexCount >= Renderer2DData.MaxIndices)
         {
@@ -410,7 +410,7 @@ void main()
     {
         DebugTimer.Start();
         
-        IfBufferIsFullStartNewBatch();
+        FlushAndReset();
         float textureIndex = 0.0f;
         for (int i = 0; i < _data.TextureSlotIndex; i++)
         {
@@ -422,6 +422,8 @@ void main()
         }
         if (textureIndex == 0.0f)
         {
+            if(_data.TextureSlotIndex >= _data.MaxTextureSlots)
+                FlushAndReset();
             textureIndex = _data.TextureSlotIndex;
             _data.TextureSlots[_data.TextureSlotIndex] = texture;
             _data.TextureSlotIndex++;
