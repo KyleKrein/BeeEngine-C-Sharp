@@ -597,6 +597,7 @@ public static class DebugLog
         }
 
         Error(o);
+        Debugger.Break();
     }
 
     [Conditional("DEBUG")]

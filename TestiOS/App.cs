@@ -53,4 +53,8 @@ public class App: Application
         
         Renderer2D.EndScene();
     }
+
+    public App(WindowProps initSettings) : base(initSettings)
+    {
+    }
 }

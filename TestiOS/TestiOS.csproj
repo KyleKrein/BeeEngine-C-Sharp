@@ -15,6 +15,6 @@
       <IOSDebugOverWiFi>true</IOSDebugOverWiFi>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\BeeEngine.OpenTK\BeeEngine.OpenTK.csproj" />
+      <ProjectReference Include="..\BeeEngine\BeeEngine.csproj" />
     </ItemGroup>
 </Project>

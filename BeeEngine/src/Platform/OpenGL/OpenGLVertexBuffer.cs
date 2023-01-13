@@ -5,21 +5,19 @@ namespace BeeEngine.Platform.OpenGL;
 
 internal class OpenGLVertexBuffer: VertexBuffer
 {
-    private uint _rendererId;
-    
     public OpenGLVertexBuffer(int size)
     {
         DebugTimer.Start(".ctor (int size)");
         Count = size/sizeof(float);
         if (Application.PlatformOS == OS.Mac)
         {
-            GL.GenBuffers(1, out _rendererId);
+            GL.GenBuffers(1, out RendererID.GetRef()._id);
         }
         else
         {
-            GL.CreateBuffers(1, out _rendererId);
+            GL.CreateBuffers(1, out RendererID.GetRef()._id);
         }
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, RendererID.GetRef());
         GL.BufferData(BufferTarget.ArrayBuffer, size, nint.Zero, BufferUsageHint.DynamicDraw);
         DebugTimer.End(".ctor (int size)");
     }
@@ -29,13 +27,13 @@ internal class OpenGLVertexBuffer: VertexBuffer
         Count = vertices.Length;
         if (Application.PlatformOS == OS.Mac)
         {
-            GL.GenBuffers(1, out _rendererId);
+            GL.GenBuffers(1, out RendererID.GetRef()._id);
         }
         else
         {
-            GL.CreateBuffers(1, out _rendererId);
+            GL.CreateBuffers(1, out RendererID.GetRef()._id);
         }
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, RendererID.GetRef()._id);
         GL.BufferData(BufferTarget.ArrayBuffer, Count*sizeof(float), vertices, BufferUsageHint.StaticDraw);
         DebugTimer.End(".ctor (float[] vertices)");
     }
@@ -45,7 +43,7 @@ internal class OpenGLVertexBuffer: VertexBuffer
     public override void Bind()
     {
         DebugTimer.Start();
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, RendererID.GetRef()._id);
         DebugTimer.End();
     }
 
@@ -56,12 +54,12 @@ internal class OpenGLVertexBuffer: VertexBuffer
 
     protected override void Dispose(bool disposing)
     {
-        GL.DeleteBuffer(_rendererId);
+        GL.DeleteBuffer(RendererID.GetRef()._id);
     }
 
     public override void SetData(IntPtr data, int size)
     {
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _rendererId);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, RendererID.GetRef());
         GL.BufferSubData(BufferTarget.ArrayBuffer, 0, size ,data);
     }
 }

@@ -4,16 +4,16 @@ namespace BeeEngine.Editor;
 
 public sealed class Editor: Application
 {
-    private OrthographicCameraController _cameraController;
+    //private OrthographicCameraController _cameraController;
     protected override void OnEvent(ref EventDispatcher e)
     {
-        _cameraController.OnEvent(ref e);
+        //_cameraController.OnEvent(ref e);
     }
 
     protected override void Initialize()
     {
         PushLayer(new EditorLayer());
-        _cameraController = new OrthographicCameraController();
+        //_cameraController = new OrthographicCameraController();
     }
 
     protected override void LoadContent()
@@ -29,8 +29,8 @@ public sealed class Editor: Application
     protected override void Update()
     {
         Renderer2D.ResetStatistics();
-        _cameraController.OnUpdate();
-        Renderer2D.BeginScene(_cameraController);
+        /*_cameraController.OnUpdate();
+        Renderer2D.BeginScene(_cameraController);*/
     }
 
     protected override void FixedUpdate()
@@ -40,7 +40,7 @@ public sealed class Editor: Application
 
     protected override void Render()
     {
-        Renderer2D.EndScene();
+        /*Renderer2D.EndScene();*/
     }
 
     public Editor(WindowProps initSettings) : base(initSettings)

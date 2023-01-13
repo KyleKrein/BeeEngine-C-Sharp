@@ -1,31 +1,45 @@
-using System.Numerics;
 using BeeEngine.Events;
 using BeeEngine.Gui;
+using BeeEngine.Mathematics;
 using ImGuiNET;
+using Vector2 = System.Numerics.Vector2;
 
 namespace BeeEngine.Editor;
 
 public class EditorLayer : Layer
 {
     private FpsCounter _fpsCounter;
+    private ViewPort _viewPort;
     public override void OnAttach()
     {
         _fpsCounter = new FpsCounter();
+        _viewPort = new ViewPort(100, 100)
+        {
+            Func = DrawToScene
+        };
+        
+    }
+
+    private void DrawToScene()
+    {
+        Renderer2D.DrawRectangle(0,0,1,1,Color.Green);
     }
 
     public override void OnEvent(ref EventDispatcher e)
     {
-        
+        _viewPort.OnEvent(ref e);
     }
 
     public override void OnGUIRendering()
     {
         ShowExampleAppDockSpace();
+        _viewPort.Render();
         _fpsCounter.Render();
     }
 
     public override void OnUpdate()
     {
+        _viewPort.Update();
         _fpsCounter.Update();
     }
 

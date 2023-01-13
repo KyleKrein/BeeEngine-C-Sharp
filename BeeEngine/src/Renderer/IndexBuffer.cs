@@ -1,13 +1,25 @@
 using BeeEngine;
 using BeeEngine.Platform.Metal;
 using BeeEngine.Platform.OpenGL;
+using BeeEngine.SmartPointers;
 using NotSupportedException = System.NotSupportedException;
 
 namespace BeeEngine;
 
 public abstract class IndexBuffer: IDisposable
 {
-    public int RendererID { get; protected set; }
+    private SharedPointer<RendererID> _rendererId = new SharedPointer<RendererID>();
+
+    public unsafe SharedPointer<RendererID> RendererID
+    {
+        get => _rendererId.Share();
+        protected set
+        {
+            *_rendererId.GetPtr() = *value.GetPtr();
+            value.Release();
+        }
+    }
+
     public int Count { get; protected init; }
     public static IndexBuffer Create(uint[] indices)
     {
@@ -36,11 +48,13 @@ public abstract class IndexBuffer: IDisposable
     public void Dispose()
     {
         Dispose(true);
+        _rendererId.Dispose();
         GC.SuppressFinalize(this);
     }
 
     ~IndexBuffer()
     {
         Dispose(false);
+        _rendererId.Dispose();
     }
 }

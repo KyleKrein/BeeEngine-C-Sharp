@@ -11,15 +11,13 @@ internal class OpenGLIndexBuffer: IndexBuffer
         Count = indices.Length;
         if (Application.PlatformOS == OS.Mac)
         {
-            RendererID = GL.GenBuffer();
+            RendererID.GetRef() = GL.GenBuffer();
         }
         else
         {
-            int rendererId;
-            GL.CreateBuffers(1, out rendererId);
-            RendererID = rendererId;
+            GL.CreateBuffers(1, out RendererID.GetRef()._id);
         }
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, RendererID);
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, RendererID.GetRef());
         GL.BufferData(BufferTarget.ElementArrayBuffer, Count * sizeof(uint), indices, BufferUsageHint.StaticDraw);
         DebugTimer.End();
     }
@@ -27,7 +25,7 @@ internal class OpenGLIndexBuffer: IndexBuffer
     public override void Bind()
     {
         DebugTimer.Start("OpenGLIndexBuffer.Bind()");
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, RendererID);
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, RendererID.GetRef());
         DebugTimer.End("OpenGLIndexBuffer.Bind()");
     }
 
@@ -38,6 +36,6 @@ internal class OpenGLIndexBuffer: IndexBuffer
 
     protected override void Dispose(bool disposing)
     {
-        GL.DeleteBuffer(RendererID);
+        GL.DeleteBuffer(RendererID.GetRef());
     }
 }

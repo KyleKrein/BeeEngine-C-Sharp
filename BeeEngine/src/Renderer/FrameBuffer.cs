@@ -1,13 +1,14 @@
-using BeeEngine;
-using BeeEngine.Platform.Metal;
-using BeeEngine.Platform.OpenGL;
+using BeeEngine.OpenTK.Platform.OpenGL;
 using BeeEngine.SmartPointers;
-using NotSupportedException = System.NotSupportedException;
 
 namespace BeeEngine;
 
-public abstract class VertexBuffer: IDisposable
+public abstract class FrameBuffer: IDisposable
 {
+    protected SharedPointer<FrameBufferPreferences> m_preferences;
+    public RendererID ColorAttachment;
+    public RendererID DepthAttachment;
+
     private SharedPointer<RendererID> _rendererId = new SharedPointer<RendererID>();
 
     public unsafe SharedPointer<RendererID> RendererID
@@ -19,31 +20,17 @@ public abstract class VertexBuffer: IDisposable
             value.Release();
         }
     }
-    public int Count { get; protected init; }
-    private BufferLayout _layout;
-    public BufferLayout Layout
-    {
-        get => _layout;
-        set
-        {
-            if (!value.IsReadOnly)
-            {
-                value.Build();
-            }
 
-            _layout = value;
-        }
-    }
-    public static VertexBuffer Create(int size)
+    public static FrameBuffer Create(ref FrameBufferPreferences preferences)
     {
         switch (Renderer.API)
         {
             case API.OpenGL:
-                return new OpenGLVertexBuffer(size);
+                return new OpenGLFrameBuffer(ref preferences);
             case API.Metal:
-                #if IOS
-                return new MetalVertexBuffer(size);
-                #endif
+#if IOS
+                //return new MetalFrameBuffer(ref preferences);
+#endif
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();
@@ -52,16 +39,16 @@ public abstract class VertexBuffer: IDisposable
                 throw new NotSupportedException();
         }
     }
-    public static VertexBuffer Create(float[] vertices)
+    public static FrameBuffer Create(SharedPointer<FrameBufferPreferences> preferences)
     {
         switch (Renderer.API)
         {
             case API.OpenGL:
-                return new OpenGLVertexBuffer(vertices);
+                return new OpenGLFrameBuffer(preferences);
             case API.Metal:
-                #if IOS
-                return new MetalVertexBuffer(vertices);
-                #endif
+#if IOS
+            //return new MetalFrameBuffer(ref preferences);
+#endif
             case API.None:
                 Log.Error("{0} is not supported", Renderer.API);
                 throw new NotSupportedException();
@@ -71,6 +58,7 @@ public abstract class VertexBuffer: IDisposable
         }
     }
 
+    public abstract void Invalidate();
     public abstract void Bind();
     public abstract void Unbind();
 
@@ -83,16 +71,31 @@ public abstract class VertexBuffer: IDisposable
         GC.SuppressFinalize(this);
     }
 
-    ~VertexBuffer()
+    ~FrameBuffer()
     {
         Dispose(false);
-        _rendererId.Dispose();
     }
-
-    public abstract void SetData(IntPtr data, int size);
 }
 
-public enum DrawingFrequency
+public struct FrameBufferPreferences
 {
-    
+    public uint Width, Height;
+    public uint Samples;
+    public bool SwapChainTarget;
+
+    public FrameBufferPreferences()
+    {
+        Width = 1280;
+        Height = 720;
+        Samples = 1;
+        SwapChainTarget = false;
+    }
+
+    public FrameBufferPreferences(uint width = 1280, uint height = 720, uint samples = 1, bool swapChainTarget = false)
+    {
+        Width = width;
+        Height = height;
+        Samples = samples;
+        SwapChainTarget = swapChainTarget;
+    }
 }

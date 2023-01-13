@@ -6,7 +6,7 @@
 using BeeEngine;
 using TestiOS;
 Application.SetPlatformOS(OS.IOS);
-using (var App = new App())
+using (var App = new App(new WindowProps()))
 {
     App.Run();
 }

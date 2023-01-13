@@ -30,6 +30,7 @@ public readonly ref struct EventDispatcher
     private readonly Type _type;
     private readonly bool _shouldBeHandled;
     private static readonly List<Type> NonHandleableTypes = new List<Type>();
+    public EventCategory Category => _event.Category;
     public EventDispatcher(Event @event)
     {
         _event = @event;

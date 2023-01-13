@@ -71,6 +71,11 @@ public struct SharedPointer<T>: IDisposable where T: unmanaged
         _obj.Release();
         _released = true;
     }
+
+    public ref T GetRef()
+    {
+        return ref _obj.Ref;
+    }
 }
 
 /// <summary>

@@ -7,7 +7,6 @@ namespace BeeEngine.Platform.OpenGL;
 public class OpenGLTexture2D: Texture2D
 {
     private readonly string _path;
-    private int _rendererId;
     private PixelInternalFormat _internalFormat;
     
     public OpenGLTexture2D(string path)
@@ -26,18 +25,18 @@ public class OpenGLTexture2D: Texture2D
 
         if (Application.PlatformOS == OS.Mac)
         {
-            _rendererId = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, _rendererId);
+            RendererID.GetRef() = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, RendererID.GetRef());
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 
                 0, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
         }
         else
         {
-            GL.CreateTextures(TextureTarget.Texture2D, 1, out _rendererId);
-            GL.TextureStorage2D(_rendererId, 1, SizedInternalFormat.Rgba32f, image.Width, image.Height);
-            GL.TextureSubImage2D(_rendererId, 0, 0, 0, image.Width, image.Height, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
-            GL.GenerateTextureMipmap(_rendererId);
+            GL.CreateTextures(TextureTarget.Texture2D, 1, out RendererID.GetRef()._id);
+            GL.TextureStorage2D(RendererID.GetRef(), 1, SizedInternalFormat.Rgba32f, image.Width, image.Height);
+            GL.TextureSubImage2D(RendererID.GetRef(), 0, 0, 0, image.Width, image.Height, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
+            GL.GenerateTextureMipmap(RendererID.GetRef());
         }
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
@@ -53,16 +52,16 @@ public class OpenGLTexture2D: Texture2D
         Height = (int) height;
         if (Application.PlatformOS == OS.Mac)
         {
-            _rendererId = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, _rendererId);
+            RendererID.GetRef() = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, RendererID.GetRef());
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 
                 0, PixelFormat.Rgba, PixelType.UnsignedByte, nint.Zero);
            // GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
         }
         else
         {
-            GL.CreateTextures(TextureTarget.Texture2D, 1, out _rendererId);
-            GL.TextureStorage2D(_rendererId, 1, SizedInternalFormat.Rgba32f, Width, Height);
+            GL.CreateTextures(TextureTarget.Texture2D, 1, out RendererID.GetRef()._id);
+            GL.TextureStorage2D(RendererID.GetRef(), 1, SizedInternalFormat.Rgba32f, Width, Height);
             //GL.TextureSubImage2D(_rendererId, 0, 0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
             //GL.GenerateTextureMipmap(_rendererId);
         }
@@ -77,11 +76,11 @@ public class OpenGLTexture2D: Texture2D
         {
             DebugLog.Assert(slot<=32, "Could not bind texture to slot {0}", slot);
             GL.ActiveTexture(_textureUnits[slot]);
-            GL.BindTexture(TextureTarget.Texture2D, _rendererId);
+            GL.BindTexture(TextureTarget.Texture2D, RendererID.GetRef());
             DebugTimer.End("OpenGLTexture2D.Bind()");
             return;
         }
-        GL.BindTextureUnit(slot, _rendererId);
+        GL.BindTextureUnit(slot, RendererID.GetRef());
         DebugTimer.End("OpenGLTexture2D.Bind()");
         //
     }
@@ -91,14 +90,14 @@ public class OpenGLTexture2D: Texture2D
         Log.AssertAndThrow(size == Width * Height * 4, "Data must fill the entire texture!");
         if (Application.PlatformOS == OS.Mac)
         {
-            GL.BindTexture(TextureTarget.Texture2D, _rendererId);
+            GL.BindTexture(TextureTarget.Texture2D, RendererID.GetRef());
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 
                 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             return;
         }
-        GL.TextureSubImage2D(_rendererId, 0, 0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedByte, data);
-        GL.GenerateTextureMipmap(_rendererId);
+        GL.TextureSubImage2D(RendererID.GetRef(), 0, 0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+        GL.GenerateTextureMipmap(RendererID.GetRef());
     }
 
     public override void SetData(nint data, uint size)
@@ -106,25 +105,25 @@ public class OpenGLTexture2D: Texture2D
         Log.AssertAndThrow(size == Width * Height * 4, "Data must fill the entire texture!");
         if (Application.PlatformOS == OS.Mac)
         {
-            GL.BindTexture(TextureTarget.Texture2D, _rendererId);
+            GL.BindTexture(TextureTarget.Texture2D, RendererID.GetRef());
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 
                 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             return;
         }
-        GL.TextureSubImage2D(_rendererId, 0, 0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedByte, data);
-        GL.GenerateTextureMipmap(_rendererId);
+        GL.TextureSubImage2D(RendererID.GetRef(), 0, 0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+        GL.GenerateTextureMipmap(RendererID.GetRef());
     }
 
     private static TextureUnit[] _textureUnits = Enum.GetValues<TextureUnit>();
 
     public override bool Equals(object? obj)
     {
-        return obj is not null && ((OpenGLTexture2D) obj)._rendererId == _rendererId;
+        return obj is not null && ((OpenGLTexture2D) obj).RendererID.GetRef() == RendererID.GetRef();
     }
 
     protected override void Dispose(bool disposing)
     {
-        GL.DeleteTexture(_rendererId);
+        GL.DeleteTexture(RendererID.GetRef());
     }
 }

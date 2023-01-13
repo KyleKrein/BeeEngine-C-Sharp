@@ -1,11 +1,23 @@
 using BeeEngine;
 using BeeEngine.Platform.Metal;
 using BeeEngine.Platform.OpenGL;
+using BeeEngine.SmartPointers;
 
 namespace BeeEngine;
 
 public abstract class Texture: IDisposable
 {
+    private SharedPointer<RendererID> _rendererId = new SharedPointer<RendererID>();
+
+    public unsafe SharedPointer<RendererID> RendererID
+    {
+        get => _rendererId.Share();
+        protected set
+        {
+            *_rendererId.GetPtr() = *value.GetPtr();
+            value.Release();
+        }
+    }
     public int Width { get; protected set; }
     public int Height { get; protected set; }
 
@@ -16,12 +28,14 @@ public abstract class Texture: IDisposable
     public void Dispose()
     {
         Dispose(true);
+        _rendererId.Dispose();
         GC.SuppressFinalize(this);
     }
 
     ~Texture()
     {
         Dispose(false);
+        _rendererId.Dispose();
     }
 }
 
@@ -53,6 +67,4 @@ public abstract class Texture2D: Texture
         Log.Error("Unknown RendererAPI!");
         throw new PlatformNotSupportedException();
     }
-
-    
 }
