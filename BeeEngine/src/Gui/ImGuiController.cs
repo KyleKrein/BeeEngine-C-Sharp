@@ -10,7 +10,7 @@ using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 
 namespace BeeEngine.Gui;
 
-public class ImGuiController : IDisposable
+internal class ImGuiController : IDisposable
 {
     private readonly int _osScale = 1;
 
@@ -103,8 +103,8 @@ public class ImGuiController : IDisposable
         _windowWidth = width;
         _windowHeight = height;
         //GLFW.GetWindowSize(Game.Instance.GetWindow().WindowPtr,out _windowWidth, out _windowHeight);
-        _windowWidth *= _osScale;
-        _windowHeight *= _osScale;
+        //_windowWidth *= _osScale;
+        //_windowHeight *= _osScale;
     }
 
     public void DestroyDeviceObjects()
@@ -237,7 +237,7 @@ void main()
     /// <summary>
     /// Updates ImGui input and IO configuration state.
     /// </summary>
-    public void Update(NativeWindow wnd, float deltaSeconds)
+    public void Update(WindowHandler wnd, float deltaSeconds)
     {
         SetPerFrameImGuiData(deltaSeconds);
         UpdateImGuiInput(wnd);
@@ -259,21 +259,18 @@ void main()
     }
 
     private readonly List<char> _pressedChars = new List<char>();
-    private readonly Keys[] _enumKeysValues = Enum.GetValues<Keys>();
+    private readonly Key[] _enumKeysValues = Enum.GetValues<Key>();
     private float scale = 1;
 
-    private void UpdateImGuiInput(NativeWindow wnd)
+    private void UpdateImGuiInput(WindowHandler wnd)
     {
         ImGuiIOPtr io = ImGui.GetIO();
 
-        MouseState mouseState = wnd.MouseState;
-        KeyboardState keyboardState = wnd.KeyboardState;
+        io.MouseDown[0] = Input.MouseKeyPressed(MouseButton.Left);
+        io.MouseDown[1] = Input.MouseKeyPressed(MouseButton.Right);
+        io.MouseDown[2] = Input.MouseKeyPressed(MouseButton.Middle);
 
-        io.MouseDown[0] = mouseState[global::OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left];
-        io.MouseDown[1] = mouseState[global::OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Right];
-        io.MouseDown[2] = mouseState[global::OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Middle];
-
-        var screenPoint = new Vector2i((int) mouseState.X, (int) mouseState.Y);
+        var screenPoint = new Vector2i((int) Input.MousePosition.X, (int) Input.MousePosition.Y);
         var point = screenPoint; //wnd.PointToClient(screenPoint);
         io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
         io.MouseWheel = _mouseScroll.Y;
@@ -282,12 +279,12 @@ void main()
         for (var index = 0; index < _enumKeysValues.Length; index++)
         {
             var key = _enumKeysValues[index];
-            if (key == Keys.Unknown)
+            if (key == Key.Unknown)
             {
                 continue;
             }
 
-            io.KeysDown[(int) key] = keyboardState.IsKeyDown(key);
+            io.KeysDown[(int) key] = Input.KeyPressed(key);
         }
 
         foreach (var c in _pressedChars)
@@ -297,10 +294,10 @@ void main()
 
         _pressedChars.Clear();
 
-        io.KeyCtrl = keyboardState.IsKeyDown(Keys.LeftControl) || keyboardState.IsKeyDown(Keys.RightControl);
-        io.KeyAlt = keyboardState.IsKeyDown(Keys.LeftAlt) || keyboardState.IsKeyDown(Keys.RightAlt);
-        io.KeyShift = keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift);
-        io.KeySuper = keyboardState.IsKeyDown(Keys.LeftSuper) || keyboardState.IsKeyDown(Keys.RightSuper);
+        io.KeyCtrl = Input.KeyPressed(Key.LeftControl) || Input.KeyPressed(Key.RightControl);
+        io.KeyAlt = Input.KeyPressed(Key.LeftAlt) || Input.KeyPressed(Key.RightAlt);
+        io.KeyShift = Input.KeyPressed(Key.LeftShift) || Input.KeyPressed(Key.RightShift);
+        io.KeySuper = Input.KeyPressed(Key.LeftSuper) || Input.KeyPressed(Key.RightSuper);
     }
 
     internal void PressChar(char keyChar)

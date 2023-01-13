@@ -4,9 +4,6 @@ using BeeEngine.Events;
 using BeeEngine.Platform.OpenGL;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.Common;
-using OpenTK.Windowing.Desktop;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using InvalidOperationException = System.InvalidOperationException;
 
 namespace BeeEngine;
@@ -16,29 +13,29 @@ internal class CrossPlatformWindow:Window, IDisposable
     public static CrossPlatformWindow Instance { get; private set; }
     public override string Title
     {
-        get => _nativeWindowSettings.Title;
-        set => _nativeWindowSettings.Title = value;
+        get => _window.Title;
+        set => _window.Title = value;
     }
 
     public override int Width
     {
-        get => _nativeWindowSettings.Size.X;
-        set => _nativeWindowSettings.Size = new Vector2i(value, _nativeWindowSettings.Size.Y);
+        get => _window.Width;
+        set => _window.Width = value;
     }
 
     public override int Height
     {
-        get => _nativeWindowSettings.Size.Y;
-        set => _nativeWindowSettings.Size = new Vector2i(_nativeWindowSettings.Size.X, value);
+        get => _window.Height;
+        set => _window.Height = value;
     }
-
+    
     private VSync _vSync = VSync.On;
     public override VSync VSync
     {
         get => _vSync;
         set
         {
-            GLFW.SwapInterval(value == VSync.Off? 0: 1);
+            _window.VSync = value;
             _vSync = value;
         }
     }
@@ -92,16 +89,17 @@ internal class CrossPlatformWindow:Window, IDisposable
     }
     
     public Point Location { get; set; }
-    public Size Size 
+    public Size Size
     {
-        get => new Size(_nativeWindowSettings.Size.X, _nativeWindowSettings.Size.Y);
-        set => _nativeWindowSettings.Size = new Vector2i(value.Width, value.Height);
+        get => new Size(_window.Width, _window.Height);
+        set
+        {
+            _window.Width = value.Width;
+            _window.Height = value.Height;
+        }
     }
 
-    private NativeWindow _window;
-    
-    private GameWindowSettings _gameWindowSettings = GameWindowSettings.Default;
-    private NativeWindowSettings _nativeWindowSettings = NativeWindowSettings.Default;
+    private WindowHandler _window;
     public CrossPlatformWindow(WindowProps initSettings, EventQueue eventQueue)
     {
         DebugTimer.Start();
@@ -113,17 +111,9 @@ internal class CrossPlatformWindow:Window, IDisposable
         }
 
         Instance = this;
-        if (Application.PlatformOS == OS.Mac)
-        {
-            _nativeWindowSettings.Flags = ContextFlags.ForwardCompatible;
-        }
-        _nativeWindowSettings.Profile = ContextProfile.Core;
-        _nativeWindowSettings.API = ContextAPI.OpenGL;
-        _nativeWindowSettings.AutoLoadBindings = true;
-        _nativeWindowSettings.Title = initSettings.Title;
-        _nativeWindowSettings.Size = new Vector2i(initSettings.Width, initSettings.Height);
         DebugTimer.Start("Creating window");
-        _window = new NativeWindow(_nativeWindowSettings);
+        
+        _window = WindowHandler.Create(WindowHandlerType.GLFW, ref initSettings, eventQueue);
         var context = new OpenGLContext(_window);
         DebugTimer.End("Creating window");
         Context = context;
@@ -135,37 +125,6 @@ internal class CrossPlatformWindow:Window, IDisposable
         //_window.Load += () => { _controller = new ImGuiController(_window.ClientSize.X, _window.ClientSize.Y); };
         VSync = initSettings.VSync;
         isMultiThreaded = initSettings.IsGame;
-        SetupEventsQueue();
-        DebugTimer.End();
-    }
-
-    private void SetupEventsQueue()
-    {
-        DebugTimer.Start();
-        _window.MouseMove += (e) => { _events.AddEvent(new MouseMovedEvent(e.X, e.Y, e.DeltaX, e.DeltaY)); };
-        _window.Resize += (e) =>
-        {
-            _events.AddEvent(new WindowResizedEvent(e.Width, e.Height));
-        };
-        _window.MouseDown += (e) => _events.AddEvent(new MouseDownEvent((MouseButton) (int) e.Button,
-            _window.MouseState.Position.X, _window.MouseState.Position.Y));
-        _window.MouseUp += (e) => _events.AddEvent(new MouseUpEvent((MouseButton) (int) e.Button,
-            _window.MouseState.Position.X, _window.MouseState.Position.Y));
-        _window.MouseWheel += (e) =>
-        {
-            _events.AddEvent(new MouseScrolledEvent(e.Offset.Y, e.Offset.X));
-        };
-        _window.KeyDown += (e) => _events.AddEvent(new KeyDownEvent((Key) (int) e.Key));
-        _window.KeyUp += (e) => _events.AddEvent(new KeyUpEvent((Key) (int) e.Key));
-        _window.TextInput += (e) => _events.AddEvent(new KeyTypedEvent(e.Unicode));
-        //_window.Move
-        /*unsafe
-        {
-            GLFW.SetScrollCallback(_window.WindowPtr, (window, x, y) =>
-            {
-                _events.AddEvent(new MouseScrolledEvent((float) x, (float) y));
-            });
-        }*/
         DebugTimer.End();
     }
 
@@ -181,7 +140,7 @@ internal class CrossPlatformWindow:Window, IDisposable
         _watchRender = new Stopwatch();
         _watchUpdate = new Stopwatch();
         Context.MakeCurrent();
-        _events.AddEvent(new WindowResizedEvent(Size.Width, Size.Height));
+        _events.AddEvent(new WindowResizedEvent(Width, Height));
     }
 
     public override unsafe void Run(Action updateLoop, Action renderLoop)
@@ -190,7 +149,8 @@ internal class CrossPlatformWindow:Window, IDisposable
         RenderLoop = renderLoop;
         _watchUpdate.Start();
         _watchRender.Start();
-        while (!GLFW.WindowShouldClose(_window.WindowPtr))
+        //RenderCommand.SetViewPort(0,0, Width, Height);
+        while (_window.IsRunning())
         {
             double val1 = this.DispatchUpdateFrame();
             double val2 = this.DispatchRenderFrame();
@@ -205,7 +165,7 @@ internal class CrossPlatformWindow:Window, IDisposable
         RenderLoop = renderLoop;
         RunRenderThread();
         _watchUpdate.Start();
-        while (!GLFW.WindowShouldClose(_window.WindowPtr))
+        while (_window.IsRunning())
         {
             double val1 = this.DispatchUpdateFrame();
             if (val1 > 0.0)
@@ -224,7 +184,7 @@ internal class CrossPlatformWindow:Window, IDisposable
     {
         Context.MakeCurrent();
         this._watchRender.Start();
-        while (!GLFW.WindowShouldClose(_window.WindowPtr))
+        while (_window.IsRunning())
             this.DispatchRenderFrame();
     }
 
@@ -239,8 +199,7 @@ internal class CrossPlatformWindow:Window, IDisposable
         double num2;
         for (num2 = this.UpdateFrequency == 0.0 ? 0.0 : 1.0 / this.UpdateFrequency; totalSeconds > 0.0 && totalSeconds + this._updateEpsilon >= num2; totalSeconds = this._watchUpdate.Elapsed.TotalSeconds)
         {
-            _window.ProcessInputEvents();
-            NativeWindow.ProcessWindowEvents(_window.IsEventDriven);
+            _window.ProcessEvents();
             this._watchUpdate.Restart();
             this.UpdateTime = totalSeconds;
             Time.Update();
@@ -291,7 +250,7 @@ internal class CrossPlatformWindow:Window, IDisposable
         Context.Destroy();
     }
 
-    internal NativeWindow GetWindow()
+    internal WindowHandler GetWindow()
     {
         return _window;
     }

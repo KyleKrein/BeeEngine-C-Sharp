@@ -41,6 +41,6 @@ public class OpenGLRendererAPI: RendererAPI
 
     public override void SetViewPort(int x, int y, int width, int height)
     {
-        GL.Viewport(x,y, width* _osScale, height* _osScale);
+        GL.Viewport(x,y, width/** _osScale*/, height/** _osScale*/);
     }
 }

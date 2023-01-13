@@ -7,14 +7,11 @@ using StringName = OpenTK.Graphics.OpenGL4.StringName;
 namespace BeeEngine.Platform.OpenGL;
 internal class OpenGLContext: Context
 {
-    private NativeWindow _window;
-    private unsafe global::OpenTK.Windowing.GraphicsLibraryFramework.Window* _windowPtr;
+    private WindowHandler _window;
     private int _swapInterval;
-    public unsafe global::OpenTK.Windowing.GraphicsLibraryFramework.Window* WindowPtr => _windowPtr;
-    public unsafe OpenGLContext(NativeWindow window)
+    public unsafe OpenGLContext(WindowHandler window)
     {
         _window = window;
-        _windowPtr = window.WindowPtr;
     }
     public override int SwapInterval
     {
@@ -37,18 +34,18 @@ internal class OpenGLContext: Context
     public override unsafe void SwapBuffers()
     {
         DebugTimer.Start();
-        GLFW.SwapBuffers(this._windowPtr);
+        _window.SwapBuffers();
         DebugTimer.End();
     }
 
     public override unsafe void MakeCurrent()
     {
-        GLFW.MakeContextCurrent(_windowPtr);
+        _window.MakeContextCurrent();
     }
 
     public override unsafe void MakeNonCurrent()
     {
-        GLFW.MakeContextCurrent(null);
+        _window.MakeContextNonCurrent();
     }
 
     public override void Destroy()

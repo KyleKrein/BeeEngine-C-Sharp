@@ -7,7 +7,7 @@ namespace BeeEngine.Platform.OpenGL;
 
 internal sealed class ImGuiLayerOpenGL: ImGuiLayer
 {
-    private NativeWindow _window;
+    private WindowHandler _window;
     private ImGuiController _controller;
 
     public ImGuiLayerOpenGL()
@@ -17,7 +17,7 @@ internal sealed class ImGuiLayerOpenGL: ImGuiLayer
 
     public override void OnAttach()
     {
-        _controller = new ImGuiController(_window.ClientSize.X, _window.ClientSize.Y);
+        _controller = new ImGuiController(_window.Width, _window.Height);
     }
 
     public override void OnDetach()

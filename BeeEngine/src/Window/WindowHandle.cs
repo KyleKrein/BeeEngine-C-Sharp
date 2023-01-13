@@ -1,5 +1,8 @@
+using System.Reflection.Emit;
+using System.Runtime.InteropServices;
 using BeeEngine.Events;
 using BeeEngine.Mathematics;
+using BeeEngine.SmartPointers;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -56,6 +59,25 @@ internal abstract class WindowHandler: IDisposable
 
 internal unsafe sealed class GLFWWindowHandler: WindowHandler
 {
+    private struct GLFWCallback
+    {
+        public GLFWCallbacks.CharCallback CharCallback;
+        public GLFWCallbacks.KeyCallback KeyCallback;
+        public GLFWCallbacks.ScrollCallback ScrollCallback;
+        public GLFWCallbacks.DropCallback DropCallback;
+        public GLFWCallbacks.ErrorCallback ErrorCallback;
+        public GLFWCallbacks.JoystickCallback JoystickCallback;
+        public GLFWCallbacks.MonitorCallback MonitorCallback;
+        public GLFWCallbacks.CursorPosCallback CursorPosCallback;
+        public GLFWCallbacks.FramebufferSizeCallback FramebufferSizeCallback;
+        public GLFWCallbacks.MouseButtonCallback MouseButtonCallback;
+        public GLFWCallbacks.WindowSizeCallback WindowSizeCallback;
+        public GLFWCallbacks.WindowFocusCallback WindowFocusCallback;
+        public GLFWCallbacks.WindowCloseCallback WindowCloseCallback;
+        public GLFWCallbacks.WindowPosCallback WindowPosCallback;
+    }
+
+    private GLFWCallback callbacks;
     public override int Width
     {
         get => _width;
@@ -130,13 +152,18 @@ internal unsafe sealed class GLFWWindowHandler: WindowHandler
             GLFW.WindowHint(WindowHintBool.OpenGLForwardCompat, true);
             GLFW.WindowHint(WindowHintInt.ContextVersionMajor, 4);
             GLFW.WindowHint(WindowHintInt.ContextVersionMinor, 1);
+            _windowHandle = GLFW.CreateWindow(preferences.Width/2, preferences.Height/2, preferences.Title, null, null);
+            _width = preferences.Width/2;
+            _height = preferences.Height/2;
         }
         else
         {
             GLFW.WindowHint(WindowHintInt.ContextVersionMajor, 4);
             GLFW.WindowHint(WindowHintInt.ContextVersionMinor, 5);
+            _windowHandle = GLFW.CreateWindow(preferences.Width, preferences.Height, preferences.Title, null, null);
+            _width = preferences.Width;
+            _height = preferences.Height;
         }
-        _windowHandle = GLFW.CreateWindow(preferences.Width, preferences.Height, preferences.Title, null, null);
         GLFW.MakeContextCurrent(_windowHandle);
         GL.LoadBindings(new GLFWBindingsContext());
         //GL = Silk.NET.OpenGL.GL.GetApi(s => GLFW.GetProcAddress(s));
@@ -151,24 +178,34 @@ internal unsafe sealed class GLFWWindowHandler: WindowHandler
                 GLFW.SwapInterval(0);
                 break;
         }
+        _title = preferences.Title;
+        callbacks = new GLFWCallback()
+        {
+            CharCallback = CharCallback,
+            ErrorCallback = (error, description) => Log.Error("GLFW Error {0}: {1}", error, description),
+            KeyCallback = KeyCallback,
+            ScrollCallback = ScrollCallback,
+            CursorPosCallback = MouseMovedCallback,
+            FramebufferSizeCallback = FrameBufferResizeCallback,
+            MouseButtonCallback = MouseButtonCallback,
+            WindowCloseCallback = WindowCloseCallback,
+            WindowPosCallback = WindowPosChangedCallback,
+        };
+        GLFW.SetCharCallback(_windowHandle, callbacks.CharCallback);
+        //TODO: GLFW.SetDropCallback(_windowHandle, )
+        GLFW.SetErrorCallback(callbacks.ErrorCallback);
+        //TODO: GLFW.SetJoystickCallback()
+        GLFW.SetKeyCallback(_windowHandle, callbacks.KeyCallback);
+        GLFW.SetScrollCallback(_windowHandle, callbacks.ScrollCallback);
+        GLFW.SetCursorPosCallback(_windowHandle, callbacks.CursorPosCallback);
+        GLFW.SetFramebufferSizeCallback(_windowHandle, callbacks.FramebufferSizeCallback);
+        GLFW.SetMouseButtonCallback(_windowHandle, callbacks.MouseButtonCallback);
+        GLFW.SetWindowCloseCallback(_windowHandle, callbacks.WindowCloseCallback);
+        //GLFW.SetWindowSizeCallback(_windowHandle, WindowResizeCallback);
+        GLFW.SetWindowPosCallback(_windowHandle, callbacks.WindowPosCallback);
+       // GLFW.SetWindowRefreshCallback(_windowHandle, RefreshCallback);
         GLFW.SetWindowTitle(_windowHandle, preferences.Title);
         GLFW.SetWindowSize(_windowHandle, preferences.Width, preferences.Height);
-        _title = preferences.Title;
-        _width = preferences.Width;
-        _height = preferences.Height;
-        GLFW.SetCharCallback(_windowHandle, CharCallback);
-        //TODO: GLFW.SetDropCallback(_windowHandle, )
-        GLFW.SetErrorCallback((error, description) => Log.Error("GLFW Error {0}: {1}", error, description));
-        //TODO: GLFW.SetJoystickCallback()
-        GLFW.SetKeyCallback(_windowHandle, KeyCallback);
-        GLFW.SetScrollCallback(_windowHandle, ScrollCallback);
-        GLFW.SetCursorPosCallback(_windowHandle, MouseMovedCallback);
-        GLFW.SetFramebufferSizeCallback(_windowHandle, FrameBufferResizeCallback);
-        GLFW.SetMouseButtonCallback(_windowHandle, MouseButtonCallback);
-        GLFW.SetWindowCloseCallback(_windowHandle, WindowCloseCallback);
-        GLFW.SetWindowSizeCallback(_windowHandle, WindowResizeCallback);
-        GLFW.SetWindowPosCallback(_windowHandle, WindowPosChangedCallback);
-        GLFW.SetWindowRefreshCallback(_windowHandle, RefreshCallback);
     }
 
     private void CharCallback(global::OpenTK.Windowing.GraphicsLibraryFramework.Window* window1, uint codepoint)
@@ -240,7 +277,9 @@ internal unsafe sealed class GLFWWindowHandler: WindowHandler
 
     private void FrameBufferResizeCallback(global::OpenTK.Windowing.GraphicsLibraryFramework.Window* window1, int width, int height)
     {
-        
+        _events.AddEvent(new WindowResizedEvent(width, height));
+        _width = width;
+        _height = height;
     }
 
     private void MouseMovedCallback(global::OpenTK.Windowing.GraphicsLibraryFramework.Window* window1, double x, double y)

@@ -63,7 +63,7 @@ public sealed class OpenGLFrameBuffer: FrameBuffer
     public override void Unbind()
     {
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-        //GL.Viewport(0,0, Application.Instance.Width*2, Application.Instance.Height*2);
+        GL.Viewport(0,0, Application.Instance.Width, Application.Instance.Height);
     }
 
     protected override void Dispose(bool disposing)
