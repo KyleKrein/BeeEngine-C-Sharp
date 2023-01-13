@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{8DBBDDF8-0FF0-4830-AC1C-A5B815F0919E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeeEngine.OpenTK", "BeeEngine.OpenTK\BeeEngine.OpenTK.csproj", "{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeeEngine", "BeeEngine\BeeEngine.csproj", "{AB5ADC1A-6D0A-4777-9785-6048EB925AA5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeeEngine.IOS", "BeeEngine.IOS\BeeEngine.IOS.csproj", "{82503BF1-3BBC-4793-BE17-75AEE6A19999}"
 EndProject

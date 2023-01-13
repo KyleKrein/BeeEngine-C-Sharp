@@ -9,6 +9,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>BeeEngine</PackageId>
         <Authors>Alex Lebedev</Authors>
+        <RootNamespace>BeeEngine.OpenTK</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

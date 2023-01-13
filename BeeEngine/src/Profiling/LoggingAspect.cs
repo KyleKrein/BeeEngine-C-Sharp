@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using Cysharp.Text;
 
-namespace BeeEngine.OpenTK.Profiling;
+namespace BeeEngine.Profiling;
 [Aspect(Scope.Global)]
 [Injection(typeof(Logging))]
 public class Logging: Attribute

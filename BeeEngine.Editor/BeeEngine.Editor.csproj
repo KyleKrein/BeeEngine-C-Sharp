@@ -9,7 +9,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BeeEngine.OpenTK\BeeEngine.OpenTK.csproj" />
+      <ProjectReference Include="..\BeeEngine\BeeEngine.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="obj\BeeEngine.Editor.csproj.nuget.dgspec.json" />
+      <Content Include="obj\Debug\net7.0\BeeEngine.Editor.AssemblyInfoInputs.cache" />
+      <Content Include="obj\Debug\net7.0\BeeEngine.Editor.assets.cache" />
+      <Content Include="obj\Debug\net7.0\BeeEngine.Editor.csproj.AssemblyReference.cache" />
+      <Content Include="obj\project.assets.json" />
+      <Content Include="obj\project.nuget.cache" />
+      <Content Include="obj\project.packagespec.json" />
+      <Content Include="obj\rider.project.restore.info" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="obj\Debug\net7.0\.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" />
     </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using Monitor = OpenTK.Windowing.GraphicsLibraryFramework.Monitor;
 
-namespace BeeEngine.OpenTK.Gui;
+namespace BeeEngine.Gui;
 
 internal static class ImGuiInit
 {
