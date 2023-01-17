@@ -4,7 +4,7 @@ using BeeEngine.SmartPointers;
 
 namespace BeeEngine;
 
-public class OrthographicCamera: IDisposable
+public class OrthographicCamera: Camera, IDisposable
 {
     private float _rotation;
     private Vector3 _position;
@@ -50,7 +50,7 @@ public class OrthographicCamera: IDisposable
         _viewProjectionMatrix.Get() = _viewMatrix * _projectionMatrix;
     }
 
-    internal SharedPointer<Matrix4> GetViewProjectionMatrix()
+    public override SharedPointer<Matrix4> GetViewProjectionMatrix()
     {
         return _viewProjectionMatrix.Share();
     }

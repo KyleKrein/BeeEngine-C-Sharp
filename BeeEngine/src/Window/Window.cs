@@ -16,7 +16,6 @@ internal abstract class Window: IDisposable
     public abstract void Init();
     public abstract void Run(Action updateLoop, Action renderLoop);
     public abstract void RunMultiThreaded(Action updateLoop, Action renderLoop);
-
     public event EventHandler<MouseButtonEventArgs> MouseClick;
 
     public abstract void ReleaseUnmanagedResources();

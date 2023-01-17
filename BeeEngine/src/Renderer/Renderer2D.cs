@@ -14,7 +14,7 @@ public static class Renderer2D
         public int TotalVertexCount => QuadCount * 4;
         
     }
-    public static void BeginScene(OrthographicCamera camera)
+    public static void BeginScene(Camera camera)
     {
         DebugTimer.Start();
         RenderCommand.Clear();

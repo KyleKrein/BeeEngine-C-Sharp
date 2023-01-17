@@ -29,9 +29,11 @@ public static class RenderCommand2D
         _rendererApi.Init();
     }
 
-    public static void SetCamera(OrthographicCamera camera)
+    public static void SetCamera(Camera camera)
     {
-        _rendererApi.SetCameraTransform(camera.GetViewProjectionMatrix());
+        var ptr = camera.GetViewProjectionMatrix();
+        _rendererApi.SetCameraTransform(ptr.Get());
+        ptr.Release();
     }
 
     public static void DrawRectangle(float x, float y, float z, float width, float height, Color color, float rotationInRadians)

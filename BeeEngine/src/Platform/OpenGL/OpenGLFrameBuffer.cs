@@ -19,6 +19,11 @@ public sealed class OpenGLFrameBuffer: FrameBuffer
 
     public override void Invalidate()
     {
+        if (m_preferences.GetRef().Width == 0 || m_preferences.GetRef().Height == 0)
+        {
+            Log.Warning("Invalid width: {0} or height: {1} set for framebuffer", m_preferences.GetRef().Width, m_preferences.GetRef().Height);
+            return;
+        }
         if (RendererID.GetRef()._id != 0)
         {
             GL.DeleteFramebuffer(RendererID.Get());

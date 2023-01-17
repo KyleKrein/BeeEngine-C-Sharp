@@ -1,13 +1,14 @@
 using BeeEngine.Mathematics;
 using BeeEngine;
 using BeeEngine.OpenTK.Profiling;
+using BeeEngine.SmartPointers;
 
 namespace BeeEngine;
 
 public class Renderer
 {
     private static API _api = API.None;
-    private static Matrix4 _viewProjectionMatrix;
+    private static SharedPointer<Matrix4> _viewProjectionMatrix;
 
     public static ShaderLibrary Shaders { get; } = new ShaderLibrary();
 
@@ -23,20 +24,20 @@ public class Renderer
         }
     }
 
-    public static void BeginScene(OrthographicCamera camera)
+    public static void BeginScene(Camera camera)
     {
-        _viewProjectionMatrix = camera.ViewProjectionMatrix;
+        _viewProjectionMatrix = camera.GetViewProjectionMatrix();
     }
 
     public static void EndScene()
     {
-        
+        _viewProjectionMatrix.Release();
     }
     [ProfileMethod]
-    public static void Submit(VertexArray vertexArray, Shader shader, Matrix4 transform, Action<Shader> func = null)
+    public static unsafe void Submit(VertexArray vertexArray, Shader shader, Matrix4 transform, Action<Shader> func = null)
     {
         shader.Bind();
-        shader.UploadUniformMatrix4("u_ViewProjection",ref _viewProjectionMatrix);
+        shader.UploadUniformMatrix4("u_ViewProjection",_viewProjectionMatrix.GetPtr());
         shader.UploadUniformMatrix4("u_Transform",ref transform);
         func?.Invoke(shader);
         vertexArray.Bind();

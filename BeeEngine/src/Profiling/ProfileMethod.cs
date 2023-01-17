@@ -40,10 +40,10 @@ public class ProfileMethod: Attribute
     [Conditional("DEBUG")]
     public void Start( string memberName = "",  string memberType = "")
     {
-        if (!Instrumentor.IsProfilingInProgress)
+        /*if (!Instrumentor.IsProfilingInProgress)
         {
             return;
-        }
+        }*/
         string name = ZString.Concat(memberType, ':', memberName);
         if (!_methods.ContainsKey(name))
         {

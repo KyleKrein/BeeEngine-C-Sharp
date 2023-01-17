@@ -45,6 +45,7 @@
 
     <ItemGroup>
       <Folder Include="src\Vendors\DLLS" />
+      <Folder Include="src\Vendors\EnTT" />
       <Folder Include="src\Vendors\NativeLibraries" />
     </ItemGroup>
  
@@ -205,6 +206,8 @@
         <Content Include="src/Vendors/NativeLibraries/runtimes/**/native/*.*" Pack="true" PackagePath="contentFiles/runtimes/">
             <PackageCopyToOutput>true</PackageCopyToOutput>
         </Content>
+        <Content Include="src\Vendors\EnTT\EnTTSharp.Annotations\EnTTSharp.Annotations.csproj" />
+        <Content Include="src\Vendors\EnTT\EnTTSharp\EnttSharp.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="BeeEngine.targets" PackagePath="build/BeeEngine.targets">

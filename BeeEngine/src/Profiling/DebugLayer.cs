@@ -16,24 +16,12 @@ public class DebugLayer: Layer
             {
                 _frameCounter = 0;
                 Instrumentor.EndSession();
-                //Process.Start("chrome://tracing/");
             }
         }
-        /*if (Input.KeyPressed(Key.G))
-        {
-            if (Instrumentor.IsProfilingInProgress)
-            {
-                Instrumentor.EndSession();
-            }
-            else
-            {
-                Instrumentor.BeginSession("Runtime", "runtime_profiling.json");
-            }
-        }*/
     }
 
     private int _numberOfFramesToCapture = 10;
-    public override unsafe void OnGUIRendering()
+    public override void OnGUIRendering()
     {
         ImGui.Begin("Debug settings");
         ImGui.Text("Number of frames to capture");

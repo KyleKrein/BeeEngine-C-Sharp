@@ -1,3 +1,5 @@
+using BeeEngine.Mathematics;
+
 namespace BeeEngine.Events;
 
 public class MouseMovedEvent: Event
@@ -6,6 +8,7 @@ public class MouseMovedEvent: Event
     public readonly float Y;
     public readonly float DeltaX;
     public readonly float DeltaY;
+    public Vector2 Position => new Vector2(X, Y);
 
     public MouseMovedEvent(float x, float y, float deltaX, float deltaY)
     {

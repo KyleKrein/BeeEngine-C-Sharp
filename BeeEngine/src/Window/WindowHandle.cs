@@ -20,6 +20,7 @@ internal abstract class WindowHandler: IDisposable
     public abstract int Height { get; set; }
     public abstract VSync VSync { get; set; }
     public abstract string Title { get; set; }
+    public static WindowHandler Instance { get; protected set; }
 
     public static WindowHandler Create(WindowHandlerType type, ref WindowProps preferences, EventQueue eventQueue)
     {
@@ -34,6 +35,11 @@ internal abstract class WindowHandler: IDisposable
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
     }
+
+    public abstract void HideCursor();
+    public abstract void DisableCursor();
+    public abstract void SetCursorPosition(Vector2 newPosition);
+    public abstract void ShowCursor();
 
     public abstract void ProcessEvents();
 
@@ -138,6 +144,7 @@ internal unsafe sealed class GLFWWindowHandler: WindowHandler
 
     public GLFWWindowHandler(ref WindowProps preferences, EventQueue events)
     {
+        Instance = this;
         _events = events;
         GLFW.SetErrorCallback((error, description) => Log.Error("GLFW Error {0}: {1}", error, description));
         if (!GLFW.Init())
@@ -434,6 +441,28 @@ internal unsafe sealed class GLFWWindowHandler: WindowHandler
             Keys.RightSuper => Key.RightSuper,
             _ => Key.Unknown
         };
+    }
+
+    public override void DisableCursor()
+    {
+        GLFW.SetInputMode(_windowHandle, CursorStateAttribute.Cursor, CursorModeValue.CursorDisabled);
+    }
+
+    public override void SetCursorPosition(Vector2 newPosition)
+    {
+        GLFW.SetCursorPos(_windowHandle, newPosition.X, newPosition.Y);
+    }
+
+    public override void HideCursor()
+    {
+        GLFW.SetInputMode(_windowHandle, CursorStateAttribute.Cursor, CursorModeValue.CursorHidden);
+
+    }
+
+    public override void ShowCursor()
+    {
+        GLFW.SetInputMode(_windowHandle, CursorStateAttribute.Cursor, CursorModeValue.CursorNormal);
+
     }
 
     public override void ProcessEvents()

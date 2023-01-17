@@ -1,5 +1,6 @@
 using BeeEngine.Drawing;
 using BeeEngine.Events;
+using BeeEngine.Mathematics;
 
 namespace BeeEngine;
 
@@ -7,8 +8,8 @@ public static class Input
 {
     private static readonly Dictionary<Key, bool> _keys;
     private static readonly Dictionary<MouseButton, bool> _mouseButtons;
-    public static Point MousePosition { get; private set; }
-    public static PointF MouseMovedDelta { get; private set; }
+    public static Vector2 MousePosition { get; private set; }
+    public static Vector2 MouseMovedDelta { get; private set; }
     public static float MouseOffset { get; private set; }
     public static float MouseOffsetHorizontal { get; private set; }
 
@@ -80,8 +81,8 @@ public static class Input
     }
     private static void OnMouseMoved(MouseMovedEvent e)
     {
-        MousePosition = new Point((int) e.X, (int) e.Y);
-        MouseMovedDelta = new PointF(e.DeltaX, e.DeltaY);
+        MousePosition = new Vector2((int) e.X, (int) e.Y);
+        MouseMovedDelta = new Vector2(e.DeltaX, e.DeltaY);
     }
     private static void OnMouseScrolled(MouseScrolledEvent e)
     {

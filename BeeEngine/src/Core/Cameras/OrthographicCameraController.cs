@@ -121,9 +121,13 @@ public class OrthographicCameraController
 
         Enabled = false;
     }
-
-    public static implicit operator OrthographicCamera(OrthographicCameraController controller)
+    
+    public static implicit operator Camera(OrthographicCameraController controller)
     {
         return controller.Camera;
     }
+    /*public static implicit operator OrthographicCamera(OrthographicCameraController controller)
+    {
+        return controller.Camera;
+    }*/
 }
